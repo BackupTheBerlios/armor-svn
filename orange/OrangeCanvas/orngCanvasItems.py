@@ -335,7 +335,7 @@ class CanvasWidget(QGraphicsRectItem):
             if self.widget.getInputs() != []:    painter.drawPixmap(0, 18, self.imageEdge)
             if self.widget.getOutputs() != []:   painter.drawPixmap(widgetWidth-8, 18, self.imageEdge)
         else:
-            painter.setBrush(QBrush(self.blue))
+            painter.setBrush(QBrush(QColor(0,0,255)))
             if self.widget.getInputs() != []:    painter.drawRect(0, 18, 8, 16)
             if self.widget.getOutputs() != []:   painter.drawRect(widgetWidth-8, 18, 8, 16)
 
