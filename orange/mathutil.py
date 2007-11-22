@@ -15,6 +15,7 @@ class RootFindingException(Exception):
 class MinimizationException(Exception):
 	pass
 
+
 GOLDEN = (1+5**.5)/2
 LITTLE = 1e-10
 SQPREC = 1e-4

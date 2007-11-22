@@ -67,8 +67,9 @@ class OutputWindow(QMainWindow):
         else:     sys.excepthook = self.defaultExceptionHandler
 
     def catchOutput(self, catch):
-        if catch:    sys.stdout = self
-        else:         sys.stdout = self.defaultSysOutHandler
+        pass
+        #if catch:    sys.stdout = self
+        #else:         sys.stdout = self.defaultSysOutHandler
 
     def setFocusOnException(self, focusOnCatchException):
         self.focusOnCatchException = focusOnCatchException

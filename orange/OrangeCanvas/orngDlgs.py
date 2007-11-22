@@ -847,12 +847,3 @@ class saveApplicationDlg(QDialog):
                 for j in range(self.tabOrderList.count()): self.tabOrderList.item(j).setSelected(0)
                 self.tabOrderList.insertItem(i+1, item)
                 item.setSelected(1)
-
-
-if __name__=="__main__":
-    import sys
-    app = QApplication(sys.argv)
-    dlg = saveApplicationDlg(None)
-    dlg.show()
-    sys.exit(app.exec_())
-

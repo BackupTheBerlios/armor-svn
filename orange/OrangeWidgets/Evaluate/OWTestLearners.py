@@ -274,11 +274,13 @@ class OWTestLearners(OWWidget):
         if not self.results:
             self.tab.setRowCount(0)
             return
+        
         self.tab.setColumnCount(len(self.stat)+1)
-        self.tabHH=self.tab.horizontalHeader()
-        self.tabHH.setLabel(0, 'Classifier')
+        headerLabels = QStringList()
+        headerLabels.append('Classifier')
         for i in range(len(self.stat)):
-            self.tabHH.setLabel(i+1, self.stat[i][1])
+            headerLabels.append(self.stat[i][1])    
+        self.tab.setHorizontalHeaderLabels(headerLabels)
 
         self.tab.setRowCount(self.results.numberOfLearners)
         for i in range(len(self.results.classifierNames)):
