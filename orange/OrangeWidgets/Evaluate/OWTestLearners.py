@@ -281,19 +281,25 @@ class OWTestLearners(OWWidget):
         for i in range(len(self.stat)):
             headerLabels.append(self.stat[i][1])    
         self.tab.setHorizontalHeaderLabels(headerLabels)
+#        pyqtRemoveInputHook()
+#        from IPython.Debugger import Tracer; debug_here = Tracer()
+#        debug_here()
 
         self.tab.setRowCount(self.results.numberOfLearners)
+        vheaderLabels = QStringList()
         for i in range(len(self.results.classifierNames)):
-            self.tab.setText(i, 0, self.results.classifierNames[i])
-
+            vheaderLabels.append(self.results.classifierNames[i])            
+        self.tab.setVerticalHeaderLabels(vheaderLabels)
+        
         prec="%%.%df" % self.precision
 
         for i in range(self.results.numberOfLearners):
             for j in range(len(self.stat)):
                 if self.scores[j][i] < 1e-8:
-                    self.tab.setText(i, j+1, "N/A")
+                    newItem = QTableWidgetItem("N/A")
                 else:
-                    self.tab.setText(i, j+1, prec % self.scores[j][i])
+                    newItem = QTableWidgetItem(prec % self.scores[j][i])
+                self.tab.setItem(i, j+1, newItem)
 
         self.tab.resizeColumnsToContents()
 

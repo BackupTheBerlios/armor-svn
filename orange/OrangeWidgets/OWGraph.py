@@ -147,7 +147,7 @@ class OWGraph(QwtPlot):
 
         #self.setTickLength(QwtPlot.yLeft, 1, 1, 3)
 
-        if (labels <> None):
+        if (labels != None):
             self.setAxisScaleDraw(QwtPlot.yLeft, DiscreteAxisScaleDraw(labels))
             self.setAxisScale(QwtPlot.yLeft, 0, len(labels) - 1, 1)
             self.setAxisMaxMinor(QwtPlot.yLeft, 0)
@@ -167,7 +167,7 @@ class OWGraph(QwtPlot):
         if not self.showAxisScale:
             return
 
-        if (labels <> None):
+        if (labels != None):
             self.setAxisScaleDraw(QwtPlot.yRight, DiscreteAxisScaleDraw(labels))
             self.setAxisScale(QwtPlot.yRight, 0, len(labels) - 1, 1)
             self.setAxisMaxMinor(QwtPlot.yRight, 0)
@@ -188,7 +188,7 @@ class OWGraph(QwtPlot):
         if not self.showAxisScale:
             return
 
-        if (labels <> None):
+        if (labels != None):
             self.setAxisScaleDraw(QwtPlot.xBottom, DiscreteAxisScaleDraw(labels))
             self.setAxisScale(QwtPlot.xBottom, 0, len(labels) - 1, 1)
             self.setAxisMaxMinor(QwtPlot.xBottom, 0)
@@ -245,7 +245,7 @@ class OWGraph(QwtPlot):
 
     def setShowMainTitle(self, b):
         self.showMainTitle = b
-        if (self.showMainTitle <> 0):
+        if (self.showMainTitle != 0):
             self.setTitle(self.mainTitle)
         else:
             self.setTitle(None)
@@ -254,7 +254,7 @@ class OWGraph(QwtPlot):
 
     def setMainTitle(self, t):
         self.mainTitle = t
-        if (self.showMainTitle <> 0):
+        if (self.showMainTitle != 0):
             self.setTitle(self.mainTitle)
         else:
             self.setTitle(None)
@@ -265,7 +265,7 @@ class OWGraph(QwtPlot):
         if b == self.showXaxisTitle: return
         if b != -1:
             self.showXaxisTitle = b
-        if (self.showXaxisTitle <> 0):
+        if (self.showXaxisTitle != 0):
             self.setAxisTitle(QwtPlot.xBottom, self.XaxisTitle)
         else:
             self.setAxisTitle(QwtPlot.xBottom, QwtText())
@@ -275,7 +275,7 @@ class OWGraph(QwtPlot):
     def setXaxisTitle(self, title):
         if title == self.XaxisTitle: return
         self.XaxisTitle = title
-        if (self.showXaxisTitle <> 0):
+        if (self.showXaxisTitle != 0):
             self.setAxisTitle(QwtPlot.xBottom, self.XaxisTitle)
         else:
             self.setAxisTitle(QwtPlot.xBottom, QwtText())
@@ -286,7 +286,7 @@ class OWGraph(QwtPlot):
         if b == self.showYLaxisTitle: return
         if b != -1:
             self.showYLaxisTitle = b
-        if (self.showYLaxisTitle <> 0):
+        if (self.showYLaxisTitle != 0):
             self.setAxisTitle(QwtPlot.yLeft, self.YLaxisTitle)
         else:
             self.setAxisTitle(QwtPlot.yLeft, QwtText())
@@ -296,7 +296,7 @@ class OWGraph(QwtPlot):
     def setYLaxisTitle(self, title):
         if title == self.YLaxisTitle: return
         self.YLaxisTitle = title
-        if (self.showYLaxisTitle <> 0):
+        if (self.showYLaxisTitle != 0):
             self.setAxisTitle(QwtPlot.yLeft, self.YLaxisTitle)
         else:
             self.setAxisTitle(QwtPlot.yLeft, QwtText())
