@@ -281,14 +281,11 @@ class OWTestLearners(OWWidget):
         for i in range(len(self.stat)):
             horHeaderLabels.append(self.stat[i][1])    
         self.tab.setHorizontalHeaderLabels(horHeaderLabels)
-#        pyqtRemoveInputHook()
-#        from IPython.Debugger import Tracer; debug_here = Tracer()
-#        debug_here()
 
         self.tab.setRowCount(self.results.numberOfLearners)
-        vheaderLabels = QStringList()
-        for i in range(len(self.results.classifierNames)):
-            verHeaderLabels.append(self.results.classifierNames[i])            
+        verHeaderLabels = QStringList()
+        for classifierName in self.results.classifierNames:
+            verHeaderLabels.append(classifierName)
         self.tab.setVerticalHeaderLabels(verHeaderLabels)
         
         prec="%%.%df" % self.precision

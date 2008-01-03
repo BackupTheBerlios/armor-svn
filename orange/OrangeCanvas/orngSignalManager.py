@@ -1,10 +1,12 @@
 # Author: Gregor Leban (gregor.leban@fri.uni-lj.si)
+# Modified by Thomas Wiecki (thomas.wiecki@tuebingen.mpg.de) to work with QT4 signals
 # Description:
 #    manager, that handles correct processing of widget signals
 #
 
 import sys, time
 import orange
+from PyQt4 import QtCore, QtGui
 
 Single = 2
 Multiple = 4
@@ -65,7 +67,7 @@ class SignalWrapper:
 
 
 
-class SignalManager:
+class SignalManager(QtCore.QObject):
     widgets = []    # topologically sorted list of widgets
     links = {}      # dicionary. keys: widgetFrom, values: (widgetTo1, signalNameFrom1, signalNameTo1, enabled1), (widgetTo2, signalNameFrom2, signalNameTo2, enabled2)
     freezing = 0            # do we want to process new signal immediately
@@ -202,6 +204,9 @@ class SignalManager:
     def addLink(self, widgetFrom, widgetTo, signalNameFrom, signalNameTo, enabled):
         if self.verbosity >= 2:
             self.addEvent("add link from " + widgetFrom.captionTitle + " to " + widgetTo.captionTitle, eventVerbosity = 2)
+        QtCore.pyqtRemoveInputHook()
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
 
         if not self.canConnect(widgetFrom, widgetTo): return 0
         # check if signal names still exist
