@@ -5,7 +5,7 @@
 <priority>3300</priority>
 """
 
-from qt import *
+#from qt import *
 from qttable import *
 from OWWidget import *
 #from OWScatterPlotGraph import *

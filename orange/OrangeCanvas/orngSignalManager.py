@@ -201,12 +201,13 @@ class SignalManager(QtCore.QObject):
     def canConnect(self, widgetFrom, widgetTo):
         return not self.existsPath(widgetTo, widgetFrom)
 
+    # called when two widgets are connected, checks if input and output match and transfers data
     def addLink(self, widgetFrom, widgetTo, signalNameFrom, signalNameTo, enabled):
         if self.verbosity >= 2:
             self.addEvent("add link from " + widgetFrom.captionTitle + " to " + widgetTo.captionTitle, eventVerbosity = 2)
-        QtCore.pyqtRemoveInputHook()
-        from IPython.Debugger import Tracer; debug_here = Tracer()
-        debug_here()
+#        QtCore.pyqtRemoveInputHook()
+#        from IPython.Debugger import Tracer; debug_here = Tracer()
+#        debug_here()
 
         if not self.canConnect(widgetFrom, widgetTo): return 0
         # check if signal names still exist
@@ -234,8 +235,11 @@ class SignalManager(QtCore.QObject):
                     return 0
 
         self.links[widgetFrom] = self.links.get(widgetFrom, []) + [(widgetTo, signalNameFrom, signalNameTo, enabled)]
-
+        
+        #Registers the Input in the receiving widget
         widgetTo.addInputConnection(widgetFrom, signalNameTo)
+        #Establish Connection between Signal and Slot (handler)
+        QtCore.QObject.connect(widgetFrom, QtCore.SIGNAL(signalNameFrom), widgetTo.linksIn[signalNameTo][0][2])
 
         # if there is no key for the signalNameFrom, create it and set its id=None and data = None
         if not widgetFrom.linksOut.has_key(signalNameFrom):
@@ -244,7 +248,8 @@ class SignalManager(QtCore.QObject):
         # if channel is enabled, send data through it
         if enabled:
             for key in widgetFrom.linksOut[signalNameFrom].keys():
-                widgetTo.updateNewSignalData(widgetFrom, signalNameTo, widgetFrom.linksOut[signalNameFrom][key], key, signalNameFrom)
+                #widgetTo.updateNewSignalData(widgetFrom, signalNameTo, widgetFrom.linksOut[signalNameFrom][key], key, signalNameFrom)
+                widgetFrom.emit(QtCore.SIGNAL(signalNameFrom), widgetFrom.linksOut[signalNameFrom][key])
 
         # reorder widgets if necessary
         if self.widgets.index(widgetFrom) > self.widgets.index(widgetTo):
@@ -329,12 +334,14 @@ class SignalManager(QtCore.QObject):
         for (widgetTo, signalFrom, signalTo, enabled) in self.links[widgetFrom]:
             if signalFrom == signalNameFrom and enabled == 1:
                 #print "signal from ", widgetFrom, " to ", widgetTo, " signal: ", signalNameFrom, " value: ", value, " id: ", id
-                widgetTo.updateNewSignalData(widgetFrom, signalTo, value, id, signalNameFrom)
+                #widgetTo.updateNewSignalData(widgetFrom, signalTo, value, id, signalNameFrom)
+                widgetFrom.emit(QtCore.SIGNAL(signalNameFrom), value)
 
 
-        if not self.freezing and not self.signalProcessingInProgress:
+
+#        if not self.freezing and not self.signalProcessingInProgress:
             #print "processing new signals"
-            self.processNewSignals(widgetFrom)
+#            self.processNewSignals(widgetFrom)
 
     # when a new link is created, we have to
     def sendOnNewLink(self, widgetFrom, widgetTo, signals):

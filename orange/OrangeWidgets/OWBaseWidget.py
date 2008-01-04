@@ -482,6 +482,11 @@ class OWBaseWidget(QDialog):
 
     # signal manager calls this function when all input signals have updated the data
     def processSignals(self):
+#        QtCore.pyqtRemoveInputHook()
+#        from IPython.Debugger import Tracer; debug_here = Tracer()
+#        debug_here()
+
+ 
         if self.processingHandler: self.processingHandler(self, 1)    # focus on active widget
 
         # we define only a way to handle signals that have defined a handler function

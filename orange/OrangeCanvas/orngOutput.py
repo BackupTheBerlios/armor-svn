@@ -23,8 +23,8 @@ class OutputWindow(QMainWindow):
         self.setWindowTitle("Output Window")
         self.setWindowIcon(QIcon(canvasDlg.outputPix))
 
-        #self.defaultExceptionHandler = sys.excepthook
-        #self.defaultSysOutHandler = sys.stdout
+        self.defaultExceptionHandler = sys.excepthook
+        self.defaultSysOutHandler = sys.stdout
         self.focusOnCatchException = 1
         self.focusOnCatchOutput  = 0
         self.printOutput = 1

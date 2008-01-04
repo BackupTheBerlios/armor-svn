@@ -96,7 +96,7 @@ class SchemaDoc(QMainWindow):
 
     # add line connecting widgets outWidget and inWidget
     # if necessary ask which signals to connect
-    def addLine(self, outWidget, inWidget, enabled = True):
+    def addLine(self, outWidget, inWidget, enabled = False):
         # check if line already exists
         line = self.getLine(outWidget, inWidget)
         if line:
@@ -188,7 +188,7 @@ class SchemaDoc(QMainWindow):
 
 
     # add one link (signal) from outWidget to inWidget. if line doesn't exist yet, we create it
-    def addLink(self, outWidget, inWidget, outSignalName, inSignalName, enabled = 1):
+    def addLink(self, outWidget, inWidget, outSignalName, inSignalName, enabled = 0):
         #print "<extra>orngDoc - addLink() - ", outWidget, inWidget, outSignalName, inSignalName
         # in case there already exists link to inSignalName in inWidget that is single, we first delete it
         widgetInstance = inWidget.instance.removeExistingSingleLink(inSignalName)

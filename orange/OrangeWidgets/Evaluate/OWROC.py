@@ -44,24 +44,30 @@ def TCconvexHull(curves):
     return hull
 
 class singleClassROCgraph(OWGraph):
-    def __init__(self, parent = None, name = None, title = ""):
+    def __init__(self, parent = None, name = None, title = "Not set"):
         OWGraph.__init__(self, parent, name)
+        
+        import PyQt4.QtCore
+        PyQt4.QtCore.pyqtRemoveInputHook()
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
+
 
         self.setYRlabels(None)
-        self.enableGridXB(0)
-        self.enableGridYL(0)
+        self.enableGridXB(1)
+        self.enableGridYL(1)
         self.setAxisMaxMajor(QwtPlot.xBottom, 10)
         self.setAxisMaxMinor(QwtPlot.xBottom, 5)
         self.setAxisMaxMajor(QwtPlot.yLeft, 10)
         self.setAxisMaxMinor(QwtPlot.yLeft, 5)
         self.setAxisScale(QwtPlot.xBottom, -0.0, 1.0, 0)
         self.setAxisScale(QwtPlot.yLeft, -0.0, 1.0, 0)
-        self.setShowXaxisTitle(1)
         self.setXaxisTitle("FP Rate (1-Specificity)")
-        self.setShowYLaxisTitle(1)
+        self.setShowXaxisTitle(1)
         self.setYLaxisTitle("TP Rate (Sensitivity)")
-        self.setShowMainTitle(1)
+        self.setShowYLaxisTitle(1)
         self.setMainTitle(title)
+        self.setShowMainTitle(1)
         self.targetClass = 0
         self.averagingMethod = None
         self.splitByIterations = None
@@ -70,8 +76,8 @@ class singleClassROCgraph(OWGraph):
         self.FNcost = 500.0
         self.pvalue = 400.0 ##0.400
 
-        self.performanceLineSymbol = QwtSymbol(QwtSymbol.Ellipse, QBrush(Qt.color0), QPen(self.black), QSize(7,7))
-        self.defaultLineSymbol = QwtSymbol(QwtSymbol.Ellipse, QBrush(Qt.black), QPen(self.black), QSize(8,8))
+        self.performanceLineSymbol = QwtSymbol(QwtSymbol.Ellipse, QBrush(Qt.color0), QPen(QColor(0,0,0)), QSize(7,7))
+        self.defaultLineSymbol = QwtSymbol(QwtSymbol.Ellipse, QBrush(Qt.black), QPen(QColor(0,0,0)), QSize(8,8))
         self.convexHullPen = QPen(Qt.yellow, 3)
 
         self.removeMarkers()
