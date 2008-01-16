@@ -31,6 +31,27 @@ enum {
   opt_verbose 
 } ;
 
+
+static PyMethodDef _siftMethods[] = {
+    {"sift", vecfcn1, METH_VARARGS},
+    {NULL, NULL}     /* Sentinel - marks the end of this structure */
+};
+
+/* ==== Initialize the sift functions ====================== */
+void init_sift()  {
+    (void) Py_InitModule("_sift", _siftMethods);
+    import_array();  // Must be present for NumPy.  Called first after above line.
+}
+
+/* ==== Create 1D Carray from PyArray ======================
+    Assumes PyArray is contiguous in memory.             */
+double *pyvector_to_Carrayptrs(PyArrayObject *arrayin)  {
+    int i,n;
+    
+    n=arrayin->dimensions[0];
+    return (double *) arrayin->data;  /* pointer to arrayin data as double */
+}
+
 /*uMexOption options [] = {
   {"Octaves",      1,   opt_octaves       },
   {"Levels",       1,   opt_levels        },
@@ -88,17 +109,22 @@ korder (void const* a, void const* b) {
 
 /* ----------------------------------------------------------------- */
 /** @brief MEX entry point */
-void
+/*void
 mexFunction(int nout, mxArray *out[], 
             int nin, const mxArray *in[])
+*/
+
+static PyObject *sift(PyObject *self, PyObject *args)
 {
+    PyArrayObject *matin, *matout;  // The python objects to be extracted from the args
+
   enum {IN_I=0,IN_END} ;
   enum {OUT_FRAMES=0, OUT_DESCRIPTORS} ;
 
   int                verbose = 0 ;
   int                opt ;
   int                next = IN_END ;
-  mxArray const     *optarg ;
+//  mxArray const     *optarg ;
      
   vl_sift_pix const *data ;
   int                M, N ;
@@ -110,15 +136,28 @@ mexFunction(int nout, mxArray *out[],
   double             edge_tresh = -1 ;
   double             peak_tresh = -1 ;
 
-  mxArray           *ikeys_array = 0 ;
+//  mxArray           *ikeys_array = 0 ;
   double            *ikeys = 0 ;
   int                nikeys = -1 ;
   vl_bool            force_orientations = 0 ;
 
+    /* Parse tuples separately since args will differ between C fcns */
+    if (!PyArg_ParseTuple(args, "O!O!i", &PyArray_Type, &matin,
+        &PyArray_Type, &matout, verbose))  return NULL;
+    if (NULL == matin)  return NULL;
+    if (NULL == matout)  return NULL;
+
+    data= (vl_sift_pix *) pyvector_to_Carrayptrs(matin);
+
+    M = matin->dimensions[0];
+    N = matin->dimensions[1];
+
+//    cout=pyvector_to_Carrayptrs(matout);
+    
   /** -----------------------------------------------------------------
    **                                               Check the arguments
    ** -------------------------------------------------------------- */
-  if (nin < 1) {
+/*  if (nin < 1) {
     mexErrMsgTxt("One argument required.") ;
   } else if (nout > 2) {
     mexErrMsgTxt("Too many output arguments.");
@@ -190,7 +229,7 @@ mexFunction(int nout, mxArray *out[],
       break ;
     }
   }
-  
+*/  
   /* -----------------------------------------------------------------
    *                                                     Run algorithm
    * -------------------------------------------------------------- */
@@ -208,21 +247,21 @@ mexFunction(int nout, mxArray *out[],
     if (edge_tresh >= 0) vl_sift_set_edge_tresh (filt, edge_tresh) ;
     
     if (verbose) {    
-      mexPrintf("siftmx: filter settings:\n") ;
-      mexPrintf("siftmx:   octaves      (O)     = %d\n", 
+      printf("siftmx: filter settings:\n") ;
+      printf("siftmx:   octaves      (O)     = %d\n", 
                 vl_sift_get_octave_num   (filt)) ;
-      mexPrintf("siftmx:   levels       (S)     = %d\n",
+      printf("siftmx:   levels       (S)     = %d\n",
                 vl_sift_get_level_num    (filt)) ;
-      mexPrintf("siftmx:   first octave (o_min) = %d\n", 
+      printf("siftmx:   first octave (o_min) = %d\n", 
                 vl_sift_get_octave_first (filt)) ;
-      mexPrintf("siftmx:   edge tresh           = %g\n",
+      printf("siftmx:   edge tresh           = %g\n",
                 vl_sift_get_edge_tresh   (filt)) ;
-      mexPrintf("siftmx:   peak tresh           = %g\n",
+      printf("siftmx:   peak tresh           = %g\n",
                 vl_sift_get_peak_tresh   (filt)) ;
-      mexPrintf((nikeys >= 0) ? 
+      printf((nikeys >= 0) ? 
                 "siftmx: will source frames? yes (%d)\n" :
                 "siftmx: will source frames? no\n", nikeys) ;
-      mexPrintf("siftmx: will force orientations? %s\n",
+      printf("siftmx: will force orientations? %s\n",
                 force_orientations ? "yes" : "no") ;      
     }
 
@@ -238,7 +277,7 @@ mexFunction(int nout, mxArray *out[],
       int                   nkeys = 0 ;
       
       if (verbose) {
-        mexPrintf ("siftmx: processing octave %d\n",
+        printf ("siftmx: processing octave %d\n",
                    vl_sift_get_octave_index (filt)) ;
       }
 
@@ -346,7 +385,7 @@ mexFunction(int nout, mxArray *out[],
     } /* next octave */
     
     if (verbose) {
-      mexPrintf ("siftmx: found %d keypoints\n", nframes) ;
+      printf ("siftmx: found %d keypoints\n", nframes) ;
     }
     
     /* save back */
