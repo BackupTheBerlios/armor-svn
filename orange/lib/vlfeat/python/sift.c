@@ -31,6 +31,7 @@ enum {
   opt_verbose 
 } ;
 
+static PyObject *sift(PyObject *self, PyObject *args);
 
 static PyMethodDef _siftMethods[] = {
     {"sift", sift, METH_VARARGS},
@@ -46,36 +47,10 @@ void init_sift()  {
 /* ==== Create 1D Carray from PyArray ======================
     Assumes PyArray is contiguous in memory.             */
 double *pyvector_to_Carrayptrs(PyArrayObject *arrayin)  {
-    int i,n;
+    int n;
     
     n=arrayin->dimensions[0];
     return (double *) arrayin->data;  /* pointer to arrayin data as double */
-}
-
-/* ==== Create Carray from PyArray ======================
-    Assumes PyArray is contiguous in memory.
-    Memory is allocated!                                    */
-double *pymatrix_to_Carrayptrs(PyArrayObject *arrayin)  {
-    double *c, *a;
-    int i,n,m;
-    
-    n=arrayin->dimensions[0];
-    m=arrayin->dimensions[1];
-    c=ptrvector(n);
-    a=(double *) arrayin->data;  /* pointer to arrayin data as double */
-    for ( i=0; i<n; i++)  {
-        c[i]=a+i*m;  }
-    return c;
-}
-/* ==== Allocate a double *vector (vec of pointers) ======================
-    Memory is Allocated!  See void free_Carray(double ** )                  */
-double *ptrvector(long n)  {
-    double *v;
-    v=(double *)malloc((size_t) (n*sizeof(double)));
-    if (!v)   {
-        printf("In *ptrvector. Allocation of memory for double array failed.");
-        exit(0);  }
-    return v;
 }
 
 /*uMexOption options [] = {
@@ -152,7 +127,7 @@ static PyObject *sift(PyObject *self, PyObject *args)
   int                opt ;
   int                next = IN_END ;
 //  mxArray const     *optarg ;
-     
+  int nout = 1;   
   vl_sift_pix const *data ;
   int                M, N ;
 
@@ -169,7 +144,7 @@ static PyObject *sift(PyObject *self, PyObject *args)
   vl_bool            force_orientations = 0 ;
 
     /* Parse tuples separately since args will differ between C fcns */
-    if (!PyArg_ParseTuple(args, "Oi", &input, verbose))  return NULL;
+    if (!PyArg_ParseTuple(args, "Oi", &input, &verbose))  return NULL;
     matin = (PyArrayObject *) PyArray_ContiguousFromObject(input, PyArray_FLOAT, 2, 2);
 
     if (NULL == matin)  return NULL;
@@ -450,7 +425,7 @@ static PyObject *sift(PyObject *self, PyObject *args)
     /* cleanup */
     vl_sift_delete (filt) ;
     
-    if (ikeys_array) mxDestroyArray(ikeys_array) ;
+    //if (ikeys_array) mxDestroyArray(ikeys_array) ;
   }
     Py_DECREF(matin);
     return PyArray_Return(out_frames);
