@@ -33,7 +33,7 @@ enum {
 
 
 static PyMethodDef _siftMethods[] = {
-    {"sift", vecfcn1, METH_VARARGS},
+    {"sift", sift, METH_VARARGS},
     {NULL, NULL}     /* Sentinel - marks the end of this structure */
 };
 
@@ -50,6 +50,32 @@ double *pyvector_to_Carrayptrs(PyArrayObject *arrayin)  {
     
     n=arrayin->dimensions[0];
     return (double *) arrayin->data;  /* pointer to arrayin data as double */
+}
+
+/* ==== Create Carray from PyArray ======================
+    Assumes PyArray is contiguous in memory.
+    Memory is allocated!                                    */
+double *pymatrix_to_Carrayptrs(PyArrayObject *arrayin)  {
+    double *c, *a;
+    int i,n,m;
+    
+    n=arrayin->dimensions[0];
+    m=arrayin->dimensions[1];
+    c=ptrvector(n);
+    a=(double *) arrayin->data;  /* pointer to arrayin data as double */
+    for ( i=0; i<n; i++)  {
+        c[i]=a+i*m;  }
+    return c;
+}
+/* ==== Allocate a double *vector (vec of pointers) ======================
+    Memory is Allocated!  See void free_Carray(double ** )                  */
+double *ptrvector(long n)  {
+    double *v;
+    v=(double *)malloc((size_t) (n*sizeof(double)));
+    if (!v)   {
+        printf("In *ptrvector. Allocation of memory for double array failed.");
+        exit(0);  }
+    return v;
 }
 
 /*uMexOption options [] = {
@@ -116,7 +142,8 @@ mexFunction(int nout, mxArray *out[],
 
 static PyObject *sift(PyObject *self, PyObject *args)
 {
-    PyArrayObject *matin, *matout;  // The python objects to be extracted from the args
+    PyObject *input;
+    PyArrayObject *matin, *out_descr, *out_frames;  // The python objects to be extracted from the args
 
   enum {IN_I=0,IN_END} ;
   enum {OUT_FRAMES=0, OUT_DESCRIPTORS} ;
@@ -142,12 +169,13 @@ static PyObject *sift(PyObject *self, PyObject *args)
   vl_bool            force_orientations = 0 ;
 
     /* Parse tuples separately since args will differ between C fcns */
-    if (!PyArg_ParseTuple(args, "O!O!i", &PyArray_Type, &matin,
-        &PyArray_Type, &matout, verbose))  return NULL;
-    if (NULL == matin)  return NULL;
-    if (NULL == matout)  return NULL;
+    if (!PyArg_ParseTuple(args, "Oi", &input, verbose))  return NULL;
+    matin = (PyArrayObject *) PyArray_ContiguousFromObject(input, PyArray_FLOAT, 2, 2);
 
-    data= (vl_sift_pix *) pyvector_to_Carrayptrs(matin);
+    if (NULL == matin)  return NULL;
+
+    data = (vl_sift_pix *) pyvector_to_Carrayptrs(matin);
+
 
     M = matin->dimensions[0];
     N = matin->dimensions[1];
@@ -258,11 +286,12 @@ static PyObject *sift(PyObject *self, PyObject *args)
                 vl_sift_get_edge_tresh   (filt)) ;
       printf("siftmx:   peak tresh           = %g\n",
                 vl_sift_get_peak_tresh   (filt)) ;
-      printf((nikeys >= 0) ? 
+/*      printf((nikeys >= 0) ? 
                 "siftmx: will source frames? yes (%d)\n" :
                 "siftmx: will source frames? no\n", nikeys) ;
       printf("siftmx: will force orientations? %s\n",
                 force_orientations ? "yes" : "no") ;      
+*/
     }
 
     
@@ -271,7 +300,7 @@ static PyObject *sift(PyObject *self, PyObject *args)
      * ............................................................ */
     i     = 0 ;
     first = 1 ;
-    while (true) {
+    while (1) {
       int                   err ;
       VlSiftKeypoint const *keys  = 0 ;
       int                   nkeys = 0 ;
@@ -360,14 +389,16 @@ static PyObject *sift(PyObject *self, PyObject *args)
           /* make enough room for all these keypoints */
           if (reserved < nframes + 1) {
             reserved += 2 * nkeys ;
-            frames = mxRealloc (frames, 4 * sizeof(double) * reserved) ;
+            frames = malloc (4 * sizeof(double) * reserved) ;
             if (nout > 1) {
-              descr  = mxRealloc (descr,  128 * sizeof(double) * reserved) ;
+              descr  = malloc (128 * sizeof(double) * reserved) ;
             }
           }
 
           /* Save back with MATLAB conventions. Notice tha the input image was
            * the transpose of the actual image. */
+
+
           frames [4 * nframes + 0] = k -> y + 1 ;
           frames [4 * nframes + 1] = k -> x + 1 ;
           frames [4 * nframes + 2] = k -> sigma ;
@@ -395,21 +426,24 @@ static PyObject *sift(PyObject *self, PyObject *args)
       /* empty array */
       dims [0] = 0 ;
       dims [1] = 0 ;      
-      out[OUT_FRAMES]       = mxCreateNumericArray(2, dims, mxDOUBLE_CLASS, mxREAL) ;
-      if (nout > 1)
-        out[OUT_DESCRIPTORS]= mxCreateNumericArray(2, dims, mxUINT8_CLASS,  mxREAL) ;
+//      out[OUT_FRAMES]       = mxCreateNumericArray(2, dims, mxDOUBLE_CLASS, mxREAL) ;
+//      if (nout > 1)
+//        out[OUT_DESCRIPTORS]= mxCreateNumericArray(2, dims, mxUINT8_CLASS,  mxREAL) ;
 
       /* set to our stuff */
       dims [0] = 4 ;
       dims [1] = nframes ;
-      mxSetDimensions (out[OUT_FRAMES],      dims, 2) ;
-      mxSetPr         (out[OUT_FRAMES],      frames) ;
+      out_frames = PyArray_FromDimsAndData(2, dims, PyArray_DOUBLE, frames);
+
+//      mxSetDimensions (out[OUT_FRAMES],      dims, 2) ;
+//      mxSetPr         (out[OUT_FRAMES],      frames) ;
 
       if (nout > 1) {
         dims [0] = 128 ;
         dims [1] = nframes ;
-        mxSetDimensions (out[OUT_DESCRIPTORS], dims, 2) ;
-        mxSetData       (out[OUT_DESCRIPTORS], descr) ;
+        out_descr = PyArray_FromDimsAndData(2, dims, PyArray_SHORT, descr);
+        //mxSetDimensions (out[OUT_DESCRIPTORS], dims, 2) ;
+        //mxSetData       (out[OUT_DESCRIPTORS], descr) ;
       }
     }
     
@@ -418,4 +452,6 @@ static PyObject *sift(PyObject *self, PyObject *args)
     
     if (ikeys_array) mxDestroyArray(ikeys_array) ;
   }
+    Py_DECREF(matin);
+    return PyArray_Return(out_frames);
 }
