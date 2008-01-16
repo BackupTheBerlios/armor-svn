@@ -1,0 +1,13 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=mex 2007.12.6)  13 JAN 2008 19:24
+entering extended mode
+ %&-line parsing enabled.
+**"CFLAGS=$CFLAGS -I. -pedantic -Wall -std=c99 -g -O0 -Wno-variadic-macros -Wno
+-unused-function -D__LITTLE_ENDIAN__" -Lbin/glx -lvl toolbox/aib.c -outdir tool
+box
+
+! Emergency stop.
+<*> ... -Wno-unused-function -D__LITTLE_ENDIAN__" 
+                                                  -Lbin/glx -lvl toolbox/aib...
+End of file on the terminal!
+
+No pages of output.

@@ -294,10 +294,15 @@ class SignalManager(QtCore.QObject):
             for (widget, signalFrom, signalTo, enabled) in self.links[widgetFrom]:
                 if widget == widgetTo and signalFrom == signalNameFrom and signalTo == signalNameTo:
                     for key in widgetFrom.linksOut[signalFrom].keys():
-                        widgetTo.updateNewSignalData(widgetFrom, signalNameTo, None, key, signalNameFrom)
+#                        widgetTo.updateNewSignalData(widgetFrom, signalNameTo, None, key, signalNameFrom)
+                        pass
+
                     self.links[widgetFrom].remove((widget, signalFrom, signalTo, enabled))
+                    QtCore.QObject.disconnect(widgetFrom, QtCore.SIGNAL(signalFrom), widgetTo.linksIn[signalNameTo][0][2])
                     if not self.freezing and not self.signalProcessingInProgress: self.processNewSignals(widgetFrom)
         widgetTo.removeInputConnection(widgetFrom, signalNameTo)
+#        QtCore.QObject.disconnect(widgetFrom, QtCore.SIGNAL(signalNameFrom), widgetTo.linksIn[signalNameTo][0][2])
+
 
 
     # ############################################
@@ -312,7 +317,8 @@ class SignalManager(QtCore.QObject):
                     links[i] = (widget, nameFrom, nameTo, enabled)
                 if enabled:
                     for key in widgetFrom.linksOut[nameFrom].keys():
-                        widgetTo.updateNewSignalData(widgetFrom, nameTo, widgetFrom.linksOut[nameFrom][key], key, nameFrom)
+                        #widgetTo.updateNewSignalData(widgetFrom, nameTo, widgetFrom.linksOut[nameFrom][key], key, nameFrom)
+                        widgetFrom.emit(QtCore.SIGNAL(nameFrom), widgetFrom.linksOut[nameFrom][key])
 
         if enabled: self.processNewSignals(widgetTo)
 
@@ -336,18 +342,6 @@ class SignalManager(QtCore.QObject):
                 #print "signal from ", widgetFrom, " to ", widgetTo, " signal: ", signalNameFrom, " value: ", value, " id: ", id
                 #widgetTo.updateNewSignalData(widgetFrom, signalTo, value, id, signalNameFrom)
                 widgetFrom.emit(QtCore.SIGNAL(signalNameFrom), value)
-
-
-
-#        if not self.freezing and not self.signalProcessingInProgress:
-            #print "processing new signals"
-#            self.processNewSignals(widgetFrom)
-
-    # when a new link is created, we have to
-    def sendOnNewLink(self, widgetFrom, widgetTo, signals):
-        for (outName, inName) in signals:
-            for key in widgetFrom.linksOut[outName].keys():
-                widgetTo.updateNewSignalData(widgetFrom, inName, widgetFrom.linksOut[outName][key], key, outName)
 
 
     def processNewSignals(self, firstWidget):
