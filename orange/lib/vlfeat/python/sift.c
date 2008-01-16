@@ -5,8 +5,14 @@
  **/
 
 //#include "mexutils.h"
+#ifdef WINDOWS 
+#include <python25/Python.h>
+#endif
 
+#ifdef LINUX
 #include <python2.5/Python.h>
+#endif
+
 #include "arrayobject.h"
 #include <vl/mathop.h>
 #include <vl/sift.h>
