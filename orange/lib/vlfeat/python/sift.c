@@ -4,11 +4,14 @@
  ** @internal
  **/
 
-#include "mexutils.h"
+//#include "mexutils.h"
+#include <python2.5/Python.h>
+#include "arrayobject.h"
 #include <vl/mathop.h>
 #include <vl/sift.h>
 #include <math.h>
 #include <assert.h>
+
 
 enum {
   opt_octaves = 0,
