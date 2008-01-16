@@ -5,6 +5,7 @@
  **/
 
 //#include "mexutils.h"
+
 #include <python2.5/Python.h>
 #include "arrayobject.h"
 #include <vl/mathop.h>
@@ -24,7 +25,7 @@ enum {
   opt_verbose 
 } ;
 
-uMexOption options [] = {
+/*uMexOption options [] = {
   {"Octaves",      1,   opt_octaves       },
   {"Levels",       1,   opt_levels        },
   {"FirstOctave",  1,   opt_first_octave  },
@@ -35,6 +36,7 @@ uMexOption options [] = {
   {"Verbose",      0,   opt_verbose       },
   {0,              0,   0                 }
 } ;
+*/
 
 /** @brief Transpose desriptor
  ** @internal
