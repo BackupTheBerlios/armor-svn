@@ -31,10 +31,10 @@ enum {
   opt_verbose 
 } ;
 
-static PyObject *sift(PyObject *self, PyObject *args);
+static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs);
 
 static PyMethodDef _siftMethods[] = {
-    {"sift", sift, METH_VARARGS},
+    {"sift", sift, METH_VARARGS | METH_KEYWORDS },
     {NULL, NULL}     /* Sentinel - marks the end of this structure */
 };
 
@@ -108,25 +108,17 @@ korder (void const* a, void const* b) {
   return 0 ;
 }
 
-/* ----------------------------------------------------------------- */
-/** @brief MEX entry point */
-/*void
-mexFunction(int nout, mxArray *out[], 
-            int nin, const mxArray *in[])
-*/
-
-static PyObject *sift(PyObject *self, PyObject *args)
+static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-    PyObject *input;
+    PyObject *input, *input_frames;
     PyArrayObject *matin, *out_descr, *out_frames;  // The python objects to be extracted from the args
+    static char *kwlist[] = {"Octave", "Levels", "FirstOctave", "Frames", 
+                             "PeakThresh", "EdgeThresh", "Orientations", "Verbose", NULL};
 
   enum {IN_I=0,IN_END} ;
   enum {OUT_FRAMES=0, OUT_DESCRIPTORS} ;
 
   int                verbose = 0 ;
-  int                opt ;
-  int                next = IN_END ;
-//  mxArray const     *optarg ;
   int nout = 1;   
   vl_sift_pix const *data ;
   int                M, N ;
@@ -138,14 +130,28 @@ static PyObject *sift(PyObject *self, PyObject *args)
   double             edge_tresh = -1 ;
   double             peak_tresh = -1 ;
 
-//  mxArray           *ikeys_array = 0 ;
+  PyArrayObject     *ikeys_array = NULL ;
   double            *ikeys = 0 ;
   int                nikeys = -1 ;
   vl_bool            force_orientations = 0 ;
 
     /* Parse tuples separately since args will differ between C fcns */
-    if (!PyArg_ParseTuple(args, "Oi", &input, &verbose))  return NULL;
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|iiiddOii", kwlist, &input, &O, &S, &o_min, &input_frames, 
+                                    &edge_tresh, &peak_tresh, &force_orientations, &verbose))  return NULL;
     matin = (PyArrayObject *) PyArray_ContiguousFromObject(input, PyArray_FLOAT, 2, 2);
+    if (matin == NULL)
+        return NULL;
+
+    if (input_arrays != NULL) {
+        ikeys_array = (PyArrayObject *) PyArray_ContiguousFromObject(input_frames, PyArray_FLOAT, 2, 2);
+        if (ikeys_array->dimensions[0] != 4) {
+            printf("'Frames' must be a 4 x N matrix.x\n");
+            return NULL;
+        }
+        nikeys = ikeys_array->dimensions[1];
+        ikeys = (double *) ikeys_array->data;
+        qsort (ikeys, nikeys, 4 * sizeof(double), korder);
+    }
 
     if (NULL == matin)  return NULL;
 
@@ -155,8 +161,6 @@ static PyObject *sift(PyObject *self, PyObject *args)
     M = matin->dimensions[0];
     N = matin->dimensions[1];
 
-//    cout=pyvector_to_Carrayptrs(matout);
-    
   /** -----------------------------------------------------------------
    **                                               Check the arguments
    ** -------------------------------------------------------------- */
@@ -370,10 +374,6 @@ static PyObject *sift(PyObject *self, PyObject *args)
             }
           }
 
-          /* Save back with MATLAB conventions. Notice tha the input image was
-           * the transpose of the actual image. */
-
-
           frames [4 * nframes + 0] = k -> y + 1 ;
           frames [4 * nframes + 1] = k -> x + 1 ;
           frames [4 * nframes + 2] = k -> sigma ;
@@ -399,8 +399,6 @@ static PyObject *sift(PyObject *self, PyObject *args)
       int dims [2] ;
       
       /* empty array */
-      dims [0] = 0 ;
-      dims [1] = 0 ;      
 //      out[OUT_FRAMES]       = mxCreateNumericArray(2, dims, mxDOUBLE_CLASS, mxREAL) ;
 //      if (nout > 1)
 //        out[OUT_DESCRIPTORS]= mxCreateNumericArray(2, dims, mxUINT8_CLASS,  mxREAL) ;
@@ -413,20 +411,17 @@ static PyObject *sift(PyObject *self, PyObject *args)
 //      mxSetDimensions (out[OUT_FRAMES],      dims, 2) ;
 //      mxSetPr         (out[OUT_FRAMES],      frames) ;
 
-      if (nout > 1) {
         dims [0] = 128 ;
         dims [1] = nframes ;
         out_descr = PyArray_FromDimsAndData(2, dims, PyArray_SHORT, descr);
         //mxSetDimensions (out[OUT_DESCRIPTORS], dims, 2) ;
         //mxSetData       (out[OUT_DESCRIPTORS], descr) ;
-      }
     }
     
     /* cleanup */
     vl_sift_delete (filt) ;
     
-    //if (ikeys_array) mxDestroyArray(ikeys_array) ;
   }
     Py_DECREF(matin);
-    return PyArray_Return(out_frames);
+    return Py_BuildValue("(OO)",PyArray_Return(out_frames), PyArray_Return(out_descr));
 }
