@@ -112,8 +112,8 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     PyObject *input, *input_frames;
     PyArrayObject *matin, *out_descr, *out_frames;  // The python objects to be extracted from the args
-    static char *kwlist[] = {"Octave", "Levels", "FirstOctave", "Frames", 
-                             "PeakThresh", "EdgeThresh", "Orientations", "Verbose", NULL};
+    static char *kwlist[] = {"octave", "levels", "firstoctave", "frames", 
+                             "peakthresh", "edgethresh", "orientations", "verbose", NULL};
 
   enum {IN_I=0,IN_END} ;
   enum {OUT_FRAMES=0, OUT_DESCRIPTORS} ;
