@@ -7,6 +7,7 @@
 import sys, time
 import orange
 from PyQt4 import QtCore, QtGui
+import orngDebugging
 
 Single = 2
 Multiple = 4
@@ -75,7 +76,7 @@ class SignalManager(QtCore.QObject):
 
     def __init__(self, *args):
         self.debugFile = None
-#        self.verbosity = orngDebugging.orngVerbosity
+        self.verbosity = orngDebugging.orngVerbosity
         self.stderr = sys.stderr
         self._seenExceptions = {}
         #self.stdout = sys.stdout
@@ -86,7 +87,7 @@ class SignalManager(QtCore.QObject):
             #sys.stdout = self.debugFile
 
     def setDebugMode(self, debugMode = 0, debugFileName = "signalManagerOutput.txt", verbosity = 1):
-#        self.verbosity = verbosity
+        self.verbosity = verbosity
         if self.debugFile:
             sys.stderr = self.stderr
             #sys.stdout = self.stdout
