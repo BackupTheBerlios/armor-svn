@@ -6,7 +6,9 @@ module1 = Extension('_sift',
                     include_dirs = ['..',numpy.get_include()],
                     #libraries = ['tcl83'],
                     #library_dirs = ['/usr/local/lib'],
-                    sources = ['sift.c'])
+                    sources = ['sift.c'],
+		    extra_link_args = ['../bin/glx/objs/sift.o','../bin/glx/objs/imop.o']
+		    )
 
 setup (name = 'Sift',
        version = '1.0',
