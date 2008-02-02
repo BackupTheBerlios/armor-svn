@@ -98,6 +98,9 @@ class OWSVM(OWWidget):
         self.applySettings()
 
     def applySettings(self):
+        QtCore.pyqtRemoveInputHook()
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
         self.learner=orngSVM.SVMLearner()
         for attr in ("name", "kernel_type", "degree", "shrinking", "probability"):
             setattr(self.learner, attr, getattr(self, attr))

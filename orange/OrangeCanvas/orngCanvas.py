@@ -980,6 +980,7 @@ def main(argv=None):
     app = QApplication(sys.argv)
     dlg = OrangeCanvasDlg(app)
     dlg.show()
+
     for arg in sys.argv[1:]:
         if arg == "-reload":
             dlg.menuItemOpenLastSchema()

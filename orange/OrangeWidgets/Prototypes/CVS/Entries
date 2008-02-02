@@ -3,12 +3,15 @@
 /OWGraphDrawerCanvas.py/1.20.2.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWInfo.py/1.9.2.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWMoleculeVisualizer.py/1.3/Tue Nov 20 20:02:51 2007//TQt4
-/OWNetwork.py/1.12.2.1/Tue Nov 20 20:02:51 2007//TQt4
-/OWNetworkFile.py/1.6.2.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWOutlier.py/1.2.4.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWRandomForests.py/1.2.2.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWScatterPlotGraphXp.py/1.5.2.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWScatterPlotXp.py/1.3.2.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWSimilarityNetwork.py/1.3.2.1/Tue Nov 20 20:02:51 2007//TQt4
 /OWSimon.py/1.5.2.1/Tue Nov 20 20:02:51 2007//TQt4
+/OWItemsetViz.py/1.4.2.1/Fri Jan 11 08:51:02 2008//TQt4
+/OWNetworkFile.py/1.6.2.2/Wed Jan 23 15:39:21 2008//TQt4
+/OWNetworkFromDistances.py/1.1.2.1/Fri Jan 11 08:50:26 2008//TQt4
+/OWNetwork.py/1.12.2.8/Sat Feb  2 17:56:38 2008//TQt4
+/OWNetworkCanvas.py/1.11.2.9/Sat Feb  2 17:56:38 2008//TQt4
 D

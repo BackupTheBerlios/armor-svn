@@ -9,19 +9,19 @@ D/Regression////
 D/Text////
 D/Visualize////
 D/icons////
-/OWBaseWidget.py/1.112.2.2/Tue Nov 20 20:02:55 2007//TQt4
-/OWClusterOptimization.py/1.33.2.2/Tue Nov 20 20:02:55 2007//TQt4
 /OWContexts.py/1.4/Tue Nov 20 20:02:55 2007//TQt4
 /OWDlgs.py/1.33.2.2/Tue Nov 20 20:02:55 2007//TQt4
-/OWFreeVizOptimization.py/1.38.2.2/Tue Nov 20 20:02:55 2007//TQt4
-/OWGUI.py/1.86.2.2/Tue Nov 20 20:02:55 2007//TQt4
 /OWGraphTools.py/1.23.2.2/Tue Nov 20 20:02:55 2007//TQt4
 /OWMosaicOptimization.py/1.28.2.2/Tue Nov 20 20:02:55 2007//TQt4
-/OWQCanvasFuncts.py/1.5.4.2/Tue Nov 20 20:02:55 2007//TQt4
 /OWReport.py/1.1/Tue Nov 20 20:02:55 2007//TQt4
-/OWToolbars.py/1.7.2.1/Tue Nov 20 20:02:55 2007//TQt4
 /OWTools.py/1.8.2.1/Tue Nov 20 20:02:55 2007//TQt4
 /OWTreeViewer2D.py/1.7.2.1/Tue Nov 20 20:02:55 2007//TQt4
 /OWVisWidget.py/1.3.2.2/Tue Nov 20 20:02:55 2007//TQt4
-/OWWidget.py/1.35.2.2/Tue Nov 20 20:02:55 2007//TQt4
-/OWkNNOptimization.py/1.118.2.2/Tue Nov 20 20:02:55 2007//TQt4
+/OWClusterOptimization.py/1.33.2.3/Wed Jan 23 15:39:16 2008//TQt4
+/OWFreeVizOptimization.py/1.38.2.3/Wed Jan 23 15:39:16 2008//TQt4
+/OWGUI.py/1.86.2.3/Wed Jan 23 15:39:16 2008//TQt4
+/OWQCanvasFuncts.py/1.5.4.3/Wed Jan 23 15:39:17 2008//TQt4
+/OWWidget.py/1.35.2.3/Wed Jan 23 15:39:17 2008//TQt4
+/OWkNNOptimization.py/1.118.2.3/Wed Jan 23 15:39:17 2008//TQt4
+/OWBaseWidget.py/1.112.2.4/Result of merge+Sat Feb  2 17:56:32 2008//TQt4
+/OWToolbars.py/1.7.2.4/Sat Feb  2 17:56:34 2008//TQt4

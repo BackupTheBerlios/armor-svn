@@ -343,7 +343,7 @@ class CanvasWidget(QGraphicsRectItem):
             if self.widget.getOutputs() != []:   painter.drawRect(widgetWidth-8, 18, 8, 16)
 
         # draw the label
-        painter.setPen(QPen(Qt.black))
+        painter.setPen(QPen(QColor(0,0,0)))
         midX, midY = widgetWidth/2., self.image.height()+7
         painter.drawText(midX-200/2, midY, 200, 20, Qt.AlignTop | Qt.AlignHCenter, self.caption)
 
