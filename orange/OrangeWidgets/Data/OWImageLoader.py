@@ -26,6 +26,8 @@ from PIL import Image
 from subprocess import call
 import os
 import os.path
+import xml.dom.minidom
+
 
 #*******************
 class ImageLoaderBase:
@@ -168,6 +170,68 @@ class OWImageSubFile(OWWidget):
         OWImageSubFile.allFileWidgets.append(self)
         self.filename = ""
 
+    def loadDataset(self, filename):
+        dom = xml.dom.minidom.parse(filename)
+
+        def getText(nodelist):
+            rc = ""
+            for node in nodelist:
+                if node.nodeType == node.TEXT_NODE:
+                    rc = rc + node.data
+            return rc
+
+        def handleImgDatasets(xmlImgDatasets):
+            print "<imgdataset>"
+            datasets = {}
+            imgDatasets = xmlImgDatasets.getElementsByTagName("imgdataset")
+            for imgDataset in imgDatasets:
+                title = handleTitle(imgDataset.getElementsByTagName("title")[0])
+                filenames = imgDataset.getElementsByTagName("filename")
+                datasets[title] = handleFilenames(filenames)
+            print "</imgdataset>"
+
+            return datasets
+
+        def handleTitle(title):
+            print "<title>%s</title>" % getText(title.childNodes)
+            return getText(title.childNodes)
+
+        def handleFilenames(xmlFilenames):
+            filenames = []
+            for filename in xmlFilenames:
+                filenames.append(getText(filename.childNodes))
+                print "<p>%s</p>" % getText(filename.childNodes)
+            
+            return filenames
+
+        return handleImgDatasets(dom)
+
+    def saveXMLDataset(self, fnameToSave, datasets):
+        xmldoc = xml.dom.minidom.getDOMImplementation()
+        newdoc = xmldoc.createDocument(None, "imgdatasets", None)
+        QtCore.pyqtRemoveInputHook()
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
+
+        for datasetTitle in datasets.iterkeys():
+            imgdataset = newdoc.createElement("imgdataset")
+        
+            title = newdoc.createElement("title")
+            titletext = newdoc.createTextNode(datasetTitle)
+            title.appendChild(titletext)
+            imgdataset.appendChild(title)
+            
+            for datasetFilename in datasets[datasetTitle]:
+                filename = newdoc.createElement("filename")
+                filenametext = newdoc.createTextNode(datasetFilename)
+                filename.appendChild(filenametext)
+                imgdataset.appendChild(filename)
+
+            newdoc.childNodes[0].appendChild(imgdataset)
+
+        with open(fnameToSave, 'w') as fdToSave:
+            newdoc.writexml(fdToSave)
+    
     def destroy(self, destroyWindow, destroySubWindows):
         OWImageSubFile.allFileWidgets.remove(self)
         OWWidget.destroy(self, destroyWindow, destroySubWindows)
@@ -183,18 +247,6 @@ class OWImageSubFile(OWWidget):
         # connecting GUI to code
         self.connect(self.filecombo, SIGNAL('activated(int)'), self.selectFile)
 
-    # user selected a file from the combo box
-    def selectFile(self,n):
-        if n < len(self.recentFiles) :
-            name = self.recentFiles[n]
-            self.recentFiles.remove(name)
-            self.recentFiles.insert(0, name)
-        elif n:
-            self.browseFile(inDemos=1)
-
-        if len(self.recentFiles) > 0:
-            self.setFileList()
-            self.openFile(self.recentFiles[0])
 
     # user pressed the "..." button to manually select a file to load
     def browseFile(self, filters=["All (*.*)"], inDemos=0, dir=0, save=0):
@@ -244,13 +296,16 @@ class OWImageSubFile(OWWidget):
         elif dir == 1 and save == 0:
             dialog.setFileMode(QFileDialog.Directory)
         elif dir == 0 and save == 1:
-            dialog.setFileMode(QFileDialog.AnyFiles)
+            dialog.setFileMode(QFileDialog.AnyFile)
         else:
             print "That makes no sense" # TODO
 
         dialog.setFilters(QStringList(filters))
         dialog.setViewMode(QFileDialog.List)
-        dialog.exec_()
+
+        if not dialog.exec_():
+            return None
+
         if dir == 0:
             abs_fileNames = dialog.selectedFiles()
         else:
@@ -258,7 +313,7 @@ class OWImageSubFile(OWWidget):
             abs_fileNames = glob(os.path.join(str(dirNames[0]), "*.*"))
 
         if save == 1:
-            return absFileNames
+            return abs_fileNames
 
         rel_fileNames = []
 
@@ -366,6 +421,7 @@ class OWImageLoader(OWImageSubFile, ImageLoaderBase):
         self.loadSettings()
         buttonWidth = 1.5
         self.datasets = []
+        self.data = {}
 
         #GUI
         w = QWidget(self)
@@ -388,7 +444,7 @@ class OWImageLoader(OWImageSubFile, ImageLoaderBase):
         self.addExistingButton = OWGUI.button(box, self, 'Add existing dataset', callback = self.addExisting, disabled=0, width=120)
         self.createNewButton = OWGUI.button(box, self, 'Create new dataset', callback = self.createNew, disabled=0, width=120)
         self.removeSelectedButton = OWGUI.button(box, self, 'Remove selected dataset', callback = self.removeSelected, disabled=1, width=120)
-        self.saveDatasetButton = OWGUI.button(box, self, 'Save datasets', callback = self.saveDataset, disabled=1, width=120)
+        self.saveDatasetButton = OWGUI.button(box, self, 'Save datasets', callback = self.saveDataset, disabled=0, width=120)
         
         vbAttr = OWGUI.widgetBox(self, addToLayout = 0)
         grid.addWidget(vbAttr, 0,1)
@@ -401,6 +457,9 @@ class OWImageLoader(OWImageSubFile, ImageLoaderBase):
         box = OWGUI.widgetBox(self.controlArea, "Info")
         self.infoa = OWGUI.widgetLabel(box, 'No data loaded.')
         self.infob = OWGUI.widgetLabel(box, ' ')
+        
+        self.applyButton = OWGUI.button(box, self, 'Apply', callback = self.apply, disabled=0, width=120)
+
 
     def editDataset(self, dataset):
         self.datasets[self.datasetList.currentRow()].edit()
@@ -409,23 +468,29 @@ class OWImageLoader(OWImageSubFile, ImageLoaderBase):
         self.removeSelectedButton.setEnabled(1)
 
     def addExisting(self):
-        dataset_file = self.browseFile(filters=['Image Database (*.idb)','All files (*.*)'])
-        dataset = self.readIn(dataset_file)
-        self.databases.append(database)
-
-        self.datasetList.addItem(datasetList.getName())
+        dataset_file = self.browseFile(filters=['Image Database (*.xml)','All files (*.*)'])
+        if not dataset_file:
+            return
+        xmlDatasets = self.loadDataset(str(dataset_file[0]))
+        for key in xmlDatasets.iterkeys():
+            dataset = OWEditImageDataset(len(self.datasets), parent = self, name = key, imgFiles = xmlDatasets[key])
+            self.datasets.append(dataset)
+            self.datasetList.addItem(dataset.name)
+            self.data[key] = xmlDatasets[key]
 
     def createNew(self):
         dataset = OWEditImageDataset(len(self.datasets),parent = self)
         self.datasets.append(dataset)
 
     def removeSelected(self):
+        name = str(self.datasetList.currentItem().text())
+        del self.data[name]
         id = self.datasetList.currentRow() 
         del self.datasets[id]
         self.datasetList.takeItem(id)
         
         #Reorder ids
-        for id,dataset in enum(self.datasets):
+        for id,dataset in enumerate(self.datasets):
             dataset.id = id
 
         if self.datasetList.count() == 0:
@@ -433,17 +498,23 @@ class OWImageLoader(OWImageSubFile, ImageLoaderBase):
 
     def saveDataset(self):
         id = self.datasetList.currentRow() 
-        saveFile = str(self.browseFile(filters=['Image Database (*.idb)','All files (*.*)'], save=1)[0])
+        saveFile = str(self.browseFile(filters=['Image Database (*.xml)','All files (*.*)'], save=1)[0])
+        if not saveFile:
+            return
         print saveFile
+
+        self.saveXMLDataset(saveFile, self.data)
 
     def updateDataset(self, id):
 #        QtCore.pyqtRemoveInputHook()
 #        from IPython.Debugger import Tracer; debug_here = Tracer()
 #        debug_here()
         if (self.datasetList.item(id)):
-            self.datasetList.item(id).setText(self.datasets[id].getName())
+            self.datasetList.item(id).setText(self.datasets[id].name)
         else:
-            self.datasetList.addItem(self.datasets[id].getName())
+            name = self.datasets[id].name
+            self.datasetList.addItem(name)
+            self.data[name] = self.datasets[id].imgFiles
 
     # set the file combo box
     def setFileList(self):
@@ -456,16 +527,29 @@ class OWImageLoader(OWImageSubFile, ImageLoaderBase):
         #self.filecombo.adjustSize() #doesn't work properly :(
         #self.filecombo.updateGeometry()
 
+    def apply(self):
+        self.setVisible(0)
+
     def onButtonClick(self):
         pass
 
     def openFile(self,fn, throughReload = 0):
         self.openFileBase(fn, throughReload=throughReload)
 
-class OWEditImageDataset(OWImageSubFile, ImageLoaderBase):
-    def getName(self):
-        return self.name
+    # user selected a file from the combo box
+    def selectFile(self,n):
+        if n < len(self.recentFiles) :
+            name = self.recentFiles[n]
+            self.recentFiles.remove(name)
+            self.recentFiles.insert(0, name)
+        elif n:
+            self.browseFile(inDemos=1)
 
+        if len(self.recentFiles) > 0:
+            self.setFileList()
+            self.openFile(self.recentFiles[0])
+
+class OWEditImageDataset(OWImageSubFile, ImageLoaderBase):
     def displayImage(self, WidgetItem):
         img = self.load_one_image(str(WidgetItem.text()))
         img.show()
@@ -474,38 +558,45 @@ class OWEditImageDataset(OWImageSubFile, ImageLoaderBase):
         self.removeButton.setEnabled(1)
 
     def removeFile(self):
-        self.ImageFilesList.takeItem(self.ImageFilesList.currentRow())
-        if self.ImageFilesList.count() == 0:
+        self.widgetFileList.takeItem(self.widgetFileList.currentRow())
+        if self.widgetFileList.count() == 0:
             self.removeButton.setDisabled(0)
 
     def edit(self):
         self.setVisible(1)
 
     def browseImgFile(self):
-        file_list = self.browseFile(filters=['Image Files (*.jpg *.png *.gif *.bmp)','All files (*.*)'])
-        self.ImageFilesList.addItems(file_list)
+        fileList = self.browseFile(filters=['Image Files (*.jpg *.png *.gif *.bmp)','All files (*.*)'])
+        if not fileList:
+            return
+        self.widgetFileList.addItems(fileList)
+        self.imgFiles.extend(fileList)
 
     def browseImgDir(self):
-        file_list = self.browseFile(dir=1)
-        self.ImageFilesList.addItems(file_list)
+        fileList = self.browseFile(dir=1)
+        if not fileList:
+            return
+        self.widgetFileList.addItems(fileList)
+        self.imgFiles.extend(fileList)
 
     def apply(self):
         self.emit(SIGNAL('updateParent'), self.id)
         self.setVisible(0)
 
-    def __init__(self,id,parent=None, signalManager = None):
+    def __init__(self,id,parent=None, signalManager = None, name = "None", imgFiles = []):
         #get settings from the ini file, if they exist
         #self.loadSettings()
         OWImageSubFile.__init__(self, parent, signalManager, "File")
         #OWWidget.__init__(self, parent)
         buttonWidth = 1.5
-        self.name = "None"
+        self.name = name
         self.id = id
-        
+       
+        self.imgFiles = []
         #set default settings
         self.recentFiles=["(none)"]
         self.domain = None
- #GUI
+        #GUI
         w = QWidget()
 
         self.controlArea.layout().addWidget(w)
@@ -517,15 +608,13 @@ class OWEditImageDataset(OWImageSubFile, ImageLoaderBase):
         grid.addWidget(box, 0,0,3,2)
         OWGUI.lineEdit(box, self, "name", "Name of dataset: ", orientation="horizontal", tooltip="The name of the dataset used throughout the training")
 
-        self.ImageFilesList = OWGUI.listBox(box, self)
-        self.connect(self.ImageFilesList, SIGNAL('itemDoubleClicked(QListWidgetItem *)'), self.displayImage)
-        self.connect(self.ImageFilesList, SIGNAL('itemEntered(QListWidgetItem *)'), self.displayImage)
-        self.connect(self.ImageFilesList, SIGNAL('itemSelectionChanged()'), self.selectionChanged)
+        self.widgetFileList = OWGUI.listBox(box, self)
+        self.connect(self.widgetFileList, SIGNAL('itemDoubleClicked(QListWidgetItem *)'), self.displayImage)
+        self.connect(self.widgetFileList, SIGNAL('itemEntered(QListWidgetItem *)'), self.displayImage)
+        self.connect(self.widgetFileList, SIGNAL('itemSelectionChanged()'), self.selectionChanged)
         self.connect(self, SIGNAL('updateParent'), parent.updateDataset)
-        #OWGUI.connectControl(self.ImageFilesList, self, None, self.displayImage, "itemDoubleClicked(*QListWidgetItem)", None, None)
+        #OWGUI.connectControl(self.widgetFileList, self, None, self.displayImage, "itemDoubleClicked(*QListWidgetItem)", None, None)
 
-        self.filecombo = OWGUI.comboBox(box, self, "filename")
-        self.filecombo.setMinimumWidth(250)
         self.fileButton = OWGUI.button(box, self, 'Add file(s)', callback = self.browseImgFile, disabled=0, width=120)
         self.dirButton = OWGUI.button(box, self, 'Add directory', callback = self.browseImgDir, disabled=0, width=120)
         self.removeButton = OWGUI.button(box, self, 'Remove selected file', callback = self.removeFile, disabled=1, width=120)
@@ -544,7 +633,12 @@ class OWEditImageDataset(OWImageSubFile, ImageLoaderBase):
         
         self.applyButton = OWGUI.button(box, self, 'Apply', callback = self.apply, disabled=0, width=120)
 
-        self.show()
+        if len(imgFiles) == 0:
+            self.show()
+        else:
+            self.widgetFileList.addItems(imgFiles)
+            self.imgFiles.extend(imgFiles)
+
         #self.resize(150,100)
 
 if __name__ == "__main__":
