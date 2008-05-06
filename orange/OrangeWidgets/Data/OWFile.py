@@ -118,6 +118,10 @@ class OWSubFile(OWWidget):
 
     # Open a file, create data from it and send it over the data channel
     def openFileBase(self,fn, throughReload = 0, DK=None, DC=None):
+        QtCore.pyqtRemoveInputHook()
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
+
         dontCheckStored = throughReload and self.resetDomain
         self.resetDomain = self.domain != None
         oldDomain = getattr(self, "dataDomain", None)
