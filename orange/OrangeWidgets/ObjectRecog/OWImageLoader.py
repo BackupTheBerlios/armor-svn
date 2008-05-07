@@ -1,5 +1,6 @@
 
 
+
 """
 <name>ImageLoader</name>
 <description>Reads in images of all kinds.</description>
@@ -140,7 +141,7 @@ class OWImageLoader(OWImageSubFile, OWImageDataset):
         OWImageDataset.__init__(self)
 
         self.inputs = []
-        self.outputs = [("Images as Numpy Array", numpy.array), ("Images in PIL format", list)]
+        self.outputs = [("Images PIL", list)]
 
 	self.useGenerator = True
 	
@@ -170,7 +171,7 @@ class OWImageLoader(OWImageSubFile, OWImageDataset):
         self.saveDatasetButton = OWGUI.button(box, self, 'Save dataset', callback = self.saveDataset, disabled=0, width=self.dialogWidth)
         
         
-	OWGUI.checkBox(wbS, self, "useGenerator", "Use lazy evaluation")
+	OWGUI.checkBox(box, self, "useGenerator", "Use lazy evaluation")
         self.resize(self.dialogWidth,480)
 
 
@@ -180,7 +181,6 @@ class OWImageLoader(OWImageSubFile, OWImageDataset):
         self.infob = OWGUI.widgetLabel(box, '')
         self.warnings = OWGUI.widgetLabel(box, '')
 
-	OWGUI.checkBox(wbS, self, "useGenerator", "Use lazy evaluation")
 
         self.adjustSize()
 
@@ -191,13 +191,16 @@ class OWImageLoader(OWImageSubFile, OWImageDataset):
 #====================================
     def sendData(self):
 #====================================
+        if len(self.groups) == 0:
+	    return
+	
         self.prepareSet()
 	if self.useGenerator:
 	    data = self.iterator
 	else:
 	    self.createArray()
 	    data = self.allImages
-        self.send(data)
+        self.send("Images PIL", data)
         
         
 #==================================
@@ -287,6 +290,7 @@ class OWImageLoader(OWImageSubFile, OWImageDataset):
     def apply(self):
     # User pressed apply button, hide the dialog (should we close here?)
 #==================================
+        self.sendData()
         self.setVisible(0)
 
 #==================================
