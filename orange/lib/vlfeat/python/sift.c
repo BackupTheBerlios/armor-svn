@@ -30,11 +30,11 @@ void init_sift()  {
 
 /* ==== Create 1D Carray from PyArray ======================
    Assumes PyArray is contiguous in memory.             */
-double *pyvector_to_Carrayptrs(PyArrayObject *arrayin)  {
+short *pyvector_to_Carrayptrs(PyArrayObject *arrayin)  {
   int n;
 
   n=arrayin->dimensions[0];
-  return (double *) arrayin->data;  /* pointer to arrayin data as double */
+  return (short *) arrayin->data;  /* pointer to arrayin data as double */
 }
 
 
@@ -149,24 +149,27 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
   //  VL_USE_MATLAB_ENV ;
 
   /* Parse Python tuples into their appropriate variables */
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|iiiOiiiii", kwlist, &input, &O, &S, &o_min, &input_frames,
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|iiiOiiiii", kwlist, &matin, &O, &S, &o_min, &input_frames,
                                    &peak_thresh, &edge_thresh, &norm_thresh, &force_orientations, &verbose))
     return NULL;
 
-  matin = (PyArrayObject *) PyArray_ContiguousFromObject(input, PyArray_FLOAT, 2, 2);
-  if (matin == NULL)
-    return NULL;
+  //  matin = (PyArrayObject *) PyArray_ContiguousFromObject(input, PyArray_FLOAT, 2, 2);
+  //if (matin == NULL)
+  //  return NULL;
 
   /* -----------------------------------------------------------------
    *                                               Check the arguments
    * -------------------------------------------------------------- */
-  if (matin->nd != 2) {
-    printf("I must be a 2d matrix\n") ;
+  if (matin->nd != 2 || matin->descr->type_num != PyArray_FLOAT) {
+    printf("I must be a 2d matrix of dtype float32\n") ;
     return NULL;
   }
 
   // Pointer to the data array in matin
-  data = (vl_sift_pix *) pyvector_to_Carrayptrs(matin);
+  //data = (vl_sift_pix *) pyvector_to_Carrayptrs(matin);
+  // vl_sift_pix is float!
+  data = (vl_sift_pix *) matin->data;
+
   M = matin->dimensions[0];
   N = matin->dimensions[1];
 
@@ -189,7 +192,7 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
     VlSiftFilt        *filt ;
     vl_bool            first ;
     double            *frames = 0 ;
-    short             *descr  = 0 ;
+    vl_uint8          *descr  = 0 ;
     int                nframes = 0, reserved = 0, i,j,q ;
 
     /* create a filter to process the image */
@@ -313,7 +316,7 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
             reserved += 2 * nkeys ;
             frames = malloc (4 * sizeof(double) * reserved) ;
             if (nout > 1) {
-              descr  = malloc (128 * sizeof(short) * reserved) ;
+              descr  = malloc (128 * sizeof(vl_uint8) * reserved) ;
             }
           }
 
@@ -328,7 +331,7 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
             for (j = 0 ; j < 128 ; ++j) {
               double x = 512.0 * rbuf [j] ;
               x = (x < 255.0) ? x : 255.0 ;
-              descr [128 * nframes + j] = (short) (x) ;
+              descr [128 * nframes + j] = (vl_uint8) (x) ;
             }
           }
 
@@ -349,16 +352,16 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
       int dims [2] ;
 
       /* create an empty array */
-      dims [0] = 4 ;
-      dims [1] = nframes ;
+      dims [0] = nframes ;
+      dims [1] = 4 ;
       // We are allocating new memory here because its the only way to make
       // sure that it will get free()ed when there are no more references
       out_frames = (PyArrayObject*) PyArray_FromDims(2, dims, PyArray_DOUBLE);
       memcpy((double*) out_frames->data, frames, 4 * nframes * sizeof(double));
-      dims [0] = 128 ;
-      dims [1] = nframes ;
-      out_descr = (PyArrayObject*) PyArray_FromDims(2, dims, PyArray_SHORT);
-      memcpy((short *) out_descr->data, descr, 128 * nframes * sizeof(short));
+      dims [0] = nframes ; // Numpy Array uses row format, Matlab uses column format
+      dims [1] = 128 ;
+      out_descr = (PyArrayObject*) PyArray_FromDims(2, dims, PyArray_UBYTE);
+      memcpy((vl_uint8 *) out_descr->data, descr, 128 * nframes * sizeof(vl_uint8) );
     }
 
     /* cleanup */
