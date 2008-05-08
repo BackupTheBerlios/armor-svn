@@ -160,6 +160,7 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
   /* -----------------------------------------------------------------
    *                                               Check the arguments
    * -------------------------------------------------------------- */
+
   if (matin->nd != 2 || matin->descr->type_num != PyArray_FLOAT) {
     printf("I must be a 2d matrix of dtype float32\n") ;
     return NULL;
@@ -219,6 +220,8 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
       printf("siftpy: will force orientations? %s\n",
              force_orientations ? "yes" : "no") ;
     }
+    
+    Py_BEGIN_ALLOW_THREADS
 
     /* ...............................................................
      *                                             Process each octave
@@ -347,6 +350,7 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
     /* ...............................................................
      *                                                       Save back
      * ............................................................ */
+    Py_END_ALLOW_THREADS
 
     {
       int dims [2] ;
@@ -368,8 +372,6 @@ static PyObject *sift(PyObject *self, PyObject *args, PyObject *kwargs)
     vl_sift_delete (filt) ;
     free(frames);
     free(descr);
-    Py_DECREF(matin);
-
 
   } /* end: do job */
   return Py_BuildValue("(OO)",PyArray_Return(out_frames), PyArray_Return(out_descr));
