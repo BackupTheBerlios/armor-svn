@@ -30,7 +30,7 @@ import glob
 siftModule = Extension('_sift',
 		       language = 'c++',
 		       sources = glob.glob('source/vlfeat/vl/*.c') + ['source/vlfeat/python/sift.c'],
-		       extra_compile_args=['-g', '-pedantic', '-Wall', '-std=c89', '-O0' ,'-Wno-unused-function', '-Wno-long-long', '-D__LITTLE_ENDIAN__', '-std=c99'],
+		       extra_compile_args=['-g', '-pedantic', '-Wall', '-std=c89', '-O3' ,'-Wno-unused-function', '-Wno-long-long', '-D__LITTLE_ENDIAN__', '-std=c99'],
 		       include_dirs = [numpy.get_include(), 'source/vlfeat'],
 		       extra_link_args = ['-lm'])
 
