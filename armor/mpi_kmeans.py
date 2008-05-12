@@ -6,10 +6,11 @@ from numpy.ctypeslib import ndpointer
 import numpy as N
 from numpy import empty,array,reshape,arange
 import armor
+import os.path
 
 def kmeans(X, nclst, maxiter=0, numruns=1):
     """Wrapper for Peter Gehlers accelerated MPI-Kmeans routine."""
-    mpikmeanslib = N.ctypeslib.load_library("libmpikmeans.so", armor.__path__[0] + '/../')
+    mpikmeanslib = N.ctypeslib.load_library("libmpikmeans.so", os.path.join(armor.__path__[0], '..'))
     mpikmeanslib.kmeans.restype = c_double
     mpikmeanslib.kmeans.argtypes = [ndpointer(dtype=c_double, ndim=1, flags='C_CONTIGUOUS'), \
                                     ndpointer(dtype=c_double, ndim=1, flags='C_CONTIGUOUS'), \

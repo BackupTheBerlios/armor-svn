@@ -1,12 +1,13 @@
 import numpy, PIL.Image
 import armor.sift
 import unittest
+import os.path
 
 class TestSift(unittest.TestCase):
     def setUp(self):
 	self.path = armor.tests.__path__[0]
 	self.imgDataset = armor.ImageDataset()
-	self.imgDataset.loadFromXML(self.path + '/test_valid.xml')
+	self.imgDataset.loadFromXML(os.path.join(self.path, 'test_valid.xml'))
 
 	
     def testSiftGenerator(self):

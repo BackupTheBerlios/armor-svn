@@ -14,9 +14,9 @@
 # OWImageLoader: The main GUI, inherits from OWImageSubLoader
 #                and from ImageDataset as it is the logical
 #                extension to this class
-# ImageGroupDlg: Edit individual groups, add files, display images
+# ImageCategoryDlg: Edit individual categories, add files, display images
 #               Inherits from OWImageSubLoader and from
-#               ImageGroups as it is the logical extension of
+#               ImageCategories as it is the logical extension of
 #               that class
 
 
@@ -63,43 +63,7 @@ class OWImageSubFile(OWWidget):
         Returned is/are the selected item(s) with complete path."""
         if not filters:
             filters = ["All (*.*)"]
-        if inDemos:
-            try:
-                import win32api, win32con
-                t = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, "SOFTWARE\\Python\\PythonCore\\%i.%i\\PythonPath\\Orange" % sys.version_info[:2], 0, win32con.KEY_READ)
-                t = win32api.RegQueryValueEx(t, "")[0]
-                startfile = t[:t.find("orange")] + "orange\\doc\\datasets"
-            except:
-                startfile = ""
 
-            if not startfile or not os.path.exists(startfile):
-                d = OWGUI.__file__
-                if d[-8:] == "OWGUI.py":
-                    startfile = d[:-22] + "doc/datasets"
-                elif d[-9:] == "OWGUI.pyc":
-                    startfile = d[:-23] + "doc/datasets"
-
-            if not startfile or not os.path.exists(startfile):
-                d = os.getcwd()
-                if d[-12:] == "OrangeCanvas":
-                    startfile = d[:-12]+"doc/datasets"
-                else:
-                    if d[-1] not in ["/", "\\"]:
-                        d+= "/"
-                    startfile = d+"doc/datasets"
-
-            if not os.path.exists(startfile):
-                QMessageBox.information( None, "File", "Cannot find the directory with example data sets", QMessageBox.Ok + QMessageBox.Default)
-                return
-        else:
-            if len(self.recentFiles) == 0 or self.recentFiles[0] == "(none)":
-                if sys.platform == "darwin":
-                    startfile = user.home
-                else:
-                    startfile="."
-            else:
-                startfile=self.recentFiles[0]
-        
         dialog = QFileDialog()
         if dir == 0 and save == 0:
             dialog.setFileMode(QFileDialog.ExistingFiles)
@@ -131,7 +95,7 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
     We only inherit all the functionality ImageDataset and
     provide a GUI to operate on the data structure. Because of
     this, every time changes are made to the dataset, 
-    updateGroupList gets called.""" 
+    updateCategoryList gets called.""" 
 #*********************************************************
     def __init__(self, parent=None, signalManager = None):
         OWImageSubFile.__init__(self, parent, signalManager, "Image Dataset")
@@ -152,19 +116,19 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         # Create the GUI
         self.dialogWidth = 250
 
-        box = OWGUI.widgetBox(self.controlArea, 'Groups', addSpace = True, orientation=1)
+        box = OWGUI.widgetBox(self.controlArea, 'Categories', addSpace = True, orientation=1)
 
-        self.groupList = OWGUI.listBox(box, self)
-        self.connect(self.groupList, SIGNAL('itemDoubleClicked(QListWidgetItem *)'), self.editDataset)
-        self.connect(self.groupList, SIGNAL('itemEntered(QListWidgetItem *)'), self.editDataset)
-        self.connect(self.groupList, SIGNAL('itemSelectionChanged()'), self.selectionChanged)
+        self.categoryList = OWGUI.listBox(box, self)
+        self.connect(self.categoryList, SIGNAL('itemDoubleClicked(QListWidgetItem *)'), self.editDataset)
+        self.connect(self.categoryList, SIGNAL('itemEntered(QListWidgetItem *)'), self.editDataset)
+        self.connect(self.categoryList, SIGNAL('itemSelectionChanged()'), self.selectionChanged)
 
-        self.filecombo = OWGUI.comboBox(box, self, "Groups")
+        self.filecombo = OWGUI.comboBox(box, self, "Categories")
         self.filecombo.setMinimumWidth(self.dialogWidth)
 
-        self.createNewButton = OWGUI.button(box, self, 'Create new group', callback = self.createNew, disabled=0, width=self.dialogWidth)
+        self.createNewButton = OWGUI.button(box, self, 'Create new category', callback = self.createNew, disabled=0, width=self.dialogWidth)
         self.addExistingButton = OWGUI.button(box, self, 'Add existing dataset', callback = self.addExisting, disabled=0, width=self.dialogWidth)
-        self.removeSelectedButton = OWGUI.button(box, self, 'Remove selected group', callback = self.removeSelected, disabled=1, width=self.dialogWidth)
+        self.removeSelectedButton = OWGUI.button(box, self, 'Remove selected category', callback = self.removeSelected, disabled=1, width=self.dialogWidth)
         self.saveDatasetButton = OWGUI.button(box, self, 'Save dataset', callback = self.saveDataset, disabled=0, width=self.dialogWidth)
         
         
@@ -188,7 +152,7 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
 #====================================
     def sendData(self):
 #====================================
-        if len(self.groups) == 0:
+        if len(self.categories) == 0:
 	    return
 	
         self.prepareSet()
@@ -196,19 +160,19 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         
         
 #==================================
-    def addGroup(self, parent=None, name="", fnames=None, visible=False):
-        """Overwrite addGroup function to use ImageGroupDlg"""
+    def addCategory(self, parent=None, name="", fnames=None, visible=False):
+        """Overwrite addCategory function to use ImageCategoryDlg"""
 #==================================
         if not fnames:
             fnames = []
-        self.groups.append(ImageGroupDlg(parent=self, name=name, fnames=fnames, visible=visible))
-        self.updateGroupList()
+        self.categories.append(ImageCategoryDlg(parent=self, name=name, fnames=fnames, visible=visible))
+        self.updateCategoryList()
 
 #==================================
     def editDataset(self, dataset):
-        """Opens the edit dialog of the selected group"""
+        """Opens the edit dialog of the selected category"""
 #==================================
-        self.groups[self.groupList.currentRow()].edit()
+        self.categories[self.categoryList.currentRow()].edit()
 
 #==================================
     def selectionChanged(self):
@@ -222,11 +186,11 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         """Load an existing dataset from an xml file (special format)
         and add it to the dataset list"""
 #==================================
-        dataset_file = self.browseFile(filters=['Image Database (*.xml)','All files (*.*)'])
+        dataset_file = self.browseFile(filters=['Image Dataset (*.xml)','All files (*.*)'])
         if not dataset_file:
             return
         self.loadFromXML(str(dataset_file[0]))
-        self.updateGroupList()
+        self.updateCategoryList()
         
 #==================================
     def createNew(self):
@@ -234,34 +198,39 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         where you can choose which files to include
         and what name the dataset should have"""
 #==================================
-        self.addGroup(parent = self, visible=True)
+        self.addCategory(parent = self, visible=True)
         
 #==================================
     def removeSelected(self):
         """Remove dataset from the list of datasets"""
 #==================================
-        id = self.groupList.currentRow() 
-        self.delGroup(id)
-        self.updateGroupList()
+        id = self.categoryList.currentRow() 
+        self.delCategory(id)
+        self.updateCategoryList()
 
 #==================================
     def saveDataset(self):
         """Open a file dialog to select the filename and save the current datasets to the
         file in xml format"""
 #==================================
-        saveFile = str(self.browseFile(filters=['Image Database (*.xml)','All files (*.*)'], save=1)[0])
+        saveFile = str(self.browseFile(filters=['Image Dataset (*.xml)','All files (*.*)'], save=1)[0])
         if not saveFile:
             return
         self.saveToXML(saveFile)
 
 #==================================
-    def updateGroupList(self):
+    def updateCategoryList(self):
 #==================================
         # delete all items from the list
-        self.groupList.clear()
-        for group in self.groups:
-            self.groupList.addItem(group.name)
+        self.categoryList.clear()
+        for category in self.categories:
+            self.categoryList.addItem(str(category.name))
 
+	if len(self.categories) != 0:
+	    self.infoa.setText('%i categories with a total of %i images' % (len(self.categories), sum([len(imgs.fnames) for imgs in self.categories])))
+	    #self.infob.setText()
+	else:
+            self.infoa.setText("No data loaded")
 #==================================
     def setFileList(self):
     # set the file combo box
@@ -311,7 +280,7 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
             self.openFile(self.recentFiles[0])
 
 #***********************************************************************
-class ImageGroupDlg(OWImageSubFile, ImageGroup):
+class ImageCategoryDlg(OWImageSubFile, ImageCategory):
 # Dialog to create/edit a sinlge dataset.
 # Here, the user can add single image files or a whole directory and give
 # the dataset a name.
@@ -390,9 +359,9 @@ class ImageGroupDlg(OWImageSubFile, ImageGroup):
         #self.loadSettings()
         if not fnames:
             fnames = []
-        OWImageSubFile.__init__(self, parent, signalManager, "Group "+name)
+        OWImageSubFile.__init__(self, parent, signalManager, "Category "+name)
 
-        ImageGroup.__init__(self, name=name, fnames=fnames)
+        ImageCategory.__init__(self, name=name, fnames=fnames)
        
         #set default settings
         self.domain = None
@@ -408,7 +377,7 @@ class ImageGroupDlg(OWImageSubFile, ImageGroup):
         self.connect(self.widgetFileList, SIGNAL('itemDoubleClicked(QListWidgetItem *)'), self.displayImage)
         self.connect(self.widgetFileList, SIGNAL('itemEntered(QListWidgetItem *)'), self.displayImage)
         self.connect(self.widgetFileList, SIGNAL('itemSelectionChanged()'), self.selectionChanged)
-        self.connect(self, SIGNAL('updateParent'), parent.updateGroupList)
+        self.connect(self, SIGNAL('updateParent'), parent.updateCategoryList)
         #OWGUI.connectControl(self.widgetFileList, self, None, self.displayImage, "itemDoubleClicked(*QListWidgetItem)", None, None)
 
         self.fileButton = OWGUI.button(box, self, 'Add file(s)', callback = self.browseImgFile, disabled=0, width=self.dialogWidth)
