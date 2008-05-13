@@ -130,7 +130,7 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         self.addExistingButton = OWGUI.button(box, self, 'Add existing dataset', callback = self.addExisting, disabled=0, width=self.dialogWidth)
         self.removeSelectedButton = OWGUI.button(box, self, 'Remove selected category', callback = self.removeSelected, disabled=1, width=self.dialogWidth)
         self.saveDatasetButton = OWGUI.button(box, self, 'Save dataset', callback = self.saveDataset, disabled=0, width=self.dialogWidth)
-        
+       	self.autoAddButton = OWGUI.button(box, self, 'Automatically add dataset', callback = self.autoAdd, disabled=0, width=self.dialogWidth) 
         
 	OWGUI.checkBox(box, self, "useGenerator", "Use lazy evaluation")
         self.resize(self.dialogWidth,480)
@@ -168,6 +168,11 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         self.categories.append(ImageCategoryDlg(parent=self, name=name, fnames=fnames, visible=visible))
         self.updateCategoryList()
 
+    def autoAdd(self, parent=None):
+    	datasetDir = self.browseFile(dir=1)
+	self.addAutomatic(str(datasetDir[0]))
+	self.updateCategoryList()
+	
 #==================================
     def editDataset(self, dataset):
         """Opens the edit dialog of the selected category"""
@@ -331,7 +336,8 @@ class ImageCategoryDlg(OWImageSubFile, ImageCategory):
     def apply(self):
 #==================================
         self.emit(SIGNAL('updateParent'))
-        
+	self.setVisible(0)
+
 #==================================
     def ok(self):
 #==================================
