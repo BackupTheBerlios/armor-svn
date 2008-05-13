@@ -15,7 +15,7 @@ class ImageBase(object):
 
 	
     #=================
-    def loadOneImage(self, file, flatten=True, resize=False, verbose=False):
+    def loadOneImage(self, file, flatten=True, resize=False, verbose=True):
 	"""Loads the image with filename 'file' and returns the PIL.Image object"""
     #=================
         try:
@@ -63,7 +63,7 @@ class ImageBase(object):
         return (lst[0:length], lst[length:len(lst)])
 
     def absFName(self, fname):
-	if fname[0] == '.': #relative path give
+	if fname[0] == '.': #relative path given
 	    return os.path.join(self.datasetPath, fname)
 	else:
 	    return fname
@@ -111,10 +111,10 @@ class ImageDataset(ImageBase):
 	self.classes = set()
 	
         for category in self:
-	    self.classes.add(category.name)
+	    self.classes.add(str(category.name))
 	    for fname in category:
 		self.allFNames.append(self.absFName(fname))
-		self.allIDs.append(category.name)
+		self.allIDs.append(str(category.name))
         
         # Permutate them
 #        if self.doPermutate:

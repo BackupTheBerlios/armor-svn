@@ -315,7 +315,7 @@ class ImageCategoryDlg(OWImageSubFile, ImageCategory):
         fileList = self.browseFile(filters=['Image Files (*.jpg *.png *.gif *.bmp)','All files (*.*)'])
         if not fileList:
             return
-        self.addFiles(fileList)
+        self.addFiles([str(file) for file in fileList])
         self.updateFileList()
 
 #==================================

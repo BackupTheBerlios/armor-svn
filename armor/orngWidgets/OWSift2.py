@@ -1,6 +1,6 @@
 """
-<name>Sift</name>
-<description>Scale invariant feature transform.</description>
+<name>Sift2</name>
+<description>Scale invariant feature transform by Rob Hess.</description>
 <icon>icons/kNearestNeighbours.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
 <priority>25</priority>
@@ -9,12 +9,12 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from exceptions import Exception
-import armor
+import armor.sift2
 
 class OWSift2(OWWidget):
     settingsList = []
 
-    def __init__(self, parent=None, signalManager = None, name='sift'):
+    def __init__(self, parent=None, signalManager = None, name='sift2'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
 
         self.callbackDeposit = []
@@ -45,7 +45,7 @@ class OWSift2(OWWidget):
             return
 	print data
         self.data = data
-        self.sift = armor.sift2(imgContainer=data)
+        self.sift = armor.sift2.sift2(imgContainer=data)
 	# Copy the generator so different widgets get different generators
 	output = self.sift.getData(useGenerator=self.useGenerator)
 	self.send("Descriptors", output)
