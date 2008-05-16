@@ -2,7 +2,7 @@ import mpi_kmeans
 import types
 import numpy as npy
 from scipy import cluster
-from armor import SeqContainer
+import armor.SeqContainer
 
 class kmeans(object):
     def __init__(self, input, numClusters, maxiter=0, numruns=1):
@@ -17,7 +17,7 @@ class kmeans(object):
 	self.histogram()
 
     def getData(self):
-	return SeqContainer(self.dataHistogram, classes=self.input.classes, useGenerator=False)
+	return armor.SeqContainer.SeqContainer(self.dataHistogram, classes=self.input.classes, useGenerator=False)
     
     def runKmeans(self):
 	# For the clustering we need the data without labels and 
