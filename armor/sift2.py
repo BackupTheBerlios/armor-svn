@@ -3,16 +3,16 @@ import armor.prototypes
 
 class sift2(armor.prototypes.SeqProcessor):
     def __init__(self, images, useGenerator=True, **kwargs):
-	armor.prototypes.SeqProcessor.__init__(self, images, useGenerator)
-	self.kwargs = kwargs
+        armor.prototypes.SeqProcessor.__init__(self, images, useGenerator)
+        self.kwargs = kwargs
 
     def preprocess(self, img):
         img.save('tmp.pgm')
-	return img
+        return img
     
     def process(self, img):
         call(['./siftfeat', '-x', '-o', 'tmp.out', 'tmp.pgm'])
-	return('tmp.out')
+        return('tmp.out')
     
     def postprocess(self, fname = 'tmp.out'):
         f = open(fname,'rb')
@@ -33,3 +33,4 @@ class sift2(armor.prototypes.SeqProcessor):
                 break
             f.seek(pos)
         return (xlist, ylist)
+

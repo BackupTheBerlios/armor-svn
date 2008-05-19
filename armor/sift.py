@@ -1,18 +1,17 @@
 
 from numpy import array,ndarray,float32
-import types
 import armor.prototypes
 
-class sift(armor.prototypes.SeqProcessor):
+class siftObj(armor.prototypes.SeqProcessor):
     def __init__(self, images, useGenerator=True, **kwargs):
-	armor.prototypes.SeqProcessor.__init__(self, images, useGenerator)
-	self.kwargs = kwargs	    
+        armor.prototypes.SeqProcessor.__init__(self, images, useGenerator)
+        self.kwargs = kwargs	    
 
     def process(self, img):
-	return sift(img, **self.kwargs)
+        return sift(img, **self.kwargs)
 
         
-def sift(self, *args, **kwargs):
+def sift(*args, **kwargs):
     """ SIFT  Scale-invariant feature transform
     (F,D) = sift(I) where computes the SIFT frames (keypoints) F and 
     the SIFT descriptors D of the image I. I is a gray-scale image in 
