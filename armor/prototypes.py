@@ -5,10 +5,6 @@ class Prototype(object):
         self.inContainer = inContainer
         self.group = None
         
-#    def iterator(self):
-#        self.seqContainer.reset()
-        
-
 class Producer(Prototype):
     def __init__(self, inContainer, classes=None, useGenerator=True):
         Prototype.__init__(self, inContainer)

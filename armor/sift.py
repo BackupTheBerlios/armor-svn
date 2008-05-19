@@ -8,7 +8,7 @@ class siftObj(armor.prototypes.SeqProcessor):
         self.kwargs = kwargs	    
 
     def process(self, img):
-        return sift(img, **self.kwargs)
+        return sift(array(img, ndtype="float"), **self.kwargs)
 
         
 def sift(*args, **kwargs):
