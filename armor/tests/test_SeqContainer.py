@@ -1,6 +1,7 @@
 import random
 import unittest
-from armor import SeqContainer
+from armor.SeqContainer import SeqContainer
+import armor.prototype
 
 class TestSeqContainer(unittest.TestCase):
     def testInvalidInput(self):
@@ -17,19 +18,40 @@ class TestSeqContainer(unittest.TestCase):
 	SeqContainer(self.iterator, useGenerator=True)
 
     def testIterating(self):
-	for i,j in zip(self.seqContainer, range(10)):
+	iterator = self.seqContainer
+	for i,j in zip(iterator, range(10)):
 	    self.assertEqual(i,j, 'Values do not match')
 
-    def testReset(self):
-	self.seqContainer.reset()
-	self.testIterating()
-	
     def iterator(self):
 	for i in range(10):
 	    yield i
 
     def testToList(self):
 	self.assertEqual(list(self.seqContainer), range(10))
+
+    def testGroup(self):
+	producer = armor.prototype.Producer(self.iterator, useGenerator=True)
+	consumer1 = armor.prototype.SeqProcessor(producer.outContainer)
+	consumer2 = armor.prototype.SeqProcessor(producer.outContainer)
+	self.assertEqual([i for i in producer.outContainer], range(10))
+	self.assertEqual([i for i in producer.outContainer], range(10))
+	
+	consumer1.outContainer.register('test1', group=1)
+	consumer2.outContainer.register('test2', group=1)
+	self.assertEqual(producer.outContainer.references.values(), [1, 1])
+	
+	iter1 = consumer1.outContainer.getIter(group=1)
+	iter2 = consumer2.outContainer.getIter(group=1)
+	self.assertEqual([i for i in iter1], range(10))
+	self.assertEqual([i for i in iter2], range(10))
+
+	iter1 = consumer1.outContainer.getIter(group=1)
+	iter2 = consumer2.outContainer.getIter(group=1)
+	self.assertEqual([i for i in iter1], range(10))
+	self.assertEqual([i for i in iter2], range(10))
+	
+	
+	
 
 class TestList(TestSeqContainer):
     def setUp(self):
@@ -44,7 +66,7 @@ class TestGeneratorToList(TestSeqContainer):
 	self.seqContainer = SeqContainer(self.iterator, useGenerator=False)
 
 
-testAll = ['testIterating', 'testReset', 'testToList']
+testAll = ['testIterating', 'testToList', 'testGroup']
 
 def suiteInput():
     tests = ['testInvalidInput', 'testCorrectInput']

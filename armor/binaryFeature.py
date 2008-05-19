@@ -1,20 +1,25 @@
 from subprocess import call
-import armor.prototypes
+import armor.SeqContainer
 
-class sift2(armor.prototypes.SeqProcessor):
-    def __init__(self, images, useGenerator=True, **kwargs):
-	armor.prototypes.SeqProcessor.__init__(self, images, useGenerator)
-	self.kwargs = kwargs
+class sift2(object):
+    def __init__(self, imgContainer, **kwargs):
+        self.imgContainer = imgContainer
+        self.kwargs = kwargs
 
-    def preprocess(self, img):
+    def iterator(self):
+        for img in self.imgContainer:
+            self.runAlgorithm(img[0], **self.kwargs)
+            yield (self.readDescrFile()[1], img[1])
+        #self.imgContainer.reset()
+
+    def getData(self, useGenerator=True):
+	return armor.SeqContainer(self.iterator, classes=self.imgContainer.classes, useGenerator=useGenerator)
+
+    def runAlgorithm(self, img, **kwargs):
         img.save('tmp.pgm')
-	return img
-    
-    def process(self, img):
         call(['./siftfeat', '-x', '-o', 'tmp.out', 'tmp.pgm'])
-	return('tmp.out')
-    
-    def postprocess(self, fname = 'tmp.out'):
+
+    def readDescrFile(self, fname = 'tmp.out'):
         f = open(fname,'rb')
         f.readline() #skip the first line
         xlist = []
@@ -33,3 +38,4 @@ class sift2(armor.prototypes.SeqProcessor):
                 break
             f.seek(pos)
         return (xlist, ylist)
+
