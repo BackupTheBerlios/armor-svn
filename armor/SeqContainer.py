@@ -33,16 +33,9 @@ class SeqContainer(object):
         return data
 
     def __iter__(self):
-	return self
-
-    def next(self):
-	if not self.iterator:
-	    self.iterator = iter(self.getDataAsIter())
-	for item in self.iterator:
-	    yield item
-	# Reset:
 	self.iterator = iter(self.getDataAsIter())
-	
+	return self.iterator
+
     def reset(self, group=None):
 	if not group:
 	    self.iterator = None
@@ -55,7 +48,7 @@ class SeqContainer(object):
 
     def getIter(self, group=None):
         if not group:
-            return self
+            return self.__iter__()
 
         if not self.iterpool.has_key(group) or (self.iterpool.has_key(group) and len(self.iterpool[group]) == 0):
             # How many streams belong to 'group'?

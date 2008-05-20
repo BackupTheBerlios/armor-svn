@@ -4,7 +4,7 @@ import os.path
 import xml.dom.minidom
 import numpy as npy
 from PIL import Image
-import armor
+import armor.prototypes
 
 #****************************************************************
 class ImageBase(object):
@@ -70,12 +70,12 @@ class ImageBase(object):
 
 
 #****************************************
-class ImageDataset(ImageBase):
+class ImageDataset(ImageBase, armor.prototypes.Producer):
 #****************************************
 #==================================
     def __init__(self, categories=None, splitRatio=.5, doPermutate=False):
 #==================================
-        ImageBase.__init__(self)
+        super(ImageDataset, self).__init__()
         if not categories:
             categories = []
         self.categories = categories
@@ -85,21 +85,12 @@ class ImageDataset(ImageBase):
 	self.allIDs = None
 	self.classes = None
 
-	
-    def getData(self, useGenerator=False):
-	"""Return SeqContainer containing the PIL.Images and the belonging classes,
-	if useGenerator is True, the images are loaded only when they are accessed,
-	this saves memory"""
-        if not self.allFNames:
-            self.prepareSet()
-	return armor.SeqContainer(self.iterator, classes=self.classes, useGenerator=useGenerator)
-	
 
     def __iter__(self):
 	return iter(self.categories)
     
 #==================================
-    def prepareSet(self):
+    def prepare(self, useGenerator=True):
         """Once all files are added to the dataset this function is called
         to create a list of all images of all categories, this list is then
         permutated and split into a training and validation set"""
@@ -115,7 +106,11 @@ class ImageDataset(ImageBase):
 	    for fname in category:
 		self.allFNames.append(self.absFName(fname))
 		self.allIDs.append(str(category.name))
-        
+
+        self.outContainer = armor.SeqContainer.SeqContainer(self.iterator, \
+							    owner=self, \
+                                                            classes=self.classes, \
+                                                            useGenerator=useGenerator)
         # Permutate them
 #        if self.doPermutate:
 #            permutated = self.randperm((self.allFNames, self.allIDs))

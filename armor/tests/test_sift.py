@@ -10,11 +10,11 @@ class TestSift(unittest.TestCase):
 	self.path = armor.tests.__path__[0]
 	self.imgDataset = armor.ImageDataset.ImageDataset()
 	self.imgDataset.loadFromXML(os.path.join(self.path, 'test_valid.xml'))
-
+	self.imgDataset.prepare()
 	
     def testSiftGenerator(self):
 	#TODO: Check if values are correct descriptors
-	self.sft = armor.sift(self.imgDataset.outContainer, Verbose=1)
+	self.sft = armor.sift.siftObj(self.imgDataset.outContainer, Verbose=1)
 	list(self.sft.outContainer)
 
     def testSiftList(self):

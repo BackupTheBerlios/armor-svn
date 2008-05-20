@@ -7,18 +7,14 @@ class Prototype(object):
         
 class Producer(Prototype):
     def __init__(self, inContainer, classes=None, useGenerator=True):
-        Prototype.__init__(self, inContainer)
-        self.outContainer = armor.SeqContainer.SeqContainer(inContainer, \
-                                                            owner=self, \
-                                                            classes=classes, \
-                                                            useGenerator=useGenerator)
-
+        super(Producer, self).__init__(inContainer)
+	
     def register(self, reference, group=None):
         self.group = group
 
 class SeqProcessor(Prototype):
     def __init__(self, inContainer, useGenerator=True):
-        Prototype.__init__(self, inContainer)
+        super(SeqProcessor, self).__init__(inContainer)
         self.outContainer = armor.SeqContainer.SeqContainer(self.iterator, \
                                                             owner=self, \
                                                             classes = self.inContainer.classes, \
@@ -47,3 +43,23 @@ class SeqProcessor(Prototype):
         return item
 	    
 
+class BulkProcessor(SeqProcessor):
+
+    def iterator(self):
+	inData = []
+	inLabels = []
+
+	#Split data and labels
+	for item in inContainerList:
+	    inData.append(item[0])
+	    inLabels.append(item[1])
+	# Reset the input-iterator
+	self.inContainer.reset(group=self.group)
+	
+	outData = self.process(inData, inLabels)
+
+	for item in outData:
+	    yield item
+
+    def process(self, data, labels):
+	return (data, labels)

@@ -4,11 +4,11 @@ import armor.prototypes
 
 class siftObj(armor.prototypes.SeqProcessor):
     def __init__(self, images, useGenerator=True, **kwargs):
-        armor.prototypes.SeqProcessor.__init__(self, images, useGenerator)
-        self.kwargs = kwargs	    
+        super(siftObj, self).__init__(images, useGenerator)
+        self.kwargs = kwargs
 
     def process(self, img):
-        return sift(array(img, ndtype="float"), **self.kwargs)
+	return sift(array(img[0], dtype=float32), **self.kwargs)
 
         
 def sift(*args, **kwargs):
@@ -51,7 +51,9 @@ def sift(*args, **kwargs):
         
     Verbose
     Be verbose (may be repeated)."""
+
     import _sift
+    
     # Type checking, all other type checking is done inside the c function
     assert type(kwargs.get('Octave')) is type(0) or type(kwargs.get('Octave')) is type(None), \
            "'Octave' must be an integer"
