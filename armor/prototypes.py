@@ -50,7 +50,7 @@ class BulkProcessor(SeqProcessor):
 	inLabels = []
 
 	#Split data and labels
-	for item in inContainerList:
+	for item in self.inContainer:
 	    inData.append(item[0])
 	    inLabels.append(item[1])
 	# Reset the input-iterator

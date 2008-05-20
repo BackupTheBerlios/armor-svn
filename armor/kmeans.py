@@ -4,17 +4,12 @@ import numpy as npy
 from scipy import cluster
 import armor.prototypes
 
-class kmeans(armor.prototypes.BulkProcessor):
+class kmeansObj(armor.prototypes.BulkProcessor):
     def __init__(self, inContainer, numClusters, maxiter=0, numruns=1, useGenerator=True):
 	super(kmeansObj, self).__init__(inContainer, useGenerator)
         self.numClusters = numClusters
         self.maxiter = maxiter
         self.numruns = numruns
-
-	self.runKmeans()
-	self.quantize()
-	del self.data
-	self.histogram()
 
     def process(self, data, labels):
 	# Flatten the list (if we get descriptors, we get a list of 2-D arrays)
@@ -23,7 +18,7 @@ class kmeans(armor.prototypes.BulkProcessor):
 		data = npy.concatenate(data)
 
 	# Perform KMeans clustering
-	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(data, self.numClusters, self.maxiter, self.numruns)
+	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(data.T, self.numClusters, self.maxiter, self.numruns)
 
 	return self.codebook
 	    
