@@ -1,9 +1,18 @@
 from numpy import array,median,std,mean,log,concatenate
 from c_types import c_double
+import armor.prototypes
+
+class normalizeObj(armor.prototypes.SeqProcessor):
+    def __init__(self, inContainer, operation):
+	super(normalizeObj, self).__init__(inContainer)
+	self.operation = operation
+
+    def process(self, (data, label)):
+	
 
 # The following code was kindly provided by Christoph Lampert
 # (christoph.lampert@tuebingen.mpg.de) and comes under the
-# Apache-License
+# Apache-License.
 
 def normalize_data(Xlist, operation):
     """Normalize data using the specified methods: 'bin'arize, 'L1', 'L2', 'whiten'ing, 

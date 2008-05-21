@@ -32,6 +32,7 @@ from armor.ImageDataset import *
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWImageSubFile(OWWidget):
+    """Basic functionality like opening a file dialog"""
     settingsList=["recentFiles"]
     allFileWidgets = []
 
@@ -91,22 +92,19 @@ class OWImageSubFile(OWWidget):
         
 #*********************************************************
 class OWImageLoader(OWImageSubFile):
-    """Class with a dialog to create your own image dataset.
-    We only inherit all the functionality ImageDataset and
-    provide a GUI to operate on the data structure. Because of
-    this, every time changes are made to the dataset, 
-    updateCategoryList gets called.""" 
+    """Dialog to create your own image dataset.
+    Basically, this is a frontend to armor.ImageDataset.ImageDataset."""
 #*********************************************************
     def __init__(self, parent=None, signalManager = None):
         OWImageSubFile.__init__(self, parent, signalManager, "Image Dataset")
 
-	self.imgDataset = armor.ImageDataset.ImageDataset()
-	
+        self.imgDataset = armor.ImageDataset.ImageDataset()
+        
         self.inputs = []
         self.outputs = [("Images PIL", SeqContainer), ("Attritube Definitions", orange.Domain)]
 
-	self.useGenerator = True
-	
+        self.useGenerator = True
+        
         #set default settings
         self.recentFiles=["(none)"]
         self.domain = None
@@ -131,9 +129,9 @@ class OWImageLoader(OWImageSubFile):
         self.addExistingButton = OWGUI.button(box, self, 'Add existing dataset', callback = self.addExisting, disabled=0, width=self.dialogWidth)
         self.removeSelectedButton = OWGUI.button(box, self, 'Remove selected category', callback = self.removeSelected, disabled=1, width=self.dialogWidth)
         self.saveDatasetButton = OWGUI.button(box, self, 'Save dataset', callback = self.saveDataset, disabled=0, width=self.dialogWidth)
-       	self.autoAddButton = OWGUI.button(box, self, 'Automatically add dataset', callback = self.autoAdd, disabled=0, width=self.dialogWidth) 
+        self.autoAddButton = OWGUI.button(box, self, 'Automatically add dataset', callback = self.autoAdd, disabled=0, width=self.dialogWidth) 
         
-	OWGUI.checkBox(box, self, "useGenerator", "Use lazy evaluation")
+        OWGUI.checkBox(box, self, "useGenerator", "Use lazy evaluation")
         self.resize(self.dialogWidth,480)
 
 
@@ -148,46 +146,48 @@ class OWImageLoader(OWImageSubFile):
 
         self.applyButton = OWGUI.button(self.controlArea, self, 'Apply', callback = self.apply, disabled=0, width=self.dialogWidth)
 
-	self.inChange = False
+        self.inChange = False
 
 #====================================
     def sendData(self):
+        """Prepare the ImageDataset and send it to the receiving widgets"""
 #====================================
         if len(self.imgDataset.categories) == 0:
-	    return
-	
+            return
+        
         self.imgDataset.prepare(useGenerator=self.useGenerator)
         self.send("Images PIL", self.imgDataset.outContainer)
         
         
 #==================================
     def addCategory(self, parent=None, name="", fnames=None, visible=False):
-        """Overwrite addCategory function to use ImageCategoryDlg"""
+        """Add a new category to ImageDataset and display dialog to add/remove images"""
 #==================================
         if not fnames:
             fnames = []
-        #self.imgDataset.categories.append(ImageCategoryDlg(parent=self, name=name, fnames=fnames, visible=visible))
-	category = self.imgDataset.addCategory(name=name, fnames=fnames)
-	if visible:
-	    # Create GUI
-	    ImageCategoryDlg(category, parent=self)
-	    
+        category = self.imgDataset.addCategory(name=name, fnames=fnames)
+        if visible:
+            # Create GUI
+            ImageCategoryDlg(category, parent=self)
+
+        # Update the widget list because something changed in imgDataset
         self.updateCategoryList()
 
+#===================================
     def autoAdd(self, parent=None):
-    	datasetDir = self.browseFile(dir=1)
-	self.imgDataset.addAutomatic(str(datasetDir[0]))
-	self.updateCategoryList()
-	
+        """Wrapper for ImageDataset.autoAdd(). Let the user choose from which directory to pool."""
+#===================================
+        datasetDir = self.browseFile(dir=1)
+        self.imgDataset.addAutomatic(str(datasetDir[0]))
+        self.updateCategoryList()
+        
 #==================================
     def editDataset(self, dataset):
-        """Opens the edit dialog of the selected category"""
+        """Creates an edit dialog for the selected category"""
 #==================================
         selectedCategory = self.imgDataset.categories[self.categoryList.currentRow()]
-	# Create a separate GUI
-	ImageCategoryDlg(selectedCategory, parent=self)
-	
-#        self.categories[self.categoryList.currentRow()].edit()
+        # Create a separate GUI for editing
+        ImageCategoryDlg(selectedCategory, parent=self)
 
 #==================================
     def selectionChanged(self):
@@ -198,8 +198,9 @@ class OWImageLoader(OWImageSubFile):
 
 #==================================
     def addExisting(self):
-        """Load an existing dataset from an xml file (special format)
-        and add it to the dataset list"""
+        """Wrapper for ImageDataset.loadFromXML().
+        Load an existing dataset from an xml file (special format)
+        and add it to the dataset list."""
 #==================================
         dataset_file = self.browseFile(filters=['Image Dataset (*.xml)','All files (*.*)'])
         if not dataset_file:
@@ -235,18 +236,24 @@ class OWImageLoader(OWImageSubFile):
 
 #==================================
     def updateCategoryList(self):
+        """Called to update the GUI from the imgDataset structure.
+        This needs to get called everytime there are changes to the categories
+        in self.imgDataset.
+        """
 #==================================
         # delete all items from the list
+        # TODO: check if something changed at all
         self.categoryList.clear()
         for category in self.imgDataset.categories:
             self.categoryList.addItem(str(category.name))
 
-	if len(self.imgDataset.categories) != 0:
-	    self.infoa.setText('%i categories with a total of %i images' % (len(self.imgDataset.categories), sum([len(category.fnames) for category in self.imgDataset.categories])))
-	    #self.infob.setText()
-	else:
+        # Set dataset summary in infobox
+        if len(self.imgDataset.categories) != 0:
+            self.infoa.setText('%i categories with a total of %i images' % (len(self.imgDataset.categories), sum([len(category.fnames) for category in self.imgDataset.categories])))
+            #self.infob.setText()
+        else:
             self.infoa.setText("No data loaded")
-	    
+            
 #==================================
     def setFileList(self):
     # set the file combo box
@@ -297,18 +304,18 @@ class OWImageLoader(OWImageSubFile):
 
 #***********************************************************************
 class ImageCategoryDlg(OWImageSubFile):
-# Dialog to create/edit a single dataset.
-# Here, the user can add single image files or a whole directory and give
-# the dataset a name.
+    """Dialog to create/edit a single category.
+    The user can add single image files or a whole directory and give
+    the dataset a name."""
 #***********************************************************************
 #==================================
     def __init__(self, imgCategory, parent=None, signalManager = None, visible=True):
 #==================================
         #get settings from the ini file, if they exist
         #self.loadSettings()
-	self.imgCategory = imgCategory
-	self.name = self.imgCategory.name
-	
+        self.imgCategory = imgCategory
+        self.name = self.imgCategory.name
+        
         OWImageSubFile.__init__(self, parent, signalManager, "Category "+self.imgCategory.name)
 
         #set default settings
@@ -380,7 +387,7 @@ class ImageCategoryDlg(OWImageSubFile):
     def apply(self):
 #==================================
         self.emit(SIGNAL('updateParent'))
-	self.setVisible(0)
+        self.setVisible(0)
 
 #==================================
     def ok(self):

@@ -5,7 +5,14 @@ from scipy import cluster
 import armor.prototypes
 
 class kmeansObj(armor.prototypes.BulkProcessor):
-    def __init__(self, inContainer, numClusters, maxiter=0, numruns=1, useGenerator=True):
+    """Class to perform kmeans clustering on input data (e.g. descriptors).
+    Returns a codebook.
+    For performance reasons we use the kmeans implementation of Peter Gehler
+    (pgehler@tuebingen.mpg.de, URL: http://mloss.org/software/view/48/)
+
+    Default is lazy, so the clustering will only be performed when it gets
+    accessed."""
+    def __init__(self, inContainer, numClusters, maxiter=0, numruns=1, useGenerator=armor.useGenerator):
 	super(kmeansObj, self).__init__(inContainer, useGenerator)
         self.numClusters = numClusters
         self.maxiter = maxiter

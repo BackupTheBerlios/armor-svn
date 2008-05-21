@@ -12,7 +12,7 @@ class surf(object):
             yield (self.readDescrFile()[1], img[1])
         #self.imgContainer.reset()
 
-    def getData(self, useGenerator=True):
+    def getData(self, useGenerator=armor.useGenerator):
 	return armor.SeqContainer(self.iterator, classes=self.imgContainer.classes, useGenerator=useGenerator)
 
     def runAlgorithm(self, img, **kwargs):

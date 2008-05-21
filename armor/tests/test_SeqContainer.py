@@ -9,7 +9,6 @@ class TestSeqContainer(unittest.TestCase):
         self.assertRaises(TypeError, SeqContainer, 'teststring')
         self.assertRaises(TypeError, SeqContainer, 1)
         self.assertRaises(TypeError, SeqContainer, None)
-        self.assertRaises(TypeError, SeqContainer, [1,2,3], useGenerator=True)
         
     def testCorrectInput(self):
         SeqContainer(range(10))
@@ -30,6 +29,8 @@ class TestSeqContainer(unittest.TestCase):
 
     def testGroup(self):
         producer = armor.prototypes.Producer(self.iterator, useGenerator=True)
+	producer.outContainer = SeqContainer(producer.inContainer, \
+				  	    owner = producer)
         consumer1 = armor.prototypes.SeqProcessor(producer.outContainer)
         consumer2 = armor.prototypes.SeqProcessor(producer.outContainer)
         self.assertEqual([i for i in producer.outContainer], range(10))
@@ -54,15 +55,15 @@ class TestSeqContainer(unittest.TestCase):
 
 class TestList(TestSeqContainer):
     def setUp(self):
-        self.seqContainer = SeqContainer(range(10))     
+        self.seqContainer = SeqContainer(range(10), useGenerator=False)     
 
 class TestGenerator(TestSeqContainer):
     def setUp(self):
         self.seqContainer = SeqContainer(self.iterator, useGenerator=True)
 
-class TestGeneratorToList(TestSeqContainer):
-    def setUp(self):
-        self.seqContainer = SeqContainer(self.iterator, useGenerator=False)
+#class TestGeneratorToList(TestSeqContainer):
+#    def setUp(self):
+#        self.seqContainer = SeqContainer(self.iterator, useGenerator=False)
 
 
 testAll = ['testIterating', 'testToList', 'testGroup']
@@ -77,10 +78,10 @@ def suiteList():
 def suiteGenerator():
     return unittest.TestSuite(map(TestGenerator, testAll))
 
-def suiteGeneratorToList():
-    return unittest.TestSuite(map(TestGeneratorToList, testAll))
+#def suiteGeneratorToList():
+#    return unittest.TestSuite(map(TestGeneratorToList, testAll))
 
 unittest.TextTestRunner(verbosity=2).run(suiteInput())
 unittest.TextTestRunner(verbosity=2).run(suiteList())
 unittest.TextTestRunner(verbosity=2).run(suiteGenerator())
-unittest.TextTestRunner(verbosity=2).run(suiteGeneratorToList())
+#unittest.TextTestRunner(verbosity=2).run(suiteGeneratorToList())

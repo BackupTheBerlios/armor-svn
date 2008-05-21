@@ -2,7 +2,7 @@ from subprocess import call
 import armor.prototypes
 
 class sift2(armor.prototypes.SeqProcessor):
-    def __init__(self, images, useGenerator=True, **kwargs):
+    def __init__(self, images, useGenerator=armor.useGenerator, **kwargs):
         super(sift2, self).__init__(images, useGenerator)
         self.kwargs = kwargs
 

@@ -1,5 +1,6 @@
 from subprocess import call
 import armor.SeqContainer
+import armor
 
 class sift2(object):
     def __init__(self, imgContainer, **kwargs):
@@ -12,7 +13,7 @@ class sift2(object):
             yield (self.readDescrFile()[1], img[1])
         #self.imgContainer.reset()
 
-    def getData(self, useGenerator=True):
+    def getData(self, useGenerator=armor.useGenerator):
 	return armor.SeqContainer(self.iterator, classes=self.imgContainer.classes, useGenerator=useGenerator)
 
     def runAlgorithm(self, img, **kwargs):
