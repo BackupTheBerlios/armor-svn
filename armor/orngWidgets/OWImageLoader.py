@@ -3,7 +3,7 @@
 <description>Reads in images of all kinds.</description>
 <icon>icons/File.png</icon>
 <contact>Thomas Wiecki (thomas.wiecki(@at@)gmail.com)</contact>
-<priority>11</priority>
+<priority>1</priority>
 """
 
 #################################################################
@@ -29,7 +29,7 @@ import os
 import os.path
 import numpy
 from armor.ImageDataset import *
-
+from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWImageSubFile(OWWidget):
     settingsList=["recentFiles"]
@@ -90,7 +90,7 @@ class OWImageSubFile(OWWidget):
 
         
 #*********************************************************
-class OWImageLoader(OWImageSubFile, ImageDataset):
+class OWImageLoader(OWImageSubFile):
     """Class with a dialog to create your own image dataset.
     We only inherit all the functionality ImageDataset and
     provide a GUI to operate on the data structure. Because of
@@ -99,10 +99,11 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
 #*********************************************************
     def __init__(self, parent=None, signalManager = None):
         OWImageSubFile.__init__(self, parent, signalManager, "Image Dataset")
-        ImageDataset.__init__(self)
 
+	self.imgDataset = armor.ImageDataset.ImageDataset()
+	
         self.inputs = []
-        self.outputs = [("Images PIL", list), ("Attritube Definitions", orange.Domain)]
+        self.outputs = [("Images PIL", SeqContainer), ("Attritube Definitions", orange.Domain)]
 
 	self.useGenerator = True
 	
@@ -152,11 +153,11 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
 #====================================
     def sendData(self):
 #====================================
-        if len(self.categories) == 0:
+        if len(self.imgDataset.categories) == 0:
 	    return
 	
-        self.prepareSet()
-        self.send("Images PIL", self.getData(useGenerator = self.useGenerator))
+        self.imgDataset.prepare(useGenerator=self.useGenerator)
+        self.send("Images PIL", self.imgDataset.outContainer)
         
         
 #==================================
@@ -165,19 +166,28 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
 #==================================
         if not fnames:
             fnames = []
-        self.categories.append(ImageCategoryDlg(parent=self, name=name, fnames=fnames, visible=visible))
+        #self.imgDataset.categories.append(ImageCategoryDlg(parent=self, name=name, fnames=fnames, visible=visible))
+	category = self.imgDataset.addCategory(name=name, fnames=fnames)
+	if visible:
+	    # Create GUI
+	    ImageCategoryDlg(category, parent=self)
+	    
         self.updateCategoryList()
 
     def autoAdd(self, parent=None):
     	datasetDir = self.browseFile(dir=1)
-	self.addAutomatic(str(datasetDir[0]))
+	self.imgDataset.addAutomatic(str(datasetDir[0]))
 	self.updateCategoryList()
 	
 #==================================
     def editDataset(self, dataset):
         """Opens the edit dialog of the selected category"""
 #==================================
-        self.categories[self.categoryList.currentRow()].edit()
+        selectedCategory = self.imgDataset.categories[self.categoryList.currentRow()]
+	# Create a separate GUI
+	ImageCategoryDlg(selectedCategory, parent=self)
+	
+#        self.categories[self.categoryList.currentRow()].edit()
 
 #==================================
     def selectionChanged(self):
@@ -194,7 +204,7 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         dataset_file = self.browseFile(filters=['Image Dataset (*.xml)','All files (*.*)'])
         if not dataset_file:
             return
-        self.loadFromXML(str(dataset_file[0]))
+        self.imgDataset.loadFromXML(str(dataset_file[0]))
         self.updateCategoryList()
         
 #==================================
@@ -209,8 +219,8 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
     def removeSelected(self):
         """Remove dataset from the list of datasets"""
 #==================================
-        id = self.categoryList.currentRow() 
-        self.delCategory(id)
+        currentCategory = self.categoryList.currentRow() 
+        self.imgDataset.delCategory(currentCategory)
         self.updateCategoryList()
 
 #==================================
@@ -218,24 +228,25 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
         """Open a file dialog to select the filename and save the current datasets to the
         file in xml format"""
 #==================================
-        saveFile = str(self.browseFile(filters=['Image Dataset (*.xml)','All files (*.*)'], save=1)[0])
+        saveFile = self.browseFile(filters=['Image Dataset (*.xml)','All files (*.*)'], save=1)
         if not saveFile:
             return
-        self.saveToXML(saveFile)
+        self.imgDataset.saveToXML(str(saveFile[0]))
 
 #==================================
     def updateCategoryList(self):
 #==================================
         # delete all items from the list
         self.categoryList.clear()
-        for category in self.categories:
+        for category in self.imgDataset.categories:
             self.categoryList.addItem(str(category.name))
 
-	if len(self.categories) != 0:
-	    self.infoa.setText('%i categories with a total of %i images' % (len(self.categories), sum([len(imgs.fnames) for imgs in self.categories])))
+	if len(self.imgDataset.categories) != 0:
+	    self.infoa.setText('%i categories with a total of %i images' % (len(self.imgDataset.categories), sum([len(category.fnames) for category in self.imgDataset.categories])))
 	    #self.infob.setText()
 	else:
             self.infoa.setText("No data loaded")
+	    
 #==================================
     def setFileList(self):
     # set the file combo box
@@ -285,90 +296,21 @@ class OWImageLoader(OWImageSubFile, ImageDataset):
             self.openFile(self.recentFiles[0])
 
 #***********************************************************************
-class ImageCategoryDlg(OWImageSubFile, ImageCategory):
-# Dialog to create/edit a sinlge dataset.
+class ImageCategoryDlg(OWImageSubFile):
+# Dialog to create/edit a single dataset.
 # Here, the user can add single image files or a whole directory and give
 # the dataset a name.
 #***********************************************************************
 #==================================
-    def displayImage(self, WidgetItem):
-#==================================
-        img = self.loadOneImage(str(WidgetItem.text()))
-        img.show()
-
-#==================================
-    def selectionChanged(self):
-#==================================
-        self.removeButton.setEnabled(1)
-
-#==================================
-    def removeFile(self):
-#==================================
-        row = self.widgetFileList.currentRow()
-        self.delID(row)
-        self.updateFileList()
-
-#==================================
-    # Called from the parent window, that the existing dataset should be edited
-    def edit(self):
-#==================================
-        self.setVisible(1)
-
-#==================================
-    def browseImgFile(self):
-#==================================
-        fileList = self.browseFile(filters=['Image Files (*.jpg *.png *.gif *.bmp)','All files (*.*)'])
-        if not fileList:
-            return
-        self.addFiles([str(file) for file in fileList])
-        self.updateFileList()
-
-#==================================
-    def browseImgDir(self):
-#==================================
-        dirName = self.browseFile(dir=1)
-        if not dirName:
-            return
-        self.addDir(str(dirName[0]))
-        self.updateFileList()
-
-#==================================
-    def apply(self):
-#==================================
-        self.emit(SIGNAL('updateParent'))
-	self.setVisible(0)
-
-#==================================
-    def ok(self):
-#==================================
-        self.emit(SIGNAL('updateParent'))
-        self.setVisible(0)
-    
-#==================================
-    def cancel(self):
-#==================================
-        self.setVisible(0)
-
-#==================================
-    def updateFileList(self):
-#==================================
-        self.widgetFileList.clear()
-        self.widgetFileList.addItems(self.fnames)
-        if self.widgetFileList.count() == 0:
-            self.removeButton.setDisabled(0)
-
-
-#==================================
-    def __init__(self,parent=None, signalManager = None, name = "None", fnames = None, visible=True):
+    def __init__(self, imgCategory, parent=None, signalManager = None, visible=True):
 #==================================
         #get settings from the ini file, if they exist
         #self.loadSettings()
-        if not fnames:
-            fnames = []
-        OWImageSubFile.__init__(self, parent, signalManager, "Category "+name)
+	self.imgCategory = imgCategory
+	self.name = self.imgCategory.name
+	
+        OWImageSubFile.__init__(self, parent, signalManager, "Category "+self.imgCategory.name)
 
-        ImageCategory.__init__(self, name=name, fnames=fnames)
-       
         #set default settings
         self.domain = None
         #GUI
@@ -389,14 +331,78 @@ class ImageCategoryDlg(OWImageSubFile, ImageCategory):
         self.fileButton = OWGUI.button(box, self, 'Add file(s)', callback = self.browseImgFile, disabled=0, width=self.dialogWidth)
         self.dirButton = OWGUI.button(box, self, 'Add directory', callback = self.browseImgDir, disabled=0, width=self.dialogWidth)
         self.removeButton = OWGUI.button(box, self, 'Remove selected file', callback = self.removeFile, disabled=1, width=self.dialogWidth)
-        self.applyButton = OWGUI.button(self.controlArea, self, 'Apply', callback = self.apply, disabled=0, width=self.dialogWidth)        
+        self.applyButton = OWGUI.button(self.controlArea, self, 'OK', callback = self.ok, disabled=0, width=self.dialogWidth)        
         self.inChange = False
         self.resize(self.dialogWidth,300)
 
         # Add the filenames to the widgetFileList
-        self.widgetFileList.addItems(self.fnames)
+        self.widgetFileList.addItems(self.imgCategory.fnames)
         if visible:
             self.show()
+
+#==================================
+    def displayImage(self, WidgetItem):
+#==================================
+        img = self.imgCategory.loadOneImage(str(WidgetItem.text()))
+        img.show()
+
+#==================================
+    def selectionChanged(self):
+#==================================
+        self.removeButton.setEnabled(1)
+
+#==================================
+    def removeFile(self):
+#==================================
+        row = self.widgetFileList.currentRow()
+        self.imgCategory.delID(row)
+        self.updateFileList()
+
+#==================================
+    def browseImgFile(self):
+#==================================
+        fileList = self.browseFile(filters=['Image Files (*.jpg *.png *.gif *.bmp)','All files (*.*)'])
+        if not fileList:
+            return
+        self.imgCategory.addFiles([str(file) for file in fileList])
+        self.updateFileList()
+
+#==================================
+    def browseImgDir(self):
+#==================================
+        dirName = self.browseFile(dir=1)
+        if not dirName:
+            return
+        self.imgCategory.addDir(str(dirName[0]))
+        self.updateFileList()
+
+#==================================
+    def apply(self):
+#==================================
+        self.emit(SIGNAL('updateParent'))
+	self.setVisible(0)
+
+#==================================
+    def ok(self):
+#==================================
+        self.imgCategory.name = self.name
+        self.emit(SIGNAL('updateParent'))
+        self.close()
+    
+#==================================
+    def cancel(self):
+#==================================
+        self.setVisible(0)
+
+#==================================
+    def updateFileList(self):
+#==================================
+        self.widgetFileList.clear()
+        self.widgetFileList.addItems(self.imgCategory.fnames)
+        if self.widgetFileList.count() == 0:
+            self.removeButton.setDisabled(0)
+
+
 
 if __name__ == "__main__":
     a=QApplication(sys.argv)

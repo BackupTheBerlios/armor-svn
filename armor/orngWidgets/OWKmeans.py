@@ -9,7 +9,8 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from exceptions import Exception
-import armor
+import armor.kmeans
+from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWKmeans(OWWidget):
     settingsList = ["numClusters", "maxiter", "numruns"]
@@ -19,8 +20,8 @@ class OWKmeans(OWWidget):
 
         self.callbackDeposit = []
 
-        self.inputs = [("Data", list, self.setData)]
-        self.outputs = [("Cluster Centers", list), ("Histograms", ExampleTable)]
+        self.inputs = [("Data", SeqContainer, self.setData)]
+        self.outputs = [("Codebook", SeqContainer)] # , ("Histograms", ExampleTable)]
 
         self.useGenerator = True
         
@@ -37,7 +38,7 @@ class OWKmeans(OWWidget):
         wbN = OWGUI.widgetBox(self.controlArea, "kMeans Settings")
         OWGUI.spin(wbN, self, "numClusters", 1, 100000, 100, None, "Number of clusters   ", orientation="horizontal")
         OWGUI.spin(wbN, self, "maxiter", 0, 100000, 1, None, "Maximum number of iterations", orientation="horizontal")
-        OWGUI.spin(wbN, self, "numruns", 0, 100000, 1, None, "First Octave ", orientation="horizontal")
+        OWGUI.spin(wbN, self, "numruns", 0, 100000, 1, None, "Number of runs ", orientation="horizontal")
 
         OWGUI.separator(self.controlArea)
         
@@ -50,22 +51,22 @@ class OWKmeans(OWWidget):
         if not data:
             pass
         self.data = data
-        self.kmeans = armor.kmeans(data, numClusters = self.numClusters, maxiter = self.maxiter, numruns = self.numruns)
-        self.send("Cluster Centers", self.kmeans.clusters)
+        self.kmeans = armor.kmeans.kmeansObj(data, numClusters = self.numClusters, maxiter = self.maxiter, numruns = self.numruns)
+        self.send("Codebook", self.kmeans.outContainer)
 
 	# Create orange.ExampleTable
-	histoList = []
-	histoContainer = self.kmeans.getData()
-	for d in histoContainer:
-	    histoList.append(list(d[0]) + [str(d[1])])
+	#histoList = []
+	#histoContainer = self.kmeans.getData()
+	#for d in histoContainer:
+	#    histoList.append(list(d[0]) + [str(d[1])])
 	    
-        domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(self.kmeans.dataHistogram[0][0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in histoContainer.classes]))])
+        #domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(self.kmeans.dataHistogram[0][0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in histoContainer.classes]))])
         #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
 
-        self.histograms = orange.ExampleTable(domain, histoList)
-        self.send("Histograms", self.histograms)
+        #self.histograms = orange.ExampleTable(domain, histoList)
+        #self.send("Histograms", self.histograms)
 	
 
 def main():

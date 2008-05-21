@@ -3,11 +3,12 @@ from numpy import array,ndarray,float32
 import armor.prototypes
 
 class siftObj(armor.prototypes.SeqProcessor):
-    def __init__(self, images, useGenerator=True, **kwargs):
+    def __init__(self, images, useGenerator=True, verbose=True, **kwargs):
         super(siftObj, self).__init__(images, useGenerator)
         self.kwargs = kwargs
 
     def process(self, img):
+	print "Computing sift-descriptors of %s" % img
 	return sift(array(img[0], dtype=float32), **self.kwargs)
 
         

@@ -10,6 +10,7 @@ from OWWidget import *
 import OWGUI
 from exceptions import Exception
 import armor.sift2
+from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWSift2(OWWidget):
     settingsList = []

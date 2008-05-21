@@ -45,14 +45,19 @@ class SeqContainer(object):
 	    raise ValueError, 'owner must be set to use this feature'
         self.references[reference] = group
         self.owner.register(self, group=group)
-
+	self.iterpool[group] = []
+	
     def getIter(self, group=None):
         if not group:
             return self.__iter__()
 
-        if not self.iterpool.has_key(group) or (self.iterpool.has_key(group) and len(self.iterpool[group]) == 0):
-            # How many streams belong to 'group'?
-            count = sum((x for x in self.references.values() if x==group))
-            self.iterpool[group] = list(itertools.tee(self.getDataAsIter(), count))
+	if not group in iterpool:
+	    raise KeyError, "You have to register() the group before accessing an iterator from it"
+	if len(self.iterpool[group]) == 0:
+	    # How many streams belong to 'group'?
+	    count = sum((x for x in self.references.values() if x==group))
+	    self.iterpool[group] = list(itertools.tee(self.getDataAsIter(), count))
+
+	    
 
         return self.iterpool[group].pop()

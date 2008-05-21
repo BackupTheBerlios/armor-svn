@@ -212,11 +212,15 @@ class ImageDataset(ImageBase, armor.prototypes.Producer):
             del fdToSave
 
 #==================================
-    def addCategory(self, name="", fnames=None):
+    def addCategory(self, name=None, fnames=None):
 #==================================
+        if not name:
+	    name = ""
         if not fnames:
             fnames = []
         self.categories.append(ImageCategory(name=name, fnames=fnames))
+	# Return added element
+	return self.categories[-1]
 
 #==================================
     def delCategory(self, id):
