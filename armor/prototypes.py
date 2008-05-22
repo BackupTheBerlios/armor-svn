@@ -11,8 +11,6 @@ class Producer(Prototype):
     but provide output (like ImageDataset)."""
     def __init__(self, inContainer, useGenerator=armor.useGenerator):
         super(Producer, self).__init__(inContainer)
-	# WARNING: Maybe not so smart.. 
-
 	
     def register(self, reference, group=None):
 	"""Register to group."""

@@ -3,7 +3,7 @@ import itertools
 import armor
 
 class SeqContainer(object):
-    """Central class to store data in a sequential order. It has basic
+    """Central class to store sequential data. It has basic
     list properties with some additional features:
     - Instead of a list, a generator function (NOT the called
     generator function) can be used, it will only get called and
@@ -26,7 +26,13 @@ class SeqContainer(object):
     all classes in armor.prototypes do so it is most convenient to
     inherit from the appropriate prototype).
     """
-    def __init__(self, seq, owner=None, classes=None, useGenerator=armor.useGenerator, **kwargs):
+    def __init__(self, seq, datatype=None, owner=None, classes=None, useGenerator=armor.useGenerator, **kwargs):
+	self.datatype = datatype
+
+	if seq.__class__ is self.__class__:
+	    if self.datatype:
+		self.datatype.compatible(seq.datatype)
+	    
         self.owner = owner
         self.useGenerator = useGenerator
         self.seq = seq
@@ -101,3 +107,21 @@ class SeqContainer(object):
 
 	# Hand one cached iterator to the group member.
         return self.iterpool[group].pop()
+
+
+class inputSlot(object):
+    def __init__(self, datatype, container=None):
+	self.datatype = datatype
+	self.container = container
+
+    def registerInput(self, senderSlot):
+	processFunc = self.datatype.compatible(senderSlot.datatype)
+	if processFunc == False:
+	    raise TypeError, "Slots are not compatible"
+
+	
+	
+class outputSlot(object):
+    def __init__(self, datatype, container):
+	self.datatype = datatype
+	self.container = container
