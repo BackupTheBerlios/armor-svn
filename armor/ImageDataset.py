@@ -115,9 +115,10 @@ class ImageDataset(ImageBase, armor.prototypes.Producer):
                 self.allFNames.append(self.absFName(fname))
                 self.allLabels.append(str(category.name))
 
-        # Prepare the output container by giving it the generator function
+	# Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
         self.outContainer = armor.SeqContainer.SeqContainer(self.iterator, \
+							    labels=self.allLabels, \
                                                             owner=self, \
                                                             classes=self.categoryNames, \
                                                             useGenerator=useGenerator)
@@ -132,12 +133,12 @@ class ImageDataset(ImageBase, armor.prototypes.Producer):
 
 #===================================
     def iterator(self): #, imgSequence = None, idSequence = None):
-        """Generator function that yields one PIL image and its category 
+        """Generator function that yields one PIL image 
         (can be either self.all{Names,IDs}Train oder self.all{Names,IDs}Valid)"""
 #===================================
         # Yield the images element wise
-        for img,label in zip(self.allFNames, self.allLabels):
-            yield (self.loadOneImage(img), label)
+        for img in self.allFNames:
+            yield self.loadOneImage(img)
         
 #==================================
     def loadFromXML(self, filename, verbose=False):
