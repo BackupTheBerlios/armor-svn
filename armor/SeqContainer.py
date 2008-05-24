@@ -1,4 +1,4 @@
-from types import ListType, MethodType
+from types import MethodType
 import itertools
 import armor
 
@@ -26,19 +26,15 @@ class SeqContainer(object):
     all classes in armor.prototypes do so it is most convenient to
     inherit from the appropriate prototype).
     """
-    def __init__(self, seq, slot=None, processFunc=None, labels=None, owner=None, classes=None, useGenerator=armor.useGenerator, **kwargs):
-        self.slot = slot
-        self.processFunc = processFunc
-        
-        self.owner = owner
-        self.useGenerator = useGenerator
+    def __init__(self, seq, slot=None, labels=None, classes=None, useGenerator=armor.useGenerator):
         self.seq = seq
-        self.labels = labels
-        
         self.getDataAsIter() # Check if seq parameter is sane
-        
-        self.classes = classes 
-        self.__dict__.update(**kwargs)
+        self.slot = slot 
+        self.useGenerator = useGenerator
+        self.labels = labels
+        self.classes = classes
+
+        #        self.__dict__.update(**kwargs)
         self.references = {}   # Registered objects with appropriate group ID
         self.iterpool = {}     # For storing the iterators of each
                                # group until every group member
@@ -47,7 +43,7 @@ class SeqContainer(object):
         
     def getDataAsIter(self):
         """Return the stored data in a way it can be passed to iter()."""
-        if isinstance(self.seq, ListType):
+        if isinstance(self.seq, list):
             if self.useGenerator:
                 # Makes no sense to use generator here
                 self.useGenerator = False
@@ -83,10 +79,10 @@ class SeqContainer(object):
         """Register an object and add it to group. Registered objects
         in the same group receive cached iterators (for more details
         see the description of the SeqContainer class)"""
-        if not self.owner:
-            raise ValueError, 'owner must be set to use this feature'
+        if not self.slot:
+            raise ValueError, 'slot must be set to use this feature'
         self.references[reference] = group
-        self.owner.register(self, group=group) # The object containing
+        self.slot.registerGroup(self, group=group) # The object containing
                                         # SeqContainer must support
                                         # this as well as we need to
                                         # propagate the group
@@ -111,43 +107,3 @@ class SeqContainer(object):
         return self.iterpool[group].pop()
 
 
-class slots(object):
-    def __init__(self):
-	pass
-    
-    def __getitem__(self, item):
-	pass
-    
-class inputSlot(object):
-    def __init__(self, datatype, container, processFunc=None, group=None):
-        self.datatype = datatype
-        self.container = container
-        self.converters = False
-        self.group = group
-        
-    def registerInput(self, senderSlot):
-        self.converters = self.datatype.compatible(senderSlot.datatype)
-        if self.converters == False:
-            raise TypeError, "Slots are not compatible"
-
-
-    def convert(self, item):
-        if self.converters == False or len(self.converters) == 0:
-            return item
-
-        for convert in self.converters:
-            item = convert(item)
-
-        return item
-
-    def register(self, reference, group=None):
-        """Register to group."""
-        self.group = group
-        # Propagate further
-        self.container.register(group)
-    
-        
-class outputSlot(object):
-    def __init__(self, datatype, container):
-        self.datatype = datatype
-        self.container = container
