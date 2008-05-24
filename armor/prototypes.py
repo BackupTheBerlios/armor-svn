@@ -1,9 +1,10 @@
 import armor.SeqContainer
 import armor
+import armor.slot
 
 class Prototype(object):
     def __init__(self, slotlist = None):
-	self.slots = slotlist
+	self.slots = set(slotlist)
     
     def __getitem__(self, item):
 	for i in self.slots:
@@ -13,7 +14,7 @@ class Prototype(object):
 	raise KeyError, "Slot not found"
 
     def add(self, slot):
-	self.slots.append(slot)
+	self.slots.add(slot)
 
 	
 # class Prototype(object):

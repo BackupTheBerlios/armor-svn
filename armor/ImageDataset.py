@@ -5,6 +5,8 @@ import xml.dom.minidom
 import numpy as npy
 from PIL import Image
 import armor.prototypes
+import armor.datatypes
+import armor
 
 #****************************************************************
 class ImageBase(object):
@@ -15,11 +17,11 @@ class ImageBase(object):
 
         
     #=================
-    def loadOneImage(self, fname, flatten=True, resize=False, verbose=True):
+    def loadOneImage(self, fname, flatten=False, resize=False):
         """Loads the image with filename 'fname' and returns the PIL.Image object"""
     #=================
         try:
-            if verbose: print(self.absFName(fname))
+            if verbosity < 0: print("Loading: %s" % self.absFName(fname))
             im=Image.open(self.absFName(fname))
             if resize: # Resize to fixed size (obsolete)
                 im = im.resize((160, 160), Image.ANTIALIAS)
@@ -73,7 +75,7 @@ class ImageBase(object):
 
 
 #****************************************
-class ImageDataset(ImageBase, armor.prototypes.Producer):
+class ImageDataset(ImageBase, armor.prototypes.Prototype):
     """Class to create, edit and store an image dataset. One dataset can
     consist of multiple categories (seperate objects).
 
@@ -93,6 +95,8 @@ class ImageDataset(ImageBase, armor.prototypes.Producer):
         self.allLabels = None # Filled by prepare()
         self.categoryNames = None    # Contains the category names
 
+	self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
+	
 
     def __iter__(self):
         return iter(self.categories)

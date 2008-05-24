@@ -8,7 +8,7 @@ class TestTypes(unittest.TestCase):
 	pass
 
     def testConvertRGB(self):
-	a = armor.datatypes.ImageType(format='PIL', color_space='gray', symmetrical=False)
+	a = armor.datatypes.ImageType(format=['PIL'], color_space=['gray'], symmetrical=False)
 	b = armor.datatypes.ImageType(format='PIL', color_space='RGB', symmetrical=False)
 	self.assertEqual(a.compatible(b)[0].__name__, 'convert_RGB_to_gray')
 
@@ -23,7 +23,7 @@ class TestTypes(unittest.TestCase):
 	assert a.compatible(b) is False	
 
     def testNestedVectorToFlat(self):
-	a = armor.datatypes.VectorType(shape='flatarray')
+	a = armor.datatypes.VectorType(shape=['flatarray'])
 	b = armor.datatypes.VectorType(shape='nestedlist')
 	self.assertEqual(a.compatible(b)[0].__name__, 'convert_nestedlist_to_flatarray')
 

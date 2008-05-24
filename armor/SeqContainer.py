@@ -1,4 +1,3 @@
-from types import MethodType
 import itertools
 import armor
 
@@ -26,11 +25,13 @@ class SeqContainer(object):
     all classes in armor.prototypes do so it is most convenient to
     inherit from the appropriate prototype).
     """
-    def __init__(self, seq, slot=None, labels=None, classes=None, useGenerator=armor.useGenerator):
-        self.seq = seq
-        self.getDataAsIter() # Check if seq parameter is sane
+    def __init__(self, sequence=None, generator=None, slot=None, labels=None, classes=None, useGenerator=armor.useGenerator):
+        self.sequence = sequence
+	self.generator = generator
+        self.useGenerator = useGenerator	
+        self.getDataAsIter() # Check if input parameters are sane
         self.slot = slot 
-        self.useGenerator = useGenerator
+
         self.labels = labels
         self.classes = classes
 
@@ -39,43 +40,40 @@ class SeqContainer(object):
         self.iterpool = {}     # For storing the iterators of each
                                # group until every group member
                                # received it
-        self.iterator = None
-        
+	
     def getDataAsIter(self):
         """Return the stored data in a way it can be passed to iter()."""
-        if isinstance(self.seq, list):
+        if self.generator and not self.sequence:
+            # Input type is a generator function (hopefully)
+            if self.useGenerator:
+                data = self.generator() # Call the generator
+            else:
+		# Convert generator to sequence
+                self.sequence = list(self.generator())
+		self.generator = None
+                data = self.sequence
+        elif self.sequence and not self.generator:
             if self.useGenerator:
                 # Makes no sense to use generator here
                 self.useGenerator = False
                 #raise TypeError, 'Setting a list to be used as a generator makes no sense!'
-            data = self.seq
-            
-        elif isinstance(self.seq, MethodType):
-            # Input type is a generator, a slot and a functToCall should be set
-            if not self.slot or not self.processFunc:
-                raise ValueError, "slot and processFunc need to be set"
-            if self.useGenerator:
-                data = self.seq(self.slot, self.processFunc) # Call the generator
-            else:
-                self.seq = list(self.seq(self.slot, self.processFunc))
-                data = self.seq
-
-        else:
-            raise TypeError, "List or Generator expected"
-
+            data = self.sequence
+	else:
+	    raise NotImplementedError, "generator AND sequence given"
+	
         return data
 
     def __iter__(self):
-        self.iterator = iter(self.getDataAsIter())  # Create a single
+        iterator = iter(self.getDataAsIter())  # Create a single
                                         # iterator for every object.
-        return self.iterator
+        return iterator
 
-    def reset(self, group=None):
-        """Resets the internal iterator."""
-        if not group:
-            self.iterator = None
-        
-    def register(self, reference, group=None):
+#    def reset(self, group=None):
+#        """Resets the internal iterator."""
+#        if not group:
+#            self.iterator = None
+
+    def registerGroup(self, reference, group=None):
         """Register an object and add it to group. Registered objects
         in the same group receive cached iterators (for more details
         see the description of the SeqContainer class)"""
