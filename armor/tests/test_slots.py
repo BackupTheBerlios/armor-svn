@@ -50,6 +50,7 @@ class TestTypes(unittest.TestCase):
 	self.slotRecv.registerInput(self.slotSend)
 	self.assertEqual([i for i in self.slotRecv], range(10))
 
+
 	
     def process(self, item):
 	return item
