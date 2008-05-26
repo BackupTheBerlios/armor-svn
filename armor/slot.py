@@ -1,5 +1,21 @@
 import armor
 from armor.SeqContainer import SeqContainer
+import weakref
+
+class slots(object):
+    def __init__(self, slotlist = None):
+        self.slots = set(slotlist)
+    
+    def __getitem__(self, item):
+        for i in self.slots:
+            if i.name == item:
+                return i
+        # Not found
+        raise AttributeError, "Slot not found"
+
+    def add(self, slot):
+        self.slots.add(slot)
+	
 
 class inputSlot(object):
     def __init__(self, name, senderSlot=None, group=None, acceptsType=None):
@@ -12,7 +28,7 @@ class inputSlot(object):
 	
     def __iter__(self):
         if not self.senderSlot:
-            raise KeyError, "No senderSlot registered!"
+            raise AttributeError, "No senderSlot registered!"
         return iter(self.container)
 
     def convertInput(self):
@@ -28,7 +44,7 @@ class inputSlot(object):
             if self.converters == False:
                 raise TypeError, "Slots are not compatible"
 
-        self.senderSlot = senderSlot
+        self.senderSlot = weakref.proxy(senderSlot)
         self.container = SeqContainer(generator=self.convertInput, slot=self.senderSlot)
         
     def registerGroup(self, reference, group=None):
