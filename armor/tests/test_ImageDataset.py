@@ -65,10 +65,9 @@ class TestImageDataset(unittest.TestCase):
         self.ImageDataset.categories[1].delID(0)
         self.assertEqual(len(self.ImageDataset.categories[1].fnames), 0)
 
-    def testIterateCategories(self):
+    def testAccessNoContainer(self):
         self.addCategories()
-        for x,y in zip(self.ImageDataset, ['', 'test1', 'test2']):
-            self.assertEqual(x.name,y)
+	self.assertRaises(AttributeError, self.ImageDataset.__iter__)
 
     def testIterateFnames(self):
         self.addCategories()
@@ -78,12 +77,12 @@ class TestImageDataset(unittest.TestCase):
     def testSeqContainerValid(self):
         self.addCategories(set = self.setValid)
 	self.ImageDataset.prepare()
-        seqContainer = self.ImageDataset.outContainer
+        seqContainer = self.ImageDataset.outputSlot
         
     def testSeqContainerValidIter(self):
         self.addCategories(set = self.setValid)
 	self.ImageDataset.prepare()
-        seqContainer = self.ImageDataset.outContainer
+        seqContainer = self.ImageDataset.outputSlot
 
     def testSeqContainerInvalid(self):
         self.addCategories()

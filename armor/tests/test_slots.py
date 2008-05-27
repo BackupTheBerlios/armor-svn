@@ -31,9 +31,10 @@ class TestTypes(unittest.TestCase):
                                               acceptsType=self.inType2)
         
         self.slotRecv = armor.slot.outputSlot('receiver',
-                                        input = self.slotInput,
-                                        processFunc=self.process,
-                                        outputType=self.outType2)
+					      input = self.slotInput,
+					      processFunc=self.process,
+					      outputType=self.outType2,
+					      slotType='sequential')
 
 
     def setMultiInput(self):
@@ -57,7 +58,7 @@ class TestTypes(unittest.TestCase):
         self.setTypesConversion()
         self.setSlots()
         self.slotInput.registerInput(self.slotSend)
-        self.assertEqual([i.__name__ for i in self.slotInput.converters], ['convert_RGB_to_gray'])
+        self.assertEqual([i.__name__ for i in self.slotInput.converters], ['convert_PIL_RGB_to_PIL_gray'])
         self.assertEqual([i.__name__ for i in self.slotRecv.processFuncs], ['process'])
 
     def testSlotIncompatible(self):
@@ -96,9 +97,10 @@ class TestTypes(unittest.TestCase):
                                               acceptsType=self.inType2)
         
         self.slotRecv2 = armor.slot.outputSlot('receiver2',
-                                        input = self.slotInput2,
-                                        processFunc=self.process,
-                                        outputType=self.outType2)
+					       input = self.slotInput2,
+					       processFunc=self.process,
+					       outputType=self.outType2,
+					       slotType='sequential')
 
         self.slotInput2.registerInput(self.slotSend)
 

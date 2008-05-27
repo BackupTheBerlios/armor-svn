@@ -18,13 +18,14 @@ class slots(object):
         
 
 class inputSlot(object):
-    def __init__(self, name, senderSlot=None, group=None, acceptsType=None):
+    def __init__(self, name, senderSlot=None, group=None, acceptsType=None, bulk=False):
         self.name = name
         self.senderSlot = senderSlot
         self.group = group
         self.acceptsType = acceptsType
         self.container = None
         self.converters = None
+	self.bulk = bulk
         
     def __iter__(self):
         if not self.senderSlot:
@@ -33,12 +34,22 @@ class inputSlot(object):
 
     def convertInput(self):
         senderIterator = self.senderSlot.container.getIter(self.group)
-        for item in senderIterator:
-            if self.converters and len(self.converters) > 0:
-                for converter in self.converters:
-                    item = converter(item)
-            yield item
-            
+	if not self.bulk:
+	    for item in senderIterator:
+		if self.converters and len(self.converters) > 0:
+		    for converter in self.converters:
+			item = converter(item)
+		yield item
+
+    def convertBunch(self):
+	senderIterator = self.senderSlot.container.getIter(self.group)
+	bunch = list(senderIterator)
+	if self.converters and len(self.converters) > 0:
+	    for converter in self.converters:
+		bunch = converter(bunch)
+
+	return bunch
+	    
     def registerInput(self, senderSlot):
         if armor.useTypeChecking and senderSlot.outputType:
             self.converters = self.acceptsType.compatible(senderSlot.outputType)
@@ -46,7 +57,11 @@ class inputSlot(object):
                 raise TypeError, "Slots are not compatible"
 
         self.senderSlot = senderSlot
-        self.container = SeqContainer(generator=self.convertInput, slot=self.senderSlot)
+	if not self.bulk:
+	    self.container = SeqContainer(generator=self.convertInput, slot=self.senderSlot)
+	else:
+	    bunch = self.convertBunch()
+	    self.container = SeqContainer(sequence=bunch, slot=self.senderSlot)
         
     def registerGroup(self, reference=None, group=None):
         """Register to group."""
@@ -57,13 +72,15 @@ class inputSlot(object):
 
         
 class outputSlot(object):
-    def __init__(self, name, input=None, processFunc=None, processFuncs=None, group=None, outputType=None, slotType=None, iterator=None, sequence=None):
+    def __init__(self, name, input=None, processFunc=None, processFuncs=None, group=None, outputType=None, slotType=None, iterator=None, sequence=None, labels=None, classes=None, useGenerator=armor.useGenerator):
         self.name = name
         self.inputSlot = input
         self.outputType = outputType
         self.group = group
         self.iterator = iterator
         self.sequence = sequence
+	self.processFunc = processFunc
+	
         if processFunc:
             if processFuncs:
                 raise TypeError, "Specify either processFunc OR processFuncs"
@@ -72,20 +89,25 @@ class outputSlot(object):
         else:
             self.processFuncs = processFuncs
 
-        if not slotType:
-            slotType = 'seq'
-
         # Create an output container
-        if self.sequence:
-            self.container = SeqContainer(sequence=self.sequence, slot=self)
-        elif self.iterator: # User defined iterator
-            self.container = SeqContainer(generator=self.iterator, slot=self)
-        elif slotType == 'seq': # Sequential iterator
-            self.container = SeqContainer(generator=self.seqIterator, slot=self)
-        elif slotType == 'bulk': # Bulk iterator
-            self.container = SeqContainer(generator=self.bulkIterator, slot=self)
-
+	if self.sequence:
+	    self.container = SeqContainer(sequence=self.sequence, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	elif self.iterator: # User defined iterator
+	    self.container = SeqContainer(generator=self.iterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	elif slotType == 'sequential': # Sequential iterator
+	    if not self.processFunc and not self.processFuncs:
+		raise AttributeError, "You must provided processFunc or processFuncs to use generic iterators"
+	    self.container = SeqContainer(generator=self.seqIterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	elif slotType == 'bulk': # Bulk iterator
+    	    if not self.processFunc and not self.processFuncs:
+		raise AttributeError, "You must provided processFunc or processFuncs to use generic iterators"
+	    self.container = SeqContainer(generator=self.bulkIterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	else:
+	    self.container = None
+	    
     def __iter__(self):
+	if not self.container:
+	    raise AttributeError, "self.container is not set"
         return iter(self.container)
     
     def seqIterator(self):
@@ -98,7 +120,6 @@ class outputSlot(object):
                 item = processFunc(item)
             yield item
             
-        #self.senderSlot.container.reset(group=self.group)
 
     def bulkIterator(self):
         """Generator which iteratates over the input elements, saves them
@@ -106,8 +127,6 @@ class outputSlot(object):
         (e.g. clustering, normalization). """
         inData = list(self.inputSlot.container.getIter(group=self.group))
 
-        #self.senderSlot.container.reset()
-        
         for processFunc in self.processFuncs:
             inData = processFunc(inData)
             

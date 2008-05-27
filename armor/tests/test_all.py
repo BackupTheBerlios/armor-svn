@@ -14,9 +14,12 @@ class testAll(unittest.TestCase):
 	self.imgDataset.prepare()
 
     def testGenerator(self):
-	sft = armor.sift.siftObj(self.imgDataset.outContainer)
-        km = armor.kmeans.kmeansObj(sft.outContainer, 3)
-	data = list(km.outContainer)
+	sft = armor.sift.siftObj()
+        km = armor.kmeans.kmeansObj(3)
+	sft.inputSlot.registerInput(self.imgDataset.outputSlot)
+	km.inputSlot.registerInput(sft.outputSlot)
+
+	data = list(km.outputSlot)
 	print data
 	#self.assertEqual([x[1] for x in data], [u'test1', u'test2'])
 	#for x,y in zip(data, [numpy.array([475, 693, 531]), numpy.array([566, 782, 509])]):

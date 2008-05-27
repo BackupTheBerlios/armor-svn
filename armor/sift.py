@@ -1,14 +1,25 @@
 from numpy import array,ndarray,float32
-import armor.prototypes
+import armor.slot
+import armor.datatypes
+import armor
 
-class siftObj(armor.prototypes.SeqProcessor):
-    def __init__(self, images, useGenerator=armor.useGenerator, verbose=True, **kwargs):
-        super(siftObj, self).__init__(images, useGenerator)
+class siftObj(object):
+    def __init__(self, useGenerator=armor.useGenerator, verbose=True, **kwargs):
         self.kwargs = kwargs
+	self.inputType = armor.datatypes.ImageType(format=["PIL"], color_space=["gray"])
+	self.outputType = armor.datatypes.VectorType(shape='nestedarray')
+
+	self.inputSlot = armor.slot.inputSlot(name='Images', acceptsType = self.inputType)
+	self.outputSlot = armor.slot.outputSlot(name='Sift Descriptors',
+						outputType=self.outputType,
+						input=self.inputSlot,
+						processFunc=self.process,
+						slotType='sequential')
 
     def process(self, img):
-	print "Computing sift-descriptors..."
-	return sift(array(img[0], dtype=float32), **self.kwargs)
+	if armor.verbosity > 0:
+	    print "Computing sift-descriptors..."
+	return sift(array(img, dtype=float32), **self.kwargs)[1]
 
         
 def sift(*args, **kwargs):

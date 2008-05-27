@@ -4,7 +4,7 @@ import os.path
 import xml.dom.minidom
 import numpy as npy
 from PIL import Image
-import armor.prototypes
+import armor.slot
 import armor.datatypes
 import armor
 
@@ -21,7 +21,7 @@ class ImageBase(object):
         """Loads the image with filename 'fname' and returns the PIL.Image object"""
     #=================
         try:
-            if verbosity < 0: print("Loading: %s" % self.absFName(fname))
+            if armor.verbosity > 0: print("Loading: %s" % self.absFName(fname))
             im=Image.open(self.absFName(fname))
             if resize: # Resize to fixed size (obsolete)
                 im = im.resize((160, 160), Image.ANTIALIAS)
@@ -75,7 +75,7 @@ class ImageBase(object):
 
 
 #****************************************
-class ImageDataset(ImageBase, armor.prototypes.Prototype):
+class ImageDataset(ImageBase):
     """Class to create, edit and store an image dataset. One dataset can
     consist of multiple categories (seperate objects).
 
@@ -96,10 +96,11 @@ class ImageDataset(ImageBase, armor.prototypes.Prototype):
         self.categoryNames = None    # Contains the category names
 
 	self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
-	
+	self.outputSlot = armor.slot.outputSlot(name="Images", outputType=self.outType)
+	self.outputSlots = armor.slot.slots(slotlist = [self.outputSlot])
 
     def __iter__(self):
-        return iter(self.categories)
+        return iter(self.outputSlot)
     
 #==================================
     def prepare(self, useGenerator=armor.useGenerator):
@@ -113,7 +114,7 @@ class ImageDataset(ImageBase, armor.prototypes.Prototype):
         self.allLabels = []
         self.categoryNames = set()
         
-        for category in self:
+        for category in self.categories:
             self.categoryNames.add(str(category.name))
             for fname in category:
                 self.allFNames.append(self.absFName(fname))
@@ -121,11 +122,12 @@ class ImageDataset(ImageBase, armor.prototypes.Prototype):
 
 	# Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
-        self.outContainer = armor.SeqContainer.SeqContainer(self.iterator, \
-							    labels=self.allLabels, \
-                                                            owner=self, \
-                                                            classes=self.categoryNames, \
-                                                            useGenerator=useGenerator)
+        self.outputSlot.__init__(name="Images", \
+				 outputType = self.outType, \
+				 iterator = self.iterator, \
+				 labels=self.allLabels, \
+				 classes=self.categoryNames, \
+				 useGenerator=useGenerator)
         # Permutate them
 #        if self.doPermutate:
 #            permutated = self.randperm((self.allFNames, self.allLabels))

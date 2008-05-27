@@ -16,70 +16,73 @@ class basetype(object):
 	if toType.__class__ is not self.__class__:
             return False
 
-        convertable = False
-        conversionFunc = []
-        
+	compatible = True
+        convert = True
+	
         for key in toType:
             # If key is not present, we assume compatibility
-            if key not in self:
+            if key not in self.dataType:
                 continue
-            
-            # Convert self[key] to list if needed
-            selfkey = self[key] if isinstance(self[key], type([])) else [self[key]]
-            
-            if toType[key] in selfkey:
+
+            if toType[key] in self.dataType[key]:
                 continue # Compatible
 
-            # Can we convert?
-            for attr in selfkey:
-                for conversion in self.conversions[key]:
-                    if conversion[0] == toType[key] and conversion[1] == attr:
-                        conversionFunc.append(conversion[2])
-                        convertable = True
-                        break
-                if convertable:
-                    break
-            if convertable:
-                convertable=False
-                continue
-                
-            # If we are here, we are not compatible and can not convert
-            return False
+	    compatible = False
 
-        # For now we disable multiple conversions as it is not really clear
-        # on what the order should be etc and may cause weird behavior
-        if len(conversionFunc) > 1:
-            return False
-        
-        return conversionFunc
+	if compatible:
+	    return []
+
+	# Can we convert?
+        for conversion in self.conversions:
+	    for key in conversion:
+		if key == 'function':
+		    continue
+		for inType in self.dataType[key]:
+		    if conversion[key][0] != toType[key] and conversion[key][1] != inType:
+			convert = False
+		    
+		if convert:
+		    return [conversion['function']]
+		convert = True
+
+	# No
+	return False
             
         
 class ImageType(basetype):
     from PIL import Image
+    from numpy import array
+    
     def __init__(self, **kwargs):
         super(ImageType, self).__init__(**kwargs)
         
-        self.attributes = {'format': ['PIL', 'vigra'],
-                          'color_space': ['gray', 'RGB'],
-                          'symmetrical': [False, True]
+        self.attributes = {'format': ['PIL', 'numpy'],
+                          'color_space': ['gray', 'RGB']
                            }
 
-        self.conversions = {'format': [('PIL', 'vigra', self.convert_PIL_to_vigra)],
-                            'color_space': [('RGB', 'gray', self.convert_RGB_to_gray)],
-                            'symmetrical' : []
-                            }
-
-    def convert_PIL_to_vigra(self, image):
-        raise NotImplemented, "Vigra support not yet implemented"
+        self.conversions = [{'format': ('PIL', 'PIL'),
+			     'color_space': ('RGB', 'gray'),
+			     'function': self.convert_PIL_RGB_to_PIL_gray},
+			    {'format': ('PIL', 'numpy'),
+			     'color_space': ('RGB', 'RGB'),
+			     'function': self.convert_PIL_RGB_to_numpy_RGB},
+			    {'format': ('PIL', 'numpy'),
+			     'color_space': ('RGB', 'gray'),
+			     'function': self.convert_PIL_RGB_to_numpy_gray}
+			    ]
+			    
     
-    def convert_RGB_to_gray(self, image):
+    def convert_PIL_RGB_to_PIL_gray(self, image):
         image = image.convert('L')
         return image
 
+    def convert_PIL_RGB_to_numpy_RGB(self, image):
+	return array(image)
+
+    def convert_PIL_RGB_to_numpy_gray(self, image):
+	return array(self.convert_PIL_RGB_to_PIL_gray(image))
 
 class VectorType(basetype):
-    from numpy import array, concatenate
-
     def __init__(self, **kwargs):
         super(VectorType, self).__init__(**kwargs)
 
@@ -87,12 +90,14 @@ class VectorType(basetype):
                            'length': [type(1)]
                            }
 
-        self.conversions = {'shape': [('nestedlist', 'flatarray', self.convert_nestedlist_to_flatarray),
-                                       ('nestedarray', 'flatarray', self.convert_nestedlist_to_flatarray)],
-                            'length': []
-                            }
+        self.conversions = [{'shape': ('nestedlist', 'flatarray'),
+			     'function': self.convert_nestedlist_to_flatarray},
+			    {'shape': ('nestedarray', 'flatarray'),
+			     'function': self.convert_nestedlist_to_flatarray}
+			    ]
 
     def convert_nestedlist_to_flatarray(self, lst):
+	from numpy import concatenate
         return concatenate(lst)
 
 

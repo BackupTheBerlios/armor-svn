@@ -14,12 +14,14 @@ class TestSift(unittest.TestCase):
 	
     def testSiftGenerator(self):
 	#TODO: Check if values are correct descriptors
-	self.sft = armor.sift.siftObj(self.imgDataset.outContainer, Verbose=1)
-	list(self.sft.outContainer)
+	self.sft = armor.sift.siftObj(Verbose=1)
+	self.sft.inputSlot.registerInput(self.imgDataset.outputSlot)
+	list(self.sft.outputSlot)
 
     def testSiftList(self):
-	self.sft = armor.sift.siftObj(self.imgDataset.outContainer, Verbose=1)
-	list(self.sft.outContainer)
+	self.sft = armor.sift.siftObj(Verbose=1)
+	self.sft.inputSlot.registerInput(self.imgDataset.outputSlot)
+	list(self.sft.outputSlot)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestSift)
 unittest.TextTestRunner(verbosity=3).run(suite)
