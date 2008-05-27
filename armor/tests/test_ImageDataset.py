@@ -40,7 +40,6 @@ class TestImageDataset(unittest.TestCase):
         
         
     def testLoadFromXML(self, fname=None):
-        
         if not fname:
             self.testSaveToXML()
             fname = os.path.join(self.path, 'test_saved.xml')
@@ -77,12 +76,12 @@ class TestImageDataset(unittest.TestCase):
     def testSeqContainerValid(self):
         self.addCategories(set = self.setValid)
 	self.ImageDataset.prepare()
-        seqContainer = self.ImageDataset.outputSlot
+        seqContainer = self.ImageDataset.outputSlotTrain
         
     def testSeqContainerValidIter(self):
         self.addCategories(set = self.setValid)
 	self.ImageDataset.prepare()
-        seqContainer = self.ImageDataset.outputSlot
+        seqContainer = self.ImageDataset.outputSlotTrain
 
     def testSeqContainerInvalid(self):
         self.addCategories()

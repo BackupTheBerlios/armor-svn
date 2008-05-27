@@ -33,28 +33,13 @@ class ImageBase(object):
 
 
     #==============
-    def normalize(self, imgs, minimax = (None, None)):
-        """Scales the input matrix to lie between 0 and 1 or minimax if supplied"""
-    #==============
-        if minimax[0]==None:
-            minimax[0] = min(imgs)
-        if minimax[1]==None:
-            minimax[1] = max(imgs)
-
-        normalized = (imgs-minimax[0])/(float(minimax[1]-minimax[0]))
-        return (normalized, minimax)
-
-    #==============
     def randperm(self,(seq)):
-        """Randomly permutes the sequences in the seq tuple, however, 
-        every sequence gets permuted in the same order"""
+        """Randomly permutes the sequences in the seq tuple with 
+        every sequence permuted in the same order"""
     #==============
         from numpy.random import permutation
-        l = list()
         perm = permutation(len(seq[0]))
-        for i in seq:
-            l.append(npy.array(i)[perm])
-        return l
+        return [list(numpy.array(s)[perm]) for s in seq]
 
     #==============
     def split(self, (lst), ratio=.5): #=round(imgs/2)):
@@ -96,8 +81,9 @@ class ImageDataset(ImageBase):
         self.categoryNames = None    # Contains the category names
 
 	self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
-	self.outputSlot = armor.slot.outputSlot(name="Images", outputType=self.outType)
-	self.outputSlots = armor.slot.slots(slotlist = [self.outputSlot])
+	self.outputSlotTrain = armor.slot.outputSlot(name="ImagesTrain", outputType=self.outType)
+	self.outputSlotTest = armor.slot.outputSlot(name="ImagesTest", outputType=self.outType)
+	self.outputSlots = armor.slot.slots(slotlist = [self.outputSlotTrain, self.outputSlotTest])
 
     def __iter__(self):
         return iter(self.outputSlot)
@@ -120,32 +106,47 @@ class ImageDataset(ImageBase):
                 self.allFNames.append(self.absFName(fname))
                 self.allLabels.append(str(category.name))
 
+        # Permutate them
+        if self.doPermutate:
+            (self.allFNames, self.allLabels) = self.randperm((self.allFNames, self.allLabels))
+            
+        # Split them into training and validation set
+        (self.allNamesTrain, self.allNamesTest) = self.split(self.allFNames, self.splitRatio)
+        (self.allLabelsTrain, self.allLabelsTest) = self.split(self.allLabels, self.splitRatio)
+
 	# Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
-        self.outputSlot.__init__(name="Images", \
-				 outputType = self.outType, \
-				 iterator = self.iterator, \
-				 labels=self.allLabels, \
-				 classes=self.categoryNames, \
-				 useGenerator=useGenerator)
-        # Permutate them
-#        if self.doPermutate:
-#            permutated = self.randperm((self.allFNames, self.allLabels))
-#            allFNamesIDs = permutated
-
-        # Split them into training and validation set
-#        (self.allNamesTrain, self.allNamesValid) = self.split(self.allFNames, self.splitRatio)
-#        (self.allLabelsTrain, self.allLabelsValid) = self.split(self.allLabels, self.splitRatio)
+        self.outputSlotTrain.__init__(name="ImagesTrain", \
+				      outputType = self.outType, \
+				      iterator = self.iterTrain, \
+				      labels=self.allLabelsTrain, \
+				      classes=self.categoryNames, \
+				      useGenerator=useGenerator)
+	self.outputSlotTest.__init__(name="ImagesTest", \
+				      outputType = self.outType, \
+				      iterator = self.iterTest, \
+				      labels=self.allLabelsTest, \
+				      classes=self.categoryNames, \
+				      useGenerator=useGenerator)
 
 #===================================
-    def iterator(self): #, imgSequence = None, idSequence = None):
+    def iterTrain(self): #, imgSequence = None, idSequence = None):
         """Generator function that yields one PIL image 
         (can be either self.all{Names,IDs}Train oder self.all{Names,IDs}Valid)"""
 #===================================
         # Yield the images element wise
-        for img in self.allFNames:
+        for img in self.allNamesTrain:
             yield self.loadOneImage(img)
-        
+
+#===================================
+    def iterTest(self): #, imgSequence = None, idSequence = None):
+        """Generator function that yields one PIL image 
+        (can be either self.all{Names,IDs}Train oder self.all{Names,IDs}Valid)"""
+#===================================
+        # Yield the images element wise
+        for img in self.allNamesTest:
+            yield self.loadOneImage(img)
+	    
 #==================================
     def loadFromXML(self, filename, verbose=False):
 #==================================
