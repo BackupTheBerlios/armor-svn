@@ -15,7 +15,7 @@ class slots(object):
 
     def add(self, slot):
         self.slots.add(slot)
-	
+        
 
 class inputSlot(object):
     def __init__(self, name, senderSlot=None, group=None, acceptsType=None):
@@ -25,7 +25,7 @@ class inputSlot(object):
         self.acceptsType = acceptsType
         self.container = None
         self.converters = None
-	
+        
     def __iter__(self):
         if not self.senderSlot:
             raise AttributeError, "No senderSlot registered!"
@@ -34,24 +34,26 @@ class inputSlot(object):
     def convertInput(self):
         senderIterator = self.senderSlot.container.getIter(self.group)
         for item in senderIterator:
-            for converter in self.converters:
-                item = converter(item)
+            if self.converters and len(self.converters) > 0:
+                for converter in self.converters:
+                    item = converter(item)
             yield item
             
     def registerInput(self, senderSlot):
-        if armor.useTypeChecking:
+        if armor.useTypeChecking and senderSlot.outputType:
             self.converters = self.acceptsType.compatible(senderSlot.outputType)
             if self.converters == False:
                 raise TypeError, "Slots are not compatible"
 
-        self.senderSlot = weakref.proxy(senderSlot)
+        self.senderSlot = senderSlot
         self.container = SeqContainer(generator=self.convertInput, slot=self.senderSlot)
         
-    def registerGroup(self, reference, group=None):
+    def registerGroup(self, reference=None, group=None):
         """Register to group."""
         self.group = group
+        self.container.registerGroup(group=self.group)
         # Propagate further
-        self.senderSlot.register(group)
+        self.senderSlot.registerGroup(group=self.group)
 
         
 class outputSlot(object):
@@ -112,9 +114,11 @@ class outputSlot(object):
         for item in inData:
             yield item
             
-    def registerGroup(self, reference, group=None):
+    def registerGroup(self, reference=None, group=None):
         """Register to group."""
         self.group = group
+        self.container.registerGroup(group=self.group)
         # Propagate further
-        self.inputSlot.register(group)
+        if self.inputSlot:
+            self.inputSlot.registerGroup(group=self.group)
     
