@@ -32,7 +32,7 @@ class inputSlot(object):
             raise AttributeError, "No senderSlot registered!"
         return iter(self.container)
 
-    def convertInput(self):
+    def convertSequential(self):
         senderIterator = self.senderSlot.container.getIter(self.group)
 	if not self.bulk:
 	    for item in senderIterator:
@@ -41,14 +41,15 @@ class inputSlot(object):
 			item = converter(item)
 		yield item
 
-    def convertBunch(self):
+    def convertBulk(self):
 	senderIterator = self.senderSlot.container.getIter(self.group)
 	bunch = list(senderIterator)
 	if self.converters and len(self.converters) > 0:
 	    for converter in self.converters:
 		bunch = converter(bunch)
 
-	return bunch
+	for i in bunch:
+	    yield i
 	    
     def registerInput(self, senderSlot):
         if armor.useTypeChecking and senderSlot.outputType:
@@ -58,10 +59,9 @@ class inputSlot(object):
 
         self.senderSlot = senderSlot
 	if not self.bulk:
-	    self.container = SeqContainer(generator=self.convertInput, slot=self.senderSlot)
+	    self.container = SeqContainer(generator=self.convertSequential, slot=self.senderSlot)
 	else:
-	    bunch = self.convertBunch()
-	    self.container = SeqContainer(sequence=bunch, slot=self.senderSlot)
+	    self.container = SeqContainer(generator=self.convertBulk, slot=self.senderSlot)
         
     def registerGroup(self, reference=None, group=None):
         """Register to group."""
@@ -72,17 +72,18 @@ class inputSlot(object):
 
         
 class outputSlot(object):
-    def __init__(self, name, input=None, processFunc=None, processFuncs=None, group=None, outputType=None, slotType=None, iterator=None, sequence=None, labels=None, classes=None, useGenerator=armor.useGenerator):
+    def __init__(self, name, input=None, inputSlots=None, processFunc=None, processFuncs=None, group=None, outputType=None, slotType=None, iterator=None, sequence=None, labels=None, classes=None, useGenerator=armor.useGenerator):
         self.name = name
         self.inputSlot = input
+	self.inputSlots = inputSlots
         self.outputType = outputType
         self.group = group
         self.iterator = iterator
         self.sequence = sequence
 	self.processFunc = processFunc
 	
-        if processFunc:
-            if processFuncs:
+        if processFunc is not None:
+            if processFuncs is not None:
                 raise TypeError, "Specify either processFunc OR processFuncs"
             else:
                 self.processFuncs = [processFunc]
@@ -90,16 +91,16 @@ class outputSlot(object):
             self.processFuncs = processFuncs
 
         # Create an output container
-	if self.sequence:
+	if self.sequence is not None:
 	    self.container = SeqContainer(sequence=self.sequence, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
-	elif self.iterator: # User defined iterator
+	elif self.iterator is not None: # User defined iterator
 	    self.container = SeqContainer(generator=self.iterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
 	elif slotType == 'sequential': # Sequential iterator
-	    if not self.processFunc and not self.processFuncs:
+	    if self.processFunc is None and self.processFuncs is None:
 		raise AttributeError, "You must provided processFunc or processFuncs to use generic iterators"
 	    self.container = SeqContainer(generator=self.seqIterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
 	elif slotType == 'bulk': # Bulk iterator
-    	    if not self.processFunc and not self.processFuncs:
+    	    if self.processFunc is None and self.processFuncs is None:
 		raise AttributeError, "You must provided processFunc or processFuncs to use generic iterators"
 	    self.container = SeqContainer(generator=self.bulkIterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
 	else:
@@ -138,6 +139,9 @@ class outputSlot(object):
         self.group = group
         self.container.registerGroup(group=self.group)
         # Propagate further
-        if self.inputSlot:
+        if self.inputSlot is not None:
             self.inputSlot.registerGroup(group=self.group)
+	elif self.inputSlots is not None:
+	    for slot in self.inputSlots:
+		slot.registerGroup(group=self.group)
     

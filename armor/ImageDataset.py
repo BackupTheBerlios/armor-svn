@@ -68,7 +68,7 @@ class ImageDataset(ImageBase):
     have to call prepare()."""
 #****************************************
 #==================================
-    def __init__(self, categories=None, splitRatio=.5, doPermutate=False):
+    def __init__(self, categories=None, splitRatio=None, doPermutate=False):
 #==================================
         super(ImageDataset, self).__init__()
         if not categories:
@@ -111,9 +111,13 @@ class ImageDataset(ImageBase):
             (self.allFNames, self.allLabels) = self.randperm((self.allFNames, self.allLabels))
             
         # Split them into training and validation set
-        (self.allNamesTrain, self.allNamesTest) = self.split(self.allFNames, self.splitRatio)
-        (self.allLabelsTrain, self.allLabelsTest) = self.split(self.allLabels, self.splitRatio)
-
+	if self.splitRatio is not None:
+	    (self.allNamesTrain, self.allNamesTest) = self.split(self.allFNames, self.splitRatio)
+	    (self.allLabelsTrain, self.allLabelsTest) = self.split(self.allLabels, self.splitRatio)
+	else:
+	    self.allNamesTrain = self.allFNames
+	    self.allLabelsTrain = self.allLabels
+	    
 	# Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
         self.outputSlotTrain.__init__(name="ImagesTrain", \
@@ -122,12 +126,13 @@ class ImageDataset(ImageBase):
 				      labels=self.allLabelsTrain, \
 				      classes=self.categoryNames, \
 				      useGenerator=useGenerator)
-	self.outputSlotTest.__init__(name="ImagesTest", \
-				      outputType = self.outType, \
-				      iterator = self.iterTest, \
-				      labels=self.allLabelsTest, \
-				      classes=self.categoryNames, \
-				      useGenerator=useGenerator)
+	if self.splitRatio is not None:
+	    self.outputSlotTest.__init__(name="ImagesTest", \
+					 outputType = self.outType, \
+					 iterator = self.iterTest, \
+					 labels=self.allLabelsTest, \
+					 classes=self.categoryNames, \
+					 useGenerator=useGenerator)
 
 #===================================
     def iterTrain(self): #, imgSequence = None, idSequence = None):

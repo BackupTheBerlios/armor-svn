@@ -1,31 +1,34 @@
 from numpy import array,median,std,mean,log,concatenate
 from c_types import c_double
-import armor.prototypes
+import armor
+import armor.datatypes
+import armor.
 
-class normalizeObj(armor.prototypes.SeqProcessor):
-    def __init__(self, inContainer, operation):
-	super(normalizeObj, self).__init__(inContainer)
+class normalizeObj(object):
+    def __init__(self, operation):
 	self.operation = operation
-
-    def process(self, (data, label)):
+	self.inputType = 
+    def process(self, data):
 	
 
 # The following code was kindly provided by Christoph Lampert
 # (christoph.lampert@tuebingen.mpg.de) and comes under the
 # Apache-License.
 
-def normalize_data(Xlist, operation):
+def normalize_data(Xlist, operation=None, operations=None):
     """Normalize data using the specified methods: 'bin'arize, 'L1', 'L2', 'whiten'ing, 
        'bias' (adds 1 to every entry), 'none'
        L1 and L2 are per-sample operations, binarization and whitening are per feature operations"""
 
-    if isinstance(operation,list)==False: # allow non-list specification of single operations
-        operation=[operation]
+    if operation:
+	if operations:
+	    raise AttributeError, "Specify either operation OR operations"
+	operations = [operation]
 
     Xtmp = []
     for Xi in Xlist:
         Xnorm = array(Xi,c_double)
-        for normtype in operation:
+        for normtype in operations:
             if normtype=='bin':
                 Xscale = median(Xnorm) # median is usually better than mean
                 Xnorm = 1.*(Xnorm>Xscale)

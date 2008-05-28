@@ -44,34 +44,26 @@ class SeqContainer(object):
         
     def getDataAsIter(self):
         """Return the stored data in a way it can be passed to iter()."""
-	try:
-	    if self.generator and not self.sequence:
-		# Input type is a generator function (hopefully)
-		if self.useGenerator:
-		    data = self.generator() # Call the generator
-		else:
-		    # Convert generator to sequence
-		    self.sequence = list(self.generator())
-		    self.generator = None
-		    data = self.sequence
-	    elif self.sequence and not self.generator:
-		if self.useGenerator:
-		    # Makes no sense to use generator here
-		    self.useGenerator = False
-		    #raise TypeError, 'Setting a list to be used as a generator makes no sense!'
-		data = self.sequence
+#	from IPython.Debugger import Tracer; debug_here = Tracer()
+#	debug_here()
+	if self.generator is not None and self.sequence is None:
+	    # Input type is a generator function (hopefully)
+	    if self.useGenerator:
+		data = self.generator() # Call the generator
 	    else:
-		raise NotImplementedError, "generator AND sequence given"
-
-        except ValueError: # for numpy funkyness
-	    if self.generator:
-		raise NotImplementedError, "generator AND sequence given"
+		# Convert generator to sequence
+		generator = self.generator()
+		self.sequence = list(generator)
+		self.generator = None
+		data = self.sequence
+	elif self.sequence is not None and self.generator is None:
 	    if self.useGenerator:
 		# Makes no sense to use generator here
 		self.useGenerator = False
-		#raise TypeError, 'Setting a list to be used as a generator makes no sense!'
 	    data = self.sequence
-	    
+	else:
+	    raise NotImplementedError, "generator AND sequence given"
+
         return data
 
     def __iter__(self):

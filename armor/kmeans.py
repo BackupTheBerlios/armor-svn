@@ -10,15 +10,15 @@ class kmeansObj(object):
     For performance reasons we use the kmeans implementation of Peter Gehler
     (pgehler@tuebingen.mpg.de, URL: http://mloss.org/software/view/48/)
 
-    Default is lazy, so the clustering will only be performed when it gets
-    accessed."""
+    Default is lazy, so the clustering will only be performed when the codebook
+    gets accessed."""
     def __init__(self, numClusters, maxiter=0, numruns=1, useGenerator=armor.useGenerator):
         self.numClusters = numClusters
         self.maxiter = maxiter
         self.numruns = numruns
 
 	self.inputType = armor.datatypes.VectorType(shape=['flatarray'])
-	self.outputType = armor.datatypes.VectorType(shape='flatarray')
+	self.outputType = armor.datatypes.VectorType(name='codebook', shape='flatarray')
 
 	self.inputSlot = armor.slot.inputSlot(name='vectors', acceptsType = self.inputType, bulk=True)
 	
@@ -31,7 +31,7 @@ class kmeansObj(object):
 	# Perform KMeans clustering
 	if armor.verbosity > 0:
 	    print "Performing kmeans clustering..."
-	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data).T, self.numClusters, self.maxiter, self.numruns)
+	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data), self.numClusters, self.maxiter, self.numruns)
 
 	return self.codebook
 	    
