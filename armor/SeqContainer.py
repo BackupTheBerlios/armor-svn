@@ -29,10 +29,8 @@ class SeqContainer(object):
     def __init__(self, sequence=None, generator=None, slot=None, labels=None, classes=None, useGenerator=armor.useGenerator):
         self.sequence = sequence
         self.generator = generator
-        self.useGenerator = useGenerator        
-        self.getDataAsIter() # Check if input parameters are sane
+        self.useGenerator = useGenerator
         self.slot = slot 
-
         self.labels = labels
         self.classes = classes
 

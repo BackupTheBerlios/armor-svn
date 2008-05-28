@@ -78,12 +78,20 @@ class ImageDataset(ImageBase):
         self.doPermutate = doPermutate
         self.allFNames = None # Filled by prepare()
         self.allLabels = None # Filled by prepare()
+	self.allFNamesTrain = None
+	self.allFNamesTest = None
+	self.allLabelsTrain = None
+	self.allLabelsTest = None
         self.categoryNames = None    # Contains the category names
 
 	self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
 	self.outputSlotTrain = armor.slot.outputSlot(name="ImagesTrain", outputType=self.outType)
 	self.outputSlotTest = armor.slot.outputSlot(name="ImagesTest", outputType=self.outType)
-	self.outputSlots = armor.slot.slots(slotlist = [self.outputSlotTrain, self.outputSlotTest])
+	self.outputSlotLabelsTrain = armor.slot.outputSlot(name="LabelsTrain", sequence=self.allLabelsTrain)
+	self.outputSlotLabelsTest = armor.slot.outputSlot(name="LabelsTest", sequence=self.allLabelsTest)
+	
+	self.outputSlots = armor.slot.slots(slotlist = [self.outputSlotTrain, self.outputSlotTest,
+							self.outputSlotLabelsTrain, self.outputSlotLabelsTest])
 
     def __iter__(self):
         return iter(self.outputSlot)
@@ -120,19 +128,32 @@ class ImageDataset(ImageBase):
 	    
 	# Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
-        self.outputSlotTrain.__init__(name="ImagesTrain", \
-				      outputType = self.outType, \
-				      iterator = self.iterTrain, \
-				      labels=self.allLabelsTrain, \
-				      classes=self.categoryNames, \
+        self.outputSlotTrain.__init__(name="ImagesTrain",
+				      outputType = self.outType,
+				      iterator = self.iterTrain,
+				      labels=self.allLabelsTrain,
+				      classes=self.categoryNames,
 				      useGenerator=useGenerator)
+
+	self.outputSlotLabelsTrain.__init__(name="LabelsTrain",
+					    sequence=self.allLabelsTrain,
+					    labels=self.allLabelsTrain,
+					    classes=self.categoryNames,
+					    useGenerator=useGenerator)
+	
 	if self.splitRatio is not None:
-	    self.outputSlotTest.__init__(name="ImagesTest", \
-					 outputType = self.outType, \
-					 iterator = self.iterTest, \
-					 labels=self.allLabelsTest, \
-					 classes=self.categoryNames, \
+	    self.outputSlotTest.__init__(name="ImagesTest",
+					 outputType = self.outType,
+					 iterator = self.iterTest,
+					 labels=self.allLabelsTest,
+					 classes=self.categoryNames,
 					 useGenerator=useGenerator)
+	    self.outputSlotLabelsTrain.__init__(name="LabelsTest",
+						sequence=self.allLabelsTest,
+						labels=self.allLabelsTest,
+						classes=self.categoryNames,
+						useGenerator=useGenerator)
+
 
 #===================================
     def iterTrain(self): #, imgSequence = None, idSequence = None):

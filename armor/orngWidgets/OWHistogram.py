@@ -1,7 +1,7 @@
 """
-<name>KMeans</name>
-<description>KMeans Clustering.</description>
-<icon>icons/KMeans.png</icon>
+<name>Histogram</name>
+<description>Compute Histograms.</description>
+<icon>icons/Rank.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
 <priority>25</priority>
 """
@@ -9,35 +9,32 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from exceptions import Exception
-import armor
-import armor.kmeans
+import armor.histogram
 from armor.SeqContainer import SeqContainer as SeqContainer
 
-class OWKmeans(OWWidget):
-    settingsList = ["numClusters", "maxiter", "numruns"]
+class OWHistogram(OWWidget):
+    settingsList = ["bins"]
 
-    def __init__(self, parent=None, signalManager = None, name='kmeans'):
+    def __init__(self, parent=None, signalManager = None, name='histogram'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
 
         self.callbackDeposit = []
 
         self.inputs = [("Data", SeqContainer, self.setData)]
-        self.outputs = [("Codebook", SeqContainer)] # , ("Histograms", ExampleTable)]
+        self.outputs = [("Histogram", SeqContainer)] # , ("Histograms", ExampleTable)]
 
-        self.useGenerator = armor.useGenerator
+        self.useGenerator = True
         
         # Settings
         self.name = name
         self.loadSettings()
 
-        self.numClusters = 20
-        self.maxiter = 0
-        self.numruns = 1
+	self.bins = 200
         
+        self.data = None                    # input data set
+
         wbN = OWGUI.widgetBox(self.controlArea, "kMeans Settings")
-        OWGUI.spin(wbN, self, "numClusters", 1, 100000, 100, None, "Number of clusters   ", orientation="horizontal")
-        OWGUI.spin(wbN, self, "maxiter", 0, 100000, 1, None, "Maximum number of iterations", orientation="horizontal")
-        OWGUI.spin(wbN, self, "numruns", 0, 100000, 1, None, "Number of runs ", orientation="horizontal")
+        OWGUI.spin(wbN, self, "bins", 1, 100000, 100, None, "Number of bins  ", orientation="horizontal")
 
         OWGUI.separator(self.controlArea)
         
@@ -49,9 +46,9 @@ class OWKmeans(OWWidget):
     def setData(self,slot):
         if not slot:
             return
-        self.kmeans = armor.kmeans.kmeansObj(numClusters = self.numClusters, maxiter = self.maxiter, numruns = self.numruns)
-	self.kmeans.inputSlot.registerInput(slot)
-        self.send("Codebook", self.kmeans.outputSlot)
+        self.histogram = armor.histogram.histogram(self.bins)
+	self.histogram.inputSlot.registerInput(slot)
+        self.send("Histogram", self.histogram.outputSlot)
 
 	# Create orange.ExampleTable
 	#histoList = []
@@ -70,7 +67,7 @@ class OWKmeans(OWWidget):
 
 def main():
     a=QApplication(sys.argv)
-    ows=OWKmeans()
+    ows=OWHistogram()
     ows.activateLoadedSettings()
     ows.show()
     sys.exit(a.exec_())

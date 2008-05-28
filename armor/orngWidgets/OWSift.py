@@ -9,6 +9,7 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from exceptions import Exception
+import armor
 import armor.sift
 from armor.SeqContainer import SeqContainer as SeqContainer
 
@@ -23,7 +24,7 @@ class OWSift(OWWidget):
         self.inputs = [("Images PIL", SeqContainer, self.setData)]
         self.outputs = [("Descriptors", SeqContainer)]
 
-        self.useGenerator = True
+        self.useGenerator = armor.useGenerator
         
         # Settings
         self.name = 'sift'
@@ -54,15 +55,13 @@ class OWSift(OWWidget):
         self.resize(100,250)
 
 
-    def setData(self,data):
-        if not data:
+    def setData(self, slot):
+        if not slot:
             return
-	print data
-        self.data = data
-        self.sift = armor.sift.siftObj(data, Octave=self.Octave, Levels=self.Levels, FirstOctave=self.FirstOctave, PeakThresh=self.PeakThresh, EdgeThresh=self.EdgeThresh, Orientations=self.Orientations, useGenerator=self.useGenerator)
-	# Copy the generator so different widgets get different generators
-	output = self.sift.outContainer
-	self.send("Descriptors", output)
+	self.sift = armor.sift.siftObj(Octave=self.Octave, Levels=self.Levels, FirstOctave=self.FirstOctave, PeakThresh=self.PeakThresh, EdgeThresh=self.EdgeThresh, Orientations=self.Orientations, useGenerator=self.useGenerator)
+	self.sift.inputSlot.registerInput(slot)
+
+	self.send("Descriptors", self.sift.outputSlot)
         
 if __name__ == "__main__":
     a=QApplication(sys.argv)

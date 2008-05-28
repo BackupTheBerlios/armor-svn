@@ -18,7 +18,7 @@ class slots(object):
         
 
 class inputSlot(object):
-    def __init__(self, name, senderSlot=None, group=None, acceptsType=None, bulk=False):
+    def __init__(self, name, senderSlot=None, group=None, acceptsType=None, bulk=False, useGenerator=armor.useGenerator):
         self.name = name
         self.senderSlot = senderSlot
         self.group = group
@@ -26,6 +26,7 @@ class inputSlot(object):
         self.container = None
         self.converters = None
 	self.bulk = bulk
+	self.useGenerator = useGenerator
         
     def __iter__(self):
         if not self.senderSlot:
@@ -34,34 +35,36 @@ class inputSlot(object):
 
     def convertSequential(self):
         senderIterator = self.senderSlot.container.getIter(self.group)
-	if not self.bulk:
-	    for item in senderIterator:
-		if self.converters and len(self.converters) > 0:
+	for item in senderIterator:
+	    if self.converters is not None:
+		if len(self.converters) > 0:
 		    for converter in self.converters:
 			item = converter(item)
-		yield item
+	    yield item
 
     def convertBulk(self):
 	senderIterator = self.senderSlot.container.getIter(self.group)
 	bunch = list(senderIterator)
-	if self.converters and len(self.converters) > 0:
-	    for converter in self.converters:
-		bunch = converter(bunch)
+	if self.converters is not None:
+	    if len(self.converters) > 0:
+		for converter in self.converters:
+		    bunch = converter(bunch)
 
 	for i in bunch:
 	    yield i
 	    
     def registerInput(self, senderSlot):
-        if armor.useTypeChecking and senderSlot.outputType:
+        if armor.useTypeChecking and senderSlot.outputType is not None:
             self.converters = self.acceptsType.compatible(senderSlot.outputType)
             if self.converters == False:
                 raise TypeError, "Slots are not compatible"
 
         self.senderSlot = senderSlot
 	if not self.bulk:
-	    self.container = SeqContainer(generator=self.convertSequential, slot=self.senderSlot)
+	    self.container = SeqContainer(generator=self.convertSequential, slot=self.senderSlot, useGenerator=self.useGenerator)
 	else:
-	    self.container = SeqContainer(generator=self.convertBulk, slot=self.senderSlot)
+	    self.container = SeqContainer(generator=self.convertBulk, slot=self.senderSlot, useGenerator=self.useGenerator)
+
         
     def registerGroup(self, reference=None, group=None):
         """Register to group."""
@@ -81,7 +84,7 @@ class outputSlot(object):
         self.iterator = iterator
         self.sequence = sequence
 	self.processFunc = processFunc
-	
+
         if processFunc is not None:
             if processFuncs is not None:
                 raise TypeError, "Specify either processFunc OR processFuncs"

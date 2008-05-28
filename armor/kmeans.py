@@ -20,12 +20,13 @@ class kmeansObj(object):
 	self.inputType = armor.datatypes.VectorType(shape=['flatarray'])
 	self.outputType = armor.datatypes.VectorType(name='codebook', shape='flatarray')
 
-	self.inputSlot = armor.slot.inputSlot(name='vectors', acceptsType = self.inputType, bulk=True)
+	self.inputSlot = armor.slot.inputSlot(name='vectors', acceptsType = self.inputType, bulk=True, useGenerator=useGenerator)
 	
 	self.outputSlot = armor.slot.outputSlot(name='codebook',
 						input = self.inputSlot,
 						slotType = 'bulk',
-						processFunc = self.process)
+						processFunc = self.process,
+						useGenerator=useGenerator)
 	
     def process(self, data):
 	# Perform KMeans clustering

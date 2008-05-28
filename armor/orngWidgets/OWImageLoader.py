@@ -28,6 +28,7 @@ import OWGUI
 import os
 import os.path
 import numpy
+import armor
 from armor.ImageDataset import *
 from armor.SeqContainer import SeqContainer as SeqContainer
 
@@ -101,9 +102,9 @@ class OWImageLoader(OWImageSubFile):
         self.imgDataset = armor.ImageDataset.ImageDataset()
         
         self.inputs = []
-        self.outputs = [("Images PIL", SeqContainer), ("Attritube Definitions", orange.Domain)]
+        self.outputs = [("Images Train", SeqContainer), ("Images Test", SeqContainer), ("Labels Train", SeqContainer),("Labels Test", SeqContainer)]
 
-        self.useGenerator = True
+        self.useGenerator = armor.useGenerator
         
         #set default settings
         self.recentFiles=["(none)"]
@@ -155,9 +156,11 @@ class OWImageLoader(OWImageSubFile):
         if len(self.imgDataset.categories) == 0:
             return
         
-        self.imgDataset.prepare(useGenerator=self.useGenerator)
-        self.send("Images PIL", self.imgDataset.outContainer)
-        
+#        self.imgDataset.prepare(useGenerator=self.useGenerator)
+        self.send("Images Train", self.imgDataset.outputSlotTrain)
+	self.send("Images Test", self.imgDataset.outputSlotTest)
+        self.send("Labels Train", self.imgDataset.outputSlotLabelsTrain)
+	self.send("Labels Test", self.imgDataset.outputSlotLabelsTest)
         
 #==================================
     def addCategory(self, parent=None, name="", fnames=None, visible=False):
@@ -274,6 +277,7 @@ class OWImageLoader(OWImageSubFile):
     def apply(self):
     # User pressed apply button, hide the dialog (should we close here?)
 #==================================
+        self.imgDataset.prepare(useGenerator=self.useGenerator)
         self.sendData()
         self.setVisible(0)
 

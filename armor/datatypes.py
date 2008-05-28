@@ -38,12 +38,13 @@ class basetype(object):
 		if key == 'function':
 		    continue
 		for inType in self.dataType[key]:
-		    if conversion[key][0] != toType[key] and conversion[key][1] != inType:
-			convert = False
-		    
+		    if toType[key] != inType:
+			if conversion[key][0] != toType[key] and conversion[key][1] != inType:
+			    convert = False
+
 		if convert:
 		    return [conversion['function']]
-		convert = True
+		
 
 	# No
 	return False

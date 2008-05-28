@@ -4,17 +4,18 @@ import armor.datatypes
 import armor
 
 class siftObj(object):
-    def __init__(self, useGenerator=armor.useGenerator, verbose=True, **kwargs):
+    def __init__(self, useGenerator=armor.useGenerator, **kwargs):
         self.kwargs = kwargs
 	self.inputType = armor.datatypes.ImageType(format=["PIL"], color_space=["gray"])
 	self.outputType = armor.datatypes.VectorType(shape='nestedarray')
 
-	self.inputSlot = armor.slot.inputSlot(name='Images', acceptsType = self.inputType)
+	self.inputSlot = armor.slot.inputSlot(name='Images', acceptsType = self.inputType, useGenerator=useGenerator)
 	self.outputSlot = armor.slot.outputSlot(name='Sift Descriptors',
 						outputType=self.outputType,
 						input=self.inputSlot,
 						processFunc=self.process,
-						slotType='sequential')
+						slotType='sequential',
+						useGenerator=useGenerator)
 
     def process(self, img):
 	if armor.verbosity > 0:
