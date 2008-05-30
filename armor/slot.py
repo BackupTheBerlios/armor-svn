@@ -121,6 +121,9 @@ class outputSlot(object):
         inputIter = self.inputSlot.container.getIter(group=self.group)
         for item in inputIter:
             for processFunc in self.processFuncs:
+		if armor.useOrange:
+		    from PyQt4.QtGui import qApp
+		    qApp.processEvents()
                 item = processFunc(item)
             yield item
             

@@ -23,6 +23,10 @@ class quantize(object):
 						inputSlots=[self.inputSlotVec, self.inputSlotCodebook])
 
     def quantize(self):
+	self.inputSlotVec.registerGroup(armor.groupCounter)
+	self.inputSlotCodebook.registerGroup(armor.groupCounter)
+	armor.groupCounter += 1
+	
         codebook = numpy.array(list(self.inputSlotCodebook))
 
         for vecs in self.inputSlotVec:

@@ -3,7 +3,7 @@
 <description>Return the closest cluster center.</description>
 <icon>icons/MDS.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
-<priority>25</priority>
+<priority>15</priority>
 """
 import orngOrangeFoldersQt4
 from OWWidget import *

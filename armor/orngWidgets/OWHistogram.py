@@ -3,7 +3,7 @@
 <description>Compute Histograms.</description>
 <icon>icons/Rank.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
-<priority>25</priority>
+<priority>20</priority>
 """
 import orngOrangeFoldersQt4
 from OWWidget import *

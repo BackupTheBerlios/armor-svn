@@ -34,7 +34,6 @@ from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWImageSubFile(OWWidget):
     """Basic functionality like opening a file dialog"""
-    settingsList=["recentFiles"]
     allFileWidgets = []
 
     def __init__(self, parent=None, signalManager = None, name = ""):
@@ -98,9 +97,10 @@ class OWImageLoader(OWImageSubFile):
 #*********************************************************
     def __init__(self, parent=None, signalManager = None):
         OWImageSubFile.__init__(self, parent, signalManager, "Image Dataset")
-
+        settingsList=["imgDataset"]
+	
         self.imgDataset = armor.ImageDataset.ImageDataset()
-        
+	
         self.inputs = []
         self.outputs = [("Images Train", SeqContainer), ("Images Test", SeqContainer), ("Labels Train", SeqContainer),("Labels Test", SeqContainer)]
 

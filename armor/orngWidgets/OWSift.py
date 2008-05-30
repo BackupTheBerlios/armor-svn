@@ -3,7 +3,7 @@
 <description>Scale invariant feature transform.</description>
 <icon>icons/kNearestNeighbours.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
-<priority>25</priority>
+<priority>5</priority>
 """
 import orngOrangeFoldersQt4
 from OWWidget import *

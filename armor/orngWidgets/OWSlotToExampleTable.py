@@ -10,7 +10,6 @@ from OWWidget import *
 import OWGUI
 from armor.SeqContainer import SeqContainer as SeqContainer
 import orange
-from orange import ExampleTable
 
 class OWSlotToExampleTable(OWWidget):
     settingsList = []
@@ -35,16 +34,20 @@ class OWSlotToExampleTable(OWWidget):
 
 
     def setLabels(self, slot):
-        if slot is None and self.labels is None:
+	if slot is None:
             return
         self.labels = slot
         if self.data is not None:
             self.createExampleTable()
             
     def setData(self, slot):
-        if slot is None and self.data is None:
+	if slot is None:
             return
         self.data = slot
+	if self.labels is None:
+	    return
+	#self.data.registerGroup(armor.groupCounter)
+	#armor.groupCounter += 1
         if self.labels is not None:
             self.createExampleTable()
             

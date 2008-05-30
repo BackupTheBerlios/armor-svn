@@ -1,33 +1,43 @@
 # set default to use lazy evaluation where possible
-useGenerator=True
+useGenerator=False
 useTypeChecking=True
+groupCounter=0
 verbosity=1
+useOrange=True
 
+def stripSlot(slot):
+    import pickle
+    slot.container.useGenerator=False
+    slot.container.getDataAsIter()
+    slot.seqIterator = None
+    slot.bulkIterator = None
+    slot.processFunc = None
+    slot.processFuncs = None
+    slot.inputSlot = None
 
-def saveSlots(outputSlots, fname):
+def saveSlots(fname, outputSlot=None, outputSlots=None):
     import pickle
 
     # First, let every output slot process and save all the data
     # Also, remove all instancemethods
-    for slot in outputSlots:
-	slot.container.useGenerator=False
-	slot.container.getDataAsIter()
-	slot.seqIterator = None
-	slot.bulkIterator = None
-	slot.processFunc = None
-	slot.processFuncs = None
-	slot.inputSlot = None
-	
     try:
 	fdescr = open(fname, mode='w')
-	pickle.dump(outputSlots, fdescr)
+
+	if outputSlot is not None:
+	    stripSlot(outputSlot)
+	    pickle.dump(outputSlot, fdescr)
+	    
+	elif outputSlots is not None:
+	    for slot in outputSlots:
+		stripSlot(slot)
+	    pickle.dump(outputSlots, fdescr)
+	    
     finally:
 	del fdescr
 
     
 def loadSlots(fname):
     import pickle
-    import armor.slot
 
     try:
 	fdescr = open(fname, mode='r')
@@ -35,7 +45,7 @@ def loadSlots(fname):
     finally:
 	del fdescr
 
-    return armor.slot.slots(outputSlots)
+    return outputSlots
     
 	
     

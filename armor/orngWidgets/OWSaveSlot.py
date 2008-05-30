@@ -1,20 +1,18 @@
 """
-<name>KMeans</name>
-<description>KMeans Clustering.</description>
-<icon>icons/KMeans.png</icon>
+<name>SaveSlot</name>
+<description>Save a slot to a file.</description>
+<icon>icons/Save.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
-<priority>10</priority>
+<priority>3</priority>
 """
 import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from exceptions import Exception
 import armor
-import armor.kmeans
 from armor.SeqContainer import SeqContainer as SeqContainer
-
-class OWKmeans(OWWidget):
-    settingsList = ["numClusters", "maxiter", "numruns"]
+class OWSaveSlot(OWWidget):
+    settingsList = []
 
     def __init__(self, parent=None, signalManager = None, name='kmeans'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
@@ -22,7 +20,7 @@ class OWKmeans(OWWidget):
         self.callbackDeposit = []
 
         self.inputs = [("Data", SeqContainer, self.setData)]
-        self.outputs = [("Codebook", SeqContainer)] # , ("Histograms", ExampleTable)]
+        self.outputs = []
 
         self.useGenerator = armor.useGenerator
         
@@ -30,28 +28,44 @@ class OWKmeans(OWWidget):
         self.name = name
         self.loadSettings()
 
-        self.numClusters = 20
-        self.maxiter = 0
-        self.numruns = 1
+	self.fname = None
+        self.slot = None
+	
+        wbN = OWGUI.widgetBox(self.controlArea, "SaveSlot settings")
+	
+        #OWGUI.separator(self.controlArea)
         
-        wbN = OWGUI.widgetBox(self.controlArea, "kMeans Settings")
-        OWGUI.spin(wbN, self, "numClusters", 1, 100000, 100, None, "Number of clusters   ", orientation="horizontal")
-        OWGUI.spin(wbN, self, "maxiter", 0, 100000, 1, None, "Maximum number of iterations", orientation="horizontal")
-        OWGUI.spin(wbN, self, "numruns", 0, 100000, 1, None, "Number of runs ", orientation="horizontal")
-
-        OWGUI.separator(self.controlArea)
-        
-        #OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.apply, disabled=0)
+        OWGUI.button(self.controlArea, self, "Save to...", callback = self.browseFile, disabled=0)
 
         self.resize(100,150)
 
+    def browseFile(self, filters=None):
+        """Display a FileDialog and select an existing file, 
+        or a dir (dir=1) or a new file (save=1).
+        filters can be a list with all extensions to be displayed during browsing
+        Returned is/are the selected item(s) with complete path."""
+        if not filters:
+            filters = ["All (*.*)"]
+
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.AnyFile)
+
+        dialog.setFilters(QStringList(filters))
+        dialog.setViewMode(QFileDialog.List)
+
+        if not dialog.exec_():
+            return None
+
+        selected = dialog.selectedFiles()
+
+        self.fname = str(selected[0])
+	self.setData(self.slot)
 
     def setData(self,slot):
-        if not slot:
+	self.slot = slot
+        if self.slot is None or self.fname is None:
             return
-        self.kmeans = armor.kmeans.kmeansObj(numClusters = self.numClusters, maxiter = self.maxiter, numruns = self.numruns)
-	self.kmeans.inputSlot.registerInput(slot)
-        self.send("Codebook", self.kmeans.outputSlot)
+        armor.saveSlots(self.fname, outputSlot=slot)
 
 	# Create orange.ExampleTable
 	#histoList = []
