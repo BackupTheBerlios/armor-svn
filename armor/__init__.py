@@ -1,3 +1,5 @@
+import weakref
+
 # set default to use lazy evaluation where possible
 useGenerator=True
 useTypeChecking=True
@@ -48,5 +50,36 @@ def loadSlots(fname):
 
     return outputSlots
     
+def applySettings(settingsList, widget, obj=None, kwargs=None):
+    changed = False
+
+    if obj is not None:
+	for setting in settingsList:
+	    try:
+		if getattr(obj, setting):
+		    if getattr(widget, setting) != getattr(obj, setting):
+			setattr(obj, setting, getattr(widget, setting))
+			changed = True
+	    except AttributeError:
+		pass
+
+    if kwargs is not None:
+	for setting in settingsList:
+	    if setting in kwargs:
+		if kwargs[setting] != getattr(widget, setting):
+		    kwargs[setting] = getattr(widget, setting)
+		    changed = True
+
+
+    if changed:
+	print "Changed"
+	return True
 	
-    
+    return False
+
+def weakmethod(obj, methname):
+    r = weakref.ref(obj)
+    del obj
+    def _weakmethod(*args, **kwargs):
+        return getattr(r(), methname)(*args, **kwargs)
+    return _weakmethod

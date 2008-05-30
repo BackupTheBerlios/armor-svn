@@ -13,7 +13,7 @@ import armor.quantize
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWQuantize(OWWidget):
-    settingsList = []
+    settingsList = ['useGenerator']
 
     def __init__(self, parent=None, signalManager = None, name='kmeans'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
@@ -23,7 +23,7 @@ class OWQuantize(OWWidget):
         self.inputs = [("Codebook", SeqContainer, self.setCodebook), ("Data", SeqContainer, self.setData)]
         self.outputs = [("Clusters", SeqContainer)]
 
-        self.useGenerator = True
+        self.useGenerator = armor.useGenerator
         
         # Settings
         self.name = name
@@ -40,19 +40,21 @@ class OWQuantize(OWWidget):
 
         self.resize(100,150)
 
-	self.quantize = armor.quantize.quantize()
+	self.quantize = armor.quantize.quantize(useGenerator=self.useGenerator)
 
 
     def setData(self,slot):
         if not slot:
             return
-	self.quantize.inputSlotVec.registerInput(slot)
+	if self.quantize.inputSlotVec.senderSlot is None or self.quantize.inputSlotVec.senderSlot() is None:
+	    self.quantize.inputSlotVec.registerInput(slot)
         self.send("Clusters", self.quantize.outputSlot)
 
     def setCodebook(self, slot):
 	if not slot:
 	    return
-	self.quantize.inputSlotCodebook.registerInput(slot)
+	if self.quantize.inputSlotCodebook.senderSlot is None or self.quantize.inputSlotCodebook.senderSlot() is None:
+	    self.quantize.inputSlotCodebook.registerInput(slot)
 	self.send("Clusters", self.quantize.outputSlot)
 	
 	# Create orange.ExampleTable

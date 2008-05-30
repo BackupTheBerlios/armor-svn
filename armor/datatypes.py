@@ -1,4 +1,5 @@
 import types
+import armor
 
 class basetype(object):
     def __init__(self, **kwargs):
@@ -63,13 +64,13 @@ class ImageType(basetype):
 
         self.conversions = [{'format': ('PIL', 'PIL'),
 			     'color_space': ('RGB', 'gray'),
-			     'function': self.convert_PIL_RGB_to_PIL_gray},
+			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_PIL_gray')},
 			    {'format': ('PIL', 'numpy'),
 			     'color_space': ('RGB', 'RGB'),
-			     'function': self.convert_PIL_RGB_to_numpy_RGB},
+			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_RGB')},
 			    {'format': ('PIL', 'numpy'),
 			     'color_space': ('RGB', 'gray'),
-			     'function': self.convert_PIL_RGB_to_numpy_gray}
+			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_gray')}
 			    ]
 			    
     
@@ -92,9 +93,9 @@ class VectorType(basetype):
                            }
 
         self.conversions = [{'shape': ('nestedlist', 'flatarray'),
-			     'function': self.convert_nestedlist_to_flatarray},
+			     'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')},
 			    {'shape': ('nestedarray', 'flatarray'),
-			     'function': self.convert_nestedlist_to_flatarray}
+			     'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')}
 			    ]
 
     def convert_nestedlist_to_flatarray(self, lst):

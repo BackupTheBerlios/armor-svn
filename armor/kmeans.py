@@ -16,7 +16,8 @@ class kmeansObj(object):
         self.numClusters = numClusters
         self.maxiter = maxiter
         self.numruns = numruns
-
+	self.useGenerator = useGenerator
+	
 	self.inputType = armor.datatypes.VectorType(shape=['flatarray'])
 	self.outputType = armor.datatypes.VectorType(name='codebook', shape='flatarray')
 
@@ -25,13 +26,13 @@ class kmeansObj(object):
 	self.outputSlot = armor.slot.outputSlot(name='codebook',
 						input = self.inputSlot,
 						slotType = 'bulk',
-						processFunc = self.process,
-						useGenerator=useGenerator)
+						processFunc = armor.weakmethod(self, 'process'),
+						useGenerator= self.useGenerator)
 	
     def process(self, data):
 	# Perform KMeans clustering
 	if armor.verbosity > 0:
-	    print "Performing kmeans clustering..."
+	    print "Performing kmeans clustering with k=%i..." % self.numClusters
 	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data), self.numClusters, self.maxiter, self.numruns)
 
 	return self.codebook

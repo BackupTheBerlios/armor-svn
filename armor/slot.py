@@ -2,6 +2,8 @@ import armor
 from armor.SeqContainer import SeqContainer
 import weakref
 
+
+
 class slots(object):
     def __init__(self, slotlist = None):
         self.slots = set(slotlist)
@@ -34,7 +36,7 @@ class inputSlot(object):
         return iter(self.container)
 
     def convertSequential(self):
-	for item in self.senderSlot.container:
+	for item in self.senderSlot().container:
 	    if self.converters is not None:
 		if len(self.converters) > 0:
 		    for converter in self.converters:
@@ -42,7 +44,7 @@ class inputSlot(object):
 	    yield item
 
     def convertBulk(self):
-	bunch = list(self.senderSlot.container)
+	bunch = list(self.senderSlot().container)
 	if self.converters is not None:
 	    if len(self.converters) > 0:
 		for converter in self.converters:
@@ -57,14 +59,21 @@ class inputSlot(object):
             if self.converters == False:
                 raise TypeError, "Slots are not compatible"
 
-        self.senderSlot = senderSlot
-	if armor.useGrouping:
-	    self.senderSlot.registerReference()
-
-	if not self.bulk:
-	    self.container = SeqContainer(generator=self.convertSequential, slot=self.senderSlot, useGenerator=self.useGenerator)
+	if self.senderSlot:
+	    if self.senderSlot() is not senderSlot:
+		self.senderSlot = weakref.ref(senderSlot)
+	
+		if armor.useGrouping:
+		    senderSlot.container.registerReference(self)
 	else:
-	    self.container = SeqContainer(generator=self.convertBulk, slot=self.senderSlot, useGenerator=self.useGenerator)
+	    self.senderSlot = weakref.ref(senderSlot)
+	    if armor.useGrouping:
+		senderSlot.container.registerReference(self)
+		
+	if not self.bulk:
+	    self.container = SeqContainer(generator=self.convertSequential, useGenerator=self.useGenerator)
+	else:
+	    self.container = SeqContainer(generator=self.convertBulk, useGenerator=self.useGenerator)
 
         
 
@@ -90,17 +99,17 @@ class outputSlot(object):
 
         # Create an output container
 	if self.sequence is not None:
-	    self.container = SeqContainer(sequence=self.sequence, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	    self.container = SeqContainer(sequence=self.sequence, labels=labels, classes=classes, useGenerator=useGenerator)
 	elif self.iterator is not None: # User defined iterator
-	    self.container = SeqContainer(generator=self.iterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	    self.container = SeqContainer(generator=self.iterator, labels=labels, classes=classes, useGenerator=useGenerator)
 	elif slotType == 'sequential': # Sequential iterator
 	    if self.processFunc is None and self.processFuncs is None:
 		raise AttributeError, "You must provided processFunc or processFuncs to use generic iterators"
-	    self.container = SeqContainer(generator=self.seqIterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	    self.container = SeqContainer(generator=armor.weakmethod(self, 'seqIterator'), labels=labels, classes=classes, useGenerator=useGenerator)
 	elif slotType == 'bulk': # Bulk iterator
     	    if self.processFunc is None and self.processFuncs is None:
 		raise AttributeError, "You must provided processFunc or processFuncs to use generic iterators"
-	    self.container = SeqContainer(generator=self.bulkIterator, slot=self, labels=labels, classes=classes, useGenerator=useGenerator)
+	    self.container = SeqContainer(generator=armor.weakmethod(self, 'bulkIterator'), labels=labels, classes=classes, useGenerator=useGenerator)
 	else:
 	    self.container = None
 	    
@@ -113,8 +122,7 @@ class outputSlot(object):
         """Generator which iterates over the input elements, calling
         processFuncs and yields the processed element, one at a time.
         """
-        inputIter = self.inputSlot.container
-        for item in inputIter:
+        for item in self.inputSlot.container:
             for processFunc in self.processFuncs:
 		if armor.useOrange:
 		    from PyQt4.QtGui import qApp
@@ -134,9 +142,3 @@ class outputSlot(object):
             
         for item in inData:
             yield item
-            
-    def registerReference(self):
-        """Register to group."""
-        self.container.registerReference()
-
-    

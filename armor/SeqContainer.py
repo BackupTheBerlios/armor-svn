@@ -26,24 +26,21 @@ class SeqContainer(object):
     all classes in armor.prototypes do so it is most convenient to
     inherit from the appropriate prototype).
     """
-    def __init__(self, sequence=None, generator=None, slot=None, labels=None, classes=None, useGenerator=armor.useGenerator):
+    def __init__(self, sequence=None, generator=None, labels=None, classes=None, useGenerator=armor.useGenerator):
         self.sequence = sequence
-        self.generator = generator
+	self.generator = generator
+	    
         self.useGenerator = useGenerator
-        self.slot = slot 
         self.labels = labels
         self.classes = classes
 
-        #        self.__dict__.update(**kwargs)
-        self.references = 0    # Registered objects with appropriate group ID
+        self.references = weakref.WeakValueDictionary()    # Registered objects with appropriate group ID
         self.iterpool = []     # For storing the iterators of each
                                # group until every group member
                                # received it
         
     def getDataAsIter(self):
         """Return the stored data in a way it can be passed to iter()."""
-#	from IPython.Debugger import Tracer; debug_here = Tracer()
-#	debug_here()
 	if self.generator is not None and self.sequence is None:
 	    # Input type is a generator function (hopefully)
 	    if self.useGenerator:
@@ -65,22 +62,23 @@ class SeqContainer(object):
         return data
 
     def __iter__(self):
-	if self.references <= 1:
+	if len(self.references) <= 1:
             return iter(self.getDataAsIter())
 
         if len(self.iterpool) == 0:
             # Create a pool of cached iterators for that group
-            self.iterpool = list(itertools.tee(self.getDataAsIter(), self.references))
+            self.iterpool = list(itertools.tee(self.getDataAsIter(), len(self.references)))
 
         # Hand one cached iterator to the group member.
         return self.iterpool.pop()
     
-    def registerReference(self):
+    def registerReference(self, obj, replaces=None):
         """Register an object and add it to group. Registered objects
         in the same group receive cached iterators (for more details
         see the description of the SeqContainer class)"""
-		
-        self.references += 1
+
+	self.references[id(obj)] = obj
+	
         
 
 

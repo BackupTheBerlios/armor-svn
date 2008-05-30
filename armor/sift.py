@@ -6,6 +6,8 @@ import armor
 class siftObj(object):
     def __init__(self, useGenerator=armor.useGenerator, **kwargs):
         self.kwargs = kwargs
+	self.useGenerator = useGenerator
+	
 	self.inputType = armor.datatypes.ImageType(format=["PIL"], color_space=["gray"])
 	self.outputType = armor.datatypes.VectorType(shape='nestedarray')
 
@@ -13,9 +15,9 @@ class siftObj(object):
 	self.outputSlot = armor.slot.outputSlot(name='Sift Descriptors',
 						outputType=self.outputType,
 						input=self.inputSlot,
-						processFunc=self.process,
+						processFunc=armor.weakmethod(self, 'process'),
 						slotType='sequential',
-						useGenerator=useGenerator)
+						useGenerator=self.useGenerator)
 
     def process(self, img):
 	if armor.verbosity > 0:

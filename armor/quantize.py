@@ -5,7 +5,10 @@ import numpy
 from scipy import cluster
 
 class quantize(object):
-    def __init__(self):
+    def __init__(self, useGenerator=armor.useGenerator):
+
+	self.useGenerator = useGenerator
+	
         inputTypeVec = armor.datatypes.VectorType(shape=['nestedlist', 'nestedarray'])
         inputTypeCodebook = armor.datatypes.VectorType(name=['codebook'], shape=['flatarray'])
         
@@ -19,8 +22,9 @@ class quantize(object):
         
         self.outputSlot = armor.slot.outputSlot(name='cluster',
                                                 outputType=outputType,
-                                                iterator=self.quantize,
-						inputSlots=[self.inputSlotVec, self.inputSlotCodebook])
+                                                iterator=armor.weakmethod(self, 'quantize'),
+						inputSlots=[self.inputSlotVec, self.inputSlotCodebook],
+						useGenerator=self.useGenerator)
 
     def quantize(self):
 	#self.inputSlotVec.registerGroup(armor.groupCounter)

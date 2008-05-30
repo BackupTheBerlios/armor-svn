@@ -1,6 +1,6 @@
 """
-<name>ListToExampleTable</name>
-<description>Converts a List/Generator to ExampleTable.</description>
+<name>SlotToExampleTable</name>
+<description>Converts an armor slot to an orange ExampleTable.</description>
 <icon>icons/DataTable.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
 <priority>25</priority>
@@ -9,6 +9,7 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from armor.SeqContainer import SeqContainer as SeqContainer
+import weakref
 import orange
 
 class OWSlotToExampleTable(OWWidget):
@@ -36,34 +37,34 @@ class OWSlotToExampleTable(OWWidget):
     def setLabels(self, slot):
 	if slot is None:
             return
-        self.labels = slot
-        if self.data is not None:
+        self.labels = weakref.ref(slot)
+        if self.data is not None and self.data() is not None:
             self.createExampleTable()
             
     def setData(self, slot):
 	if slot is None:
             return
-        self.data = slot
-	if self.labels is None:
+        self.data = weakref.ref(slot)
+	if self.labels is None or self.labels() is None:
 	    return
 	#self.data.registerGroup(armor.groupCounter)
 	#armor.groupCounter += 1
-        if self.labels is not None:
+        if self.labels is not None and self.labels() is not None:
             self.createExampleTable()
             
     def createExampleTable(self):
         # Create orange.ExampleTable
         datalabels = []
-        data = list(self.data)
-        labels = list(self.labels)
+        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
+        #from IPython.Debugger import Tracer; debug_here = Tracer()
+        #debug_here()
+        data = list(self.data())
+        labels = list(self.labels())
         
         for vec,label in zip(data, labels):
             datalabels.append(list(vec) + [str(label)])
             
-        domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(data[0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in self.labels.container.classes]))])
-        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        #from IPython.Debugger import Tracer; debug_here = Tracer()
-        #debug_here()
+        domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(data[0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in self.labels().container.classes]))])
 
         orngTable = orange.ExampleTable(domain, datalabels)
         self.send("Table", orngTable)

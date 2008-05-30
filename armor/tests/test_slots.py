@@ -2,6 +2,7 @@ import unittest
 import armor
 import armor.slot
 import armor.datatypes
+import gc
 
 class TestTypes(unittest.TestCase):
     def setUp(self):
@@ -104,11 +105,6 @@ class TestTypes(unittest.TestCase):
 
         self.slotInput2.registerInput(self.slotSend)
 
-        self.slotRecv.registerGroup(group=1)
-        self.slotRecv2.registerGroup(group=1)
-
-        self.assertEqual(self.slotSend.container.references[1], 2)
-        
         self.assertEqual([i for i in self.slotRecv], range(10))
         self.assertEqual([i for i in self.slotRecv2], range(10))
         

@@ -4,7 +4,10 @@ import armor.datatypes
 import numpy
 
 class histogram(object):
-    def __init__(self, bins):
+    def __init__(self, bins, useGenerator=armor.useGenerator):
+	self.useGenerator = useGenerator
+	self.bins = bins
+	
 	inputType = armor.datatypes.VectorType(shape=['flatarray'])
 	outputType = armor.datatypes.VectorType(shape=['flatarray'])
 
@@ -14,12 +17,11 @@ class histogram(object):
 	self.outputSlot = armor.slot.outputSlot(name='histogram',
 						input = self.inputSlot,
 						slotType = 'sequential',
-						processFunc = self.histogram)
+						processFunc = armor.weakmethod(self, 'histogram'),
+						useGenerator = self.useGenerator)
 
-	self.bins = bins
-
-
+	
     def histogram(self, vector):
 	if armor.verbosity > 0:
-	    print "Computing Histogram..."
+	    print "Computing Histogram with %i bins..." % self.bins
 	return numpy.histogram(vector, bins = self.bins)[0]

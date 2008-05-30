@@ -9,6 +9,7 @@ import armor.histogram
 import armor
 import numpy
 import os.path
+import gc
 
 class testAll(unittest.TestCase):
     def setUp(self):
@@ -18,8 +19,8 @@ class testAll(unittest.TestCase):
 	self.imgDataset.prepare()
 
     def testGenerator(self):
-#	from IPython.Debugger import Tracer; debug_here = Tracer()
-#	debug_here()
+	#from IPython.Debugger import Tracer; debug_here = Tracer()
+	#debug_here()
 
 	sft = armor.sift.siftObj()
         km = armor.kmeans.kmeansObj(3)
@@ -31,8 +32,12 @@ class testAll(unittest.TestCase):
 	qt.inputSlotCodebook.registerInput(km.outputSlot)
 	qt.inputSlotVec.registerInput(sft.outputSlot)
 	hg.inputSlot.registerInput(qt.outputSlot)
-		
+	
 	print list(hg.outputSlot)
+	del sft
+	self.assertRaises(AttributeError, list(hg.outputSlot))
+#	del km
+#	self.assertRaises(AttributeError, list(hg.outputSlot))
 	
 #	armor.saveSlots([km.outputSlot], 'kmeansSlot.pickle')
 #	kmSlots = armor.loadSlots('kmeansSlot.pickle')
