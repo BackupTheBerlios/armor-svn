@@ -31,8 +31,7 @@ class testAll(unittest.TestCase):
 	qt.inputSlotCodebook.registerInput(km.outputSlot)
 	qt.inputSlotVec.registerInput(sft.outputSlot)
 	hg.inputSlot.registerInput(qt.outputSlot)
-	hg.outputSlot.registerGroup(group=1)
-	
+		
 	print list(hg.outputSlot)
 	
 #	armor.saveSlots([km.outputSlot], 'kmeansSlot.pickle')

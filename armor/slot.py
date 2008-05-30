@@ -34,8 +34,7 @@ class inputSlot(object):
         return iter(self.container)
 
     def convertSequential(self):
-        senderIterator = self.senderSlot.container.getIter(self.group)
-	for item in senderIterator:
+	for item in self.senderSlot.container:
 	    if self.converters is not None:
 		if len(self.converters) > 0:
 		    for converter in self.converters:
@@ -43,8 +42,7 @@ class inputSlot(object):
 	    yield item
 
     def convertBulk(self):
-	senderIterator = self.senderSlot.container.getIter(self.group)
-	bunch = list(senderIterator)
+	bunch = list(self.senderSlot.container)
 	if self.converters is not None:
 	    if len(self.converters) > 0:
 		for converter in self.converters:
@@ -60,18 +58,15 @@ class inputSlot(object):
                 raise TypeError, "Slots are not compatible"
 
         self.senderSlot = senderSlot
+	if armor.useGrouping:
+	    self.senderSlot.registerReference()
+
 	if not self.bulk:
 	    self.container = SeqContainer(generator=self.convertSequential, slot=self.senderSlot, useGenerator=self.useGenerator)
 	else:
 	    self.container = SeqContainer(generator=self.convertBulk, slot=self.senderSlot, useGenerator=self.useGenerator)
 
         
-    def registerGroup(self, reference=None, group=None):
-        """Register to group."""
-        self.group = group
-        self.container.registerGroup(group=self.group)
-        # Propagate further
-        self.senderSlot.registerGroup(group=self.group)
 
         
 class outputSlot(object):
@@ -118,7 +113,7 @@ class outputSlot(object):
         """Generator which iterates over the input elements, calling
         processFuncs and yields the processed element, one at a time.
         """
-        inputIter = self.inputSlot.container.getIter(group=self.group)
+        inputIter = self.inputSlot.container
         for item in inputIter:
             for processFunc in self.processFuncs:
 		if armor.useOrange:
@@ -132,7 +127,7 @@ class outputSlot(object):
         """Generator which iteratates over the input elements, saves them
         and calls the processFuncs on the complete input data.
         (e.g. clustering, normalization). """
-        inData = list(self.inputSlot.container.getIter(group=self.group))
+        inData = list(self.inputSlot.container)
 
         for processFunc in self.processFuncs:
             inData = processFunc(inData)
@@ -140,14 +135,8 @@ class outputSlot(object):
         for item in inData:
             yield item
             
-    def registerGroup(self, reference=None, group=None):
+    def registerReference(self):
         """Register to group."""
-        self.group = group
-        self.container.registerGroup(group=self.group)
-        # Propagate further
-        if self.inputSlot is not None:
-            self.inputSlot.registerGroup(group=self.group)
-	elif self.inputSlots is not None:
-	    for slot in self.inputSlots:
-		slot.registerGroup(group=self.group)
+        self.container.registerReference()
+
     

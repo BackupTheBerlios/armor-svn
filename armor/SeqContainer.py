@@ -35,8 +35,8 @@ class SeqContainer(object):
         self.classes = classes
 
         #        self.__dict__.update(**kwargs)
-        self.references = {}   # Registered objects with appropriate group ID
-        self.iterpool = {}     # For storing the iterators of each
+        self.references = 0    # Registered objects with appropriate group ID
+        self.iterpool = []     # For storing the iterators of each
                                # group until every group member
                                # received it
         
@@ -65,35 +65,23 @@ class SeqContainer(object):
         return data
 
     def __iter__(self):
-        iterator = iter(self.getDataAsIter())  # Create a single
-                                        # iterator for every object.
-        return iterator
+	if self.references <= 1:
+            return iter(self.getDataAsIter())
 
-    def registerGroup(self, reference=None, group=None):
+        if len(self.iterpool) == 0:
+            # Create a pool of cached iterators for that group
+            self.iterpool = list(itertools.tee(self.getDataAsIter(), self.references))
+
+        # Hand one cached iterator to the group member.
+        return self.iterpool.pop()
+    
+    def registerReference(self):
         """Register an object and add it to group. Registered objects
         in the same group receive cached iterators (for more details
         see the description of the SeqContainer class)"""
-        if not self.slot:
-            raise ValueError, 'slot must be set to use this feature'
-
-        if not group in self.references:
-            self.references[group] = 1
-        else:
-            self.references[group] += 1
-            
-        self.iterpool[group] = []
+		
+        self.references += 1
         
-    def getIter(self, group=None):
-        if not group:
-            return self.__iter__()
 
-        if not group in self.iterpool:
-            raise KeyError, "You have to register() the group before accessing an iterator from it"
-        if len(self.iterpool[group]) == 0:
-            # Create a pool of cached iterators for that group
-            self.iterpool[group] = list(itertools.tee(self.getDataAsIter(), self.references[group]))
-
-        # Hand one cached iterator to the group member.
-        return self.iterpool[group].pop()
 
 

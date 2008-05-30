@@ -1,6 +1,7 @@
 # set default to use lazy evaluation where possible
-useGenerator=False
+useGenerator=True
 useTypeChecking=True
+useGrouping=True
 groupCounter=0
 verbosity=1
 useOrange=True
