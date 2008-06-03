@@ -7,31 +7,18 @@ class SeqContainer(object):
     list properties with some additional features:
     - Instead of a list, a generator function (NOT the called
     generator function) can be used, it will only get called and
-    evaluated when the data is really needed.
+    evaluated when the data is really needed (i.e. lazy evaluation).
     - Once data has been pooled from SeqContainer it will be reset
     so it is possible to iterate multiple times over the same
     SeqContainer.
     - You can have multiple references iterating over SeqContainer as
     every reference will receive its own iterator.
-    - Each object with a reference to SeqContainer can register itself
-    with a group ID. If multiple objects have the same group ID they
-    will all receive a synced iterator that caches each element until
-    every object iterated over this element. Thus, if the computation
-    of the elements is very expensive and lazy evaluation is used
-    (useGenerator=armor.useGenerator) and multiple objects need the same element at
-    roughly the same time this can save a lot of useless recomputing
-    the same elements for every single object.
-    Important: for the last feature to work, the object containing
-    SeqContainer must have defined a special register() function (like
-    all classes in armor.prototypes do so it is most convenient to
-    inherit from the appropriate prototype).
     """
-    def __init__(self, sequence=None, generator=None, labels=None, classes=None, useGenerator=armor.useGenerator):
+    def __init__(self, sequence=None, generator=None, classes=None, useLazyEvaluation=armor.useLazyEvaluation):
         self.sequence = sequence
 	self.generator = generator
 	    
-        self.useGenerator = useGenerator
-        self.labels = labels
+        self.useLazyEvaluation = useLazyEvaluation
         self.classes = classes
 
         self.references = weakref.WeakValueDictionary()    # Registered objects with appropriate group ID
@@ -43,7 +30,7 @@ class SeqContainer(object):
         """Return the stored data in a way it can be passed to iter()."""
 	if self.generator is not None and self.sequence is None:
 	    # Input type is a generator function (hopefully)
-	    if self.useGenerator:
+	    if self.useLazyEvaluation:
 		data = self.generator() # Call the generator
 	    else:
 		# Convert generator to sequence
@@ -52,9 +39,9 @@ class SeqContainer(object):
 		self.generator = None
 		data = self.sequence
 	elif self.sequence is not None and self.generator is None:
-	    if self.useGenerator:
+	    if self.useLazyEvaluation:
 		# Makes no sense to use generator here
-		self.useGenerator = False
+		self.useLazyEvaluation = False
 	    data = self.sequence
 	else:
 	    raise NotImplementedError, "generator AND sequence given"
@@ -66,20 +53,15 @@ class SeqContainer(object):
             return iter(self.getDataAsIter())
 
         if len(self.iterpool) == 0:
-            # Create a pool of cached iterators for that group
+            # Create a pool of cached iterators
             self.iterpool = list(itertools.tee(self.getDataAsIter(), len(self.references)))
 
         # Hand one cached iterator to the group member.
         return self.iterpool.pop()
     
     def registerReference(self, obj, replaces=None):
-        """Register an object and add it to group. Registered objects
-        in the same group receive cached iterators (for more details
-        see the description of the SeqContainer class)"""
+        """Register an object. Registered objects receive cached
+        iterators (for more details see the description of the
+        SeqContainer class)"""
 
 	self.references[id(obj)] = obj
-	
-        
-
-
-

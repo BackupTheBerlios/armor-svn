@@ -4,7 +4,7 @@ import armor.slot
 import armor.datatypes
 import armor
 
-class kmeansObj(object):
+class Kmeans(object):
     """Class to perform kmeans clustering on input data (e.g. descriptors).
     Returns a codebook.
     For performance reasons we use the kmeans implementation of Peter Gehler
@@ -12,22 +12,24 @@ class kmeansObj(object):
 
     Default is lazy, so the clustering will only be performed when the codebook
     gets accessed."""
-    def __init__(self, numClusters, maxiter=0, numruns=1, useGenerator=armor.useGenerator):
+    def __init__(self, numClusters, maxiter=0, numruns=1, useLazyEvaluation=armor.useLazyEvaluation):
         self.numClusters = numClusters
         self.maxiter = maxiter
         self.numruns = numruns
-	self.useGenerator = useGenerator
+	self.useLazyEvaluation = useLazyEvaluation
 	
-	self.inputType = armor.datatypes.VectorType(shape=['flatarray'])
-	self.outputType = armor.datatypes.VectorType(name='codebook', shape='flatarray')
+	# Define some types
+	inputType = armor.datatypes.VectorType(shape=['flatarray'])
+	outputType = armor.datatypes.VectorType(name='codebook', shape='flatarray')
 
-	self.inputSlot = armor.slot.inputSlot(name='vectors', acceptsType = self.inputType, bulk=True, useGenerator=useGenerator)
+	self.InputSlot = armor.slot.InputSlot(name='vectors', acceptsType = inputType, bulk=True, useLazyEvaluation=useLazyEvaluation)
 	
-	self.outputSlot = armor.slot.outputSlot(name='codebook',
-						input = self.inputSlot,
+	self.OutputSlot = armor.slot.OutputSlot(name='codebook',
+						inputSlot = self.InputSlot,
 						slotType = 'bulk',
 						processFunc = armor.weakmethod(self, 'process'),
-						useGenerator= self.useGenerator)
+						outputType = outputType,
+						useLazyEvaluation= self.useLazyEvaluation)
 	
     def process(self, data):
 	# Perform KMeans clustering
@@ -45,10 +47,10 @@ class kmeansObj(object):
 #	    self.dataClusters.append((dataCluster[0], vecs[1]))
 
     #==============
-#    def histogram(self):
+#    def Histogram(self):
 #    #==============
 #       self.dataHistogram = []
 
 #	for (dataCluster, classID) in self.dataClusters:
-#	    histo = npy.histogram(dataCluster, bins = self.numClusters)
+#	    histo = npy.Histogram(dataCluster, bins = self.numClusters)
 #	    self.dataHistogram.append((histo[0], classID))

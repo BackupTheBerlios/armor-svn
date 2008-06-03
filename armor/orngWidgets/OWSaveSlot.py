@@ -22,7 +22,7 @@ class OWSaveSlot(OWWidget):
         self.inputs = [("Data", SeqContainer, self.setData)]
         self.outputs = []
 
-        self.useGenerator = armor.useGenerator
+        self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
         self.name = name
@@ -65,7 +65,7 @@ class OWSaveSlot(OWWidget):
 	self.slot = slot
         if self.slot is None or self.fname is None:
             return
-        armor.saveSlots(self.fname, outputSlot=slot)
+        armor.saveSlots(self.fname, OutputSlot=slot)
 
 	# Create orange.ExampleTable
 	#histoList = []
@@ -78,8 +78,8 @@ class OWSaveSlot(OWWidget):
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
 
-        #self.histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.histograms)
+        #self.Histograms = orange.ExampleTable(domain, histoList)
+        #self.send("Histograms", self.Histograms)
 	
 
 def main():

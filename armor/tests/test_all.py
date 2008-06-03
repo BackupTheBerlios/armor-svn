@@ -4,7 +4,7 @@ import armor.sift
 import armor.kmeans
 import armor.quantize
 import armor.tests
-import armor.histogram
+import armor.Histogram
 
 import armor
 import numpy
@@ -22,27 +22,27 @@ class testAll(unittest.TestCase):
 	#from IPython.Debugger import Tracer; debug_here = Tracer()
 	#debug_here()
 
-	sft = armor.sift.siftObj()
-        km = armor.kmeans.kmeansObj(3)
+	sft = armor.sift.Sift()
+        km = armor.kmeans.Kmeans(3)
 	qt = armor.quantize.quantize()
-	hg = armor.histogram.histogram(3)
+	hg = armor.Histogram.Histogram(3)
 	
-	sft.inputSlot.registerInput(self.imgDataset.outputSlotTrain)
-	km.inputSlot.registerInput(sft.outputSlot)
-	qt.inputSlotCodebook.registerInput(km.outputSlot)
-	qt.inputSlotVec.registerInput(sft.outputSlot)
-	hg.inputSlot.registerInput(qt.outputSlot)
+	sft.InputSlot.registerInput(self.imgDataset.OutputSlotTrain)
+	km.InputSlot.registerInput(sft.OutputSlot)
+	qt.InputSlotCodebook.registerInput(km.OutputSlot)
+	qt.InputSlotVec.registerInput(sft.OutputSlot)
+	hg.InputSlot.registerInput(qt.OutputSlot)
 	
-	print list(hg.outputSlot)
+	print list(hg.OutputSlot)
 	del sft
-	self.assertRaises(AttributeError, list(hg.outputSlot))
+	self.assertRaises(AttributeError, list(hg.OutputSlot))
 #	del km
-#	self.assertRaises(AttributeError, list(hg.outputSlot))
+#	self.assertRaises(AttributeError, list(hg.OutputSlot))
 	
-#	armor.saveSlots([km.outputSlot], 'kmeansSlot.pickle')
+#	armor.saveSlots([km.OutputSlot], 'kmeansSlot.pickle')
 #	kmSlots = armor.loadSlots('kmeansSlot.pickle')
-#	assert (list(km.outputSlot), list(kmSlots['codebook']))
-#	print list(km.outputSlot)[0].shape
+#	assert (list(km.OutputSlot), list(kmSlots['codebook']))
+#	print list(km.OutputSlot)[0].shape
 
 
 	#self.assertEqual([x[1] for x in data], [u'test1', u'test2'])

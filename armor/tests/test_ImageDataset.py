@@ -76,12 +76,12 @@ class TestImageDataset(unittest.TestCase):
     def testSeqContainerValid(self):
         self.addCategories(set = self.setValid)
 	self.ImageDataset.prepare()
-        seqContainer = self.ImageDataset.outputSlotTrain
+        seqContainer = self.ImageDataset.OutputSlotTrain
         
     def testSeqContainerValidIter(self):
         self.addCategories(set = self.setValid)
 	self.ImageDataset.prepare()
-        seqContainer = self.ImageDataset.outputSlotTrain
+        seqContainer = self.ImageDataset.OutputSlotTrain
 
     def testSeqContainerInvalid(self):
         self.addCategories()

@@ -4,7 +4,7 @@ import armor
 import armor.datatypes
 import armor.
 
-class normalizeObj(object):
+class Normalize(object):
     def __init__(self, operation):
 	self.operation = operation
 	self.inputType = 

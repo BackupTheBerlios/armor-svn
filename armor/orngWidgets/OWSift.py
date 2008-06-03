@@ -24,7 +24,7 @@ class OWSift(OWWidget):
         self.inputs = [("Images PIL", SeqContainer, self.setData)]
         self.outputs = [("Descriptors", SeqContainer)]
 
-        self.useGenerator = armor.useGenerator
+        self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
         self.name = 'sift'
@@ -51,7 +51,7 @@ class OWSift(OWWidget):
 	OWGUI.spin(wbN, self, "NormThresh", -1, 8, 1, None, "NormThresh", orientation="horizontal")    
         OWGUI.spin(wbN, self, "Orientations", 0, 1, 1, None, "Force computation of orientations", orientation="horizontal")
         wbS = OWGUI.widgetBox(self.controlArea, "Widget Settings")
-        OWGUI.checkBox(wbS, self, "useGenerator", "Use lazy evaluation")
+        OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
         OWGUI.separator(self.controlArea)
         
         OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.applySettings, disabled=0)
@@ -63,8 +63,8 @@ class OWSift(OWWidget):
 	changed = False
 	
 	if self.sift is not None:
-	    if self.sift.useGenerator != self.useGenerator:
-		self.sift.useGenerator = self.useGenerator
+	    if self.sift.useLazyEvaluation != self.useLazyEvaluation:
+		self.sift.useLazyEvaluation = self.useLazyEvaluation
 		changed = True
 		
 	    if armor.applySettings(self.settingsList, self, kwargs=self.sift.kwargs):
@@ -74,15 +74,15 @@ class OWSift(OWWidget):
 		self.sendData()
 
     def sendData(self):
-	self.send("Descriptors", self.sift.outputSlot)
+	self.send("Descriptors", self.sift.OutputSlot)
 	
     def setData(self, slot):
         if not slot:
             return
 	if self.sift is None:
-	    self.sift = armor.sift.siftObj(Octave=self.Octave, Levels=self.Levels, FirstOctave=self.FirstOctave, PeakThresh=self.PeakThresh, EdgeThresh=self.EdgeThresh, Orientations=self.Orientations, useGenerator=self.useGenerator)
+	    self.sift = armor.sift.Sift(Octave=self.Octave, Levels=self.Levels, FirstOctave=self.FirstOctave, PeakThresh=self.PeakThresh, EdgeThresh=self.EdgeThresh, Orientations=self.Orientations, useLazyEvaluation=self.useLazyEvaluation)
 
-	    self.sift.inputSlot.registerInput(slot)
+	    self.sift.InputSlot.registerInput(slot)
 
 	self.sendData()
         

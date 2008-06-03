@@ -5,35 +5,34 @@ import numpy
 from scipy import cluster
 
 class quantize(object):
-    def __init__(self, useGenerator=armor.useGenerator):
+    def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
 
-	self.useGenerator = useGenerator
-	
+	self.useLazyEvaluation = useLazyEvaluation
+
+	# Define types
         inputTypeVec = armor.datatypes.VectorType(shape=['nestedlist', 'nestedarray'])
         inputTypeCodebook = armor.datatypes.VectorType(name=['codebook'], shape=['flatarray'])
         
         outputType = armor.datatypes.VectorType(shape='flatarray')
 
-        self.inputSlotVec = armor.slot.inputSlot(name='vectors',
+	# Define slots
+        self.InputSlotVec = armor.slot.InputSlot(name='vectors',
                                                  acceptsType=inputTypeVec)
 
-        self.inputSlotCodebook = armor.slot.inputSlot(name='codebook',
+        self.InputSlotCodebook = armor.slot.InputSlot(name='codebook',
                                                       acceptsType=inputTypeCodebook)
         
-        self.outputSlot = armor.slot.outputSlot(name='cluster',
+        self.OutputSlot = armor.slot.OutputSlot(name='cluster',
                                                 outputType=outputType,
                                                 iterator=armor.weakmethod(self, 'quantize'),
-						inputSlots=[self.inputSlotVec, self.inputSlotCodebook],
-						useGenerator=self.useGenerator)
+						useLazyEvaluation=self.useLazyEvaluation)
 
     def quantize(self):
-	#self.inputSlotVec.registerGroup(armor.groupCounter)
-	#self.inputSlotCodebook.registerGroup(armor.groupCounter)
-	#armor.groupCounter += 1
-	
-        codebook = numpy.array(list(self.inputSlotCodebook))
+	# Get data from codebook slot
+        codebook = numpy.array(list(self.InputSlotCodebook))
 
-        for vecs in self.inputSlotVec:
+	# Sequentiall get data from vector slot
+        for vecs in self.InputSlotVec:
             if armor.verbosity > 0:
                 print "Quantizing..."
             clusters = cluster.vq.vq(vecs, codebook)[0]

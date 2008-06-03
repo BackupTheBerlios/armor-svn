@@ -104,7 +104,7 @@ class OWImageLoader(OWImageSubFile):
         self.inputs = []
         self.outputs = [("Images Train", SeqContainer), ("Images Test", SeqContainer), ("Labels Train", SeqContainer),("Labels Test", SeqContainer)]
 
-        self.useGenerator = armor.useGenerator
+        self.useLazyEvaluation = armor.useLazyEvaluation
         
         #set default settings
         self.recentFiles=["(none)"]
@@ -132,7 +132,7 @@ class OWImageLoader(OWImageSubFile):
         self.saveDatasetButton = OWGUI.button(box, self, 'Save dataset', callback = self.saveDataset, disabled=0, width=self.dialogWidth)
         self.autoAddButton = OWGUI.button(box, self, 'Automatically add dataset', callback = self.autoAdd, disabled=0, width=self.dialogWidth) 
         
-        OWGUI.checkBox(box, self, "useGenerator", "Use lazy evaluation")
+        OWGUI.checkBox(box, self, "useLazyEvaluation", "Use lazy evaluation")
         self.resize(self.dialogWidth,480)
 
 
@@ -156,11 +156,11 @@ class OWImageLoader(OWImageSubFile):
         if len(self.imgDataset.categories) == 0:
             return
         
-#        self.imgDataset.prepare(useGenerator=self.useGenerator)
-        self.send("Images Train", self.imgDataset.outputSlotTrain)
-	self.send("Images Test", self.imgDataset.outputSlotTest)
-        self.send("Labels Train", self.imgDataset.outputSlotLabelsTrain)
-	self.send("Labels Test", self.imgDataset.outputSlotLabelsTest)
+#        self.imgDataset.prepare(useLazyEvaluation=self.useLazyEvaluation)
+        self.send("Images Train", self.imgDataset.OutputSlotTrain)
+	self.send("Images Test", self.imgDataset.OutputSlotTest)
+        self.send("Labels Train", self.imgDataset.OutputSlotLabelsTrain)
+	self.send("Labels Test", self.imgDataset.OutputSlotLabelsTest)
         
 #==================================
     def addCategory(self, parent=None, name="", fnames=None, visible=False):
@@ -277,7 +277,7 @@ class OWImageLoader(OWImageSubFile):
     def apply(self):
     # User pressed apply button, hide the dialog (should we close here?)
 #==================================
-        self.imgDataset.prepare(useGenerator=self.useGenerator)
+        self.imgDataset.prepare(useLazyEvaluation=self.useLazyEvaluation)
         self.sendData()
         self.setVisible(0)
 

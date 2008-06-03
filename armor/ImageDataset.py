@@ -85,19 +85,19 @@ class ImageDataset(ImageBase):
         self.categoryNames = None    # Contains the category names
 
 	self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
-	self.outputSlotTrain = armor.slot.outputSlot(name="ImagesTrain", outputType=self.outType)
-	self.outputSlotTest = armor.slot.outputSlot(name="ImagesTest", outputType=self.outType)
-	self.outputSlotLabelsTrain = armor.slot.outputSlot(name="LabelsTrain", sequence=self.allLabelsTrain)
-	self.outputSlotLabelsTest = armor.slot.outputSlot(name="LabelsTest", sequence=self.allLabelsTest)
+	self.OutputSlotTrain = armor.slot.OutputSlot(name="ImagesTrain", outputType=self.outType)
+	self.OutputSlotTest = armor.slot.OutputSlot(name="ImagesTest", outputType=self.outType)
+	self.OutputSlotLabelsTrain = armor.slot.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain)
+	self.OutputSlotLabelsTest = armor.slot.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest)
 	
-	self.outputSlots = armor.slot.slots(slotlist = [self.outputSlotTrain, self.outputSlotTest,
-							self.outputSlotLabelsTrain, self.outputSlotLabelsTest])
+	self.OutputSlots = armor.slot.Slots(slots = [self.OutputSlotTrain, self.OutputSlotTest,
+							self.OutputSlotLabelsTrain, self.OutputSlotLabelsTest])
 
     def __iter__(self):
-        return iter(self.outputSlot)
+        return iter(self.OutputSlot)
     
 #==================================
-    def prepare(self, useGenerator=armor.useGenerator):
+    def prepare(self, useLazyEvaluation=armor.useLazyEvaluation):
         """Once all files are added to the dataset this function has to get called
         to create a list of all images of all categories, this list is then
         permutated and split into a training and validation set (according to
@@ -128,35 +128,29 @@ class ImageDataset(ImageBase):
 	    
 	# Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
-        self.outputSlotTrain.__init__(name="ImagesTrain",
+        self.OutputSlotTrain.__init__(name="ImagesTrain",
 				      outputType = self.outType,
 				      iterator = self.iterTrain,
-				      labels=self.allLabelsTrain,
-				      classes=self.categoryNames,
-				      useGenerator=useGenerator)
+				      useLazyEvaluation=useLazyEvaluation)
 
-	self.outputSlotLabelsTrain.__init__(name="LabelsTrain",
+	self.OutputSlotLabelsTrain.__init__(name="LabelsTrain",
 					    sequence=self.allLabelsTrain,
-					    labels=self.allLabelsTrain,
 					    classes=self.categoryNames,
-					    useGenerator=useGenerator)
+					    useLazyEvaluation=useLazyEvaluation)
 	
 	if self.splitRatio is not None:
-	    self.outputSlotTest.__init__(name="ImagesTest",
+	    self.OutputSlotTest.__init__(name="ImagesTest",
 					 outputType = self.outType,
 					 iterator = self.iterTest,
-					 labels=self.allLabelsTest,
-					 classes=self.categoryNames,
-					 useGenerator=useGenerator)
-	    self.outputSlotLabelsTrain.__init__(name="LabelsTest",
+					 useLazyEvaluation=useLazyEvaluation)
+	    self.OutputSlotLabelsTrain.__init__(name="LabelsTest",
 						sequence=self.allLabelsTest,
-						labels=self.allLabelsTest,
 						classes=self.categoryNames,
-						useGenerator=useGenerator)
+						useLazyEvaluation=useLazyEvaluation)
 
 
 #===================================
-    def iterTrain(self): #, imgSequence = None, idSequence = None):
+    def iterTrain(self):
         """Generator function that yields one PIL image 
         (can be either self.all{Names,IDs}Train oder self.all{Names,IDs}Valid)"""
 #===================================
@@ -165,7 +159,7 @@ class ImageDataset(ImageBase):
             yield self.loadOneImage(img)
 
 #===================================
-    def iterTest(self): #, imgSequence = None, idSequence = None):
+    def iterTest(self):
         """Generator function that yields one PIL image 
         (can be either self.all{Names,IDs}Train oder self.all{Names,IDs}Valid)"""
 #===================================

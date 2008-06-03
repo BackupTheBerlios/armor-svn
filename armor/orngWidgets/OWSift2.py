@@ -23,7 +23,7 @@ class OWSift2(OWWidget):
         self.inputs = [("Images PIL", list, self.setData)]
         self.outputs = [("Descriptors", list)]
 
-        self.useGenerator = False
+        self.useLazyEvaluation = False
         
         # Settings
         self.name = 'sift2'
@@ -33,7 +33,7 @@ class OWSift2(OWWidget):
 
         wbN = OWGUI.widgetBox(self.controlArea, "Sift Settings")
         wbS = OWGUI.widgetBox(self.controlArea, "Widget Settings")
-        OWGUI.checkBox(wbS, self, "useGenerator", "Use lazy evaluation")
+        OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
         OWGUI.separator(self.controlArea)
         
         #OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.apply, disabled=0)
@@ -48,7 +48,7 @@ class OWSift2(OWWidget):
         self.data = data
         self.sift = armor.sift2.sift2(imgContainer=data)
 	# Copy the generator so different widgets get different generators
-	output = self.sift.getData(useGenerator=self.useGenerator)
+	output = self.sift.getData(useLazyEvaluation=self.useLazyEvaluation)
 	self.send("Descriptors", output)
         
 if __name__ == "__main__":

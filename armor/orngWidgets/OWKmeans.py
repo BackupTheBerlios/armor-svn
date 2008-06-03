@@ -24,7 +24,7 @@ class OWKmeans(OWWidget):
         self.inputs = [("Data", SeqContainer, self.setData)]
         self.outputs = [("Codebook", SeqContainer)] # , ("Histograms", ExampleTable)]
 
-        self.useGenerator = armor.useGenerator
+        self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
         self.name = name
@@ -55,13 +55,13 @@ class OWKmeans(OWWidget):
         if slot is None:
             return
 	if self.kmeans is None:
-	    self.kmeans = armor.kmeans.kmeansObj(numClusters = self.numClusters, maxiter = self.maxiter, numruns = self.numruns)
-	    self.kmeans.inputSlot.registerInput(slot)
+	    self.kmeans = armor.kmeans.Kmeans(numClusters = self.numClusters, maxiter = self.maxiter, numruns = self.numruns)
+	    self.kmeans.InputSlot.registerInput(slot)
 
         self.sendData()
 
     def sendData(self):
-        self.send("Codebook", self.kmeans.outputSlot)
+        self.send("Codebook", self.kmeans.OutputSlot)
 
         # Create orange.ExampleTable
         #histoList = []
@@ -74,8 +74,8 @@ class OWKmeans(OWWidget):
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
 
-        #self.histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.histograms)
+        #self.Histograms = orange.ExampleTable(domain, histoList)
+        #self.send("Histograms", self.Histograms)
         
 
 def main():

@@ -13,7 +13,7 @@ class TestSeqContainer(unittest.TestCase):
     def testCorrectInput(self):
         SeqContainer(range(10))
         SeqContainer(self.iterator)
-        SeqContainer(self.iterator, useGenerator=True)
+        SeqContainer(self.iterator, useLazyEvaluation=True)
 
     def testIterating(self):
         iterator = self.seqContainer
@@ -28,7 +28,7 @@ class TestSeqContainer(unittest.TestCase):
         self.assertEqual(list(self.seqContainer), range(10))
 
     def testGroup(self):
-        producer = armor.prototypes.Producer(self.iterator, useGenerator=True)
+        producer = armor.prototypes.Producer(self.iterator, useLazyEvaluation=True)
 	producer.outContainer = SeqContainer(producer.inContainer, \
 				  	    owner = producer)
         consumer1 = armor.prototypes.SeqProcessor(producer.outContainer)
@@ -55,15 +55,15 @@ class TestSeqContainer(unittest.TestCase):
 
 class TestList(TestSeqContainer):
     def setUp(self):
-        self.seqContainer = SeqContainer(range(10), useGenerator=False)     
+        self.seqContainer = SeqContainer(range(10), useLazyEvaluation=False)     
 
 class TestGenerator(TestSeqContainer):
     def setUp(self):
-        self.seqContainer = SeqContainer(self.iterator, useGenerator=True)
+        self.seqContainer = SeqContainer(self.iterator, useLazyEvaluation=True)
 
 #class TestGeneratorToList(TestSeqContainer):
 #    def setUp(self):
-#        self.seqContainer = SeqContainer(self.iterator, useGenerator=False)
+#        self.seqContainer = SeqContainer(self.iterator, useLazyEvaluation=False)
 
 
 testAll = ['testIterating', 'testToList', 'testGroup']

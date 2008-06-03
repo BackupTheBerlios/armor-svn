@@ -1,7 +1,7 @@
 import types
 import armor
 
-class basetype(object):
+class BaseType(object):
     def __init__(self, **kwargs):
         self.dataType = kwargs
         self.attributes = {}
@@ -14,6 +14,10 @@ class basetype(object):
         return self.dataType[item]
     
     def compatible(self, toType):
+	"""Check if toType is compatible with my own type. If it is
+	not compatible, try find fitting conversion functions and
+	return them."""
+	
 	if toType.__class__ is not self.__class__:
             return False
 
@@ -51,7 +55,7 @@ class basetype(object):
 	return False
             
         
-class ImageType(basetype):
+class ImageType(BaseType):
     from PIL import Image
     from numpy import array
     
@@ -84,7 +88,7 @@ class ImageType(basetype):
     def convert_PIL_RGB_to_numpy_gray(self, image):
 	return array(self.convert_PIL_RGB_to_PIL_gray(image))
 
-class VectorType(basetype):
+class VectorType(BaseType):
     def __init__(self, **kwargs):
         super(VectorType, self).__init__(**kwargs)
 

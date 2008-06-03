@@ -2,8 +2,8 @@ from subprocess import call
 import armor.prototypes
 
 class sift2(armor.prototypes.SeqProcessor):
-    def __init__(self, images, useGenerator=armor.useGenerator, **kwargs):
-        super(sift2, self).__init__(images, useGenerator)
+    def __init__(self, images, useLazyEvaluation=armor.useLazyEvaluation, **kwargs):
+        super(sift2, self).__init__(images, useLazyEvaluation)
         self.kwargs = kwargs
 
     def preprocess(self, img):

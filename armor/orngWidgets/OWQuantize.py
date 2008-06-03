@@ -13,7 +13,7 @@ import armor.quantize
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWQuantize(OWWidget):
-    settingsList = ['useGenerator']
+    settingsList = ['useLazyEvaluation']
 
     def __init__(self, parent=None, signalManager = None, name='kmeans'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
@@ -23,7 +23,7 @@ class OWQuantize(OWWidget):
         self.inputs = [("Codebook", SeqContainer, self.setCodebook), ("Data", SeqContainer, self.setData)]
         self.outputs = [("Clusters", SeqContainer)]
 
-        self.useGenerator = armor.useGenerator
+        self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
         self.name = name
@@ -40,22 +40,22 @@ class OWQuantize(OWWidget):
 
         self.resize(100,150)
 
-	self.quantize = armor.quantize.quantize(useGenerator=self.useGenerator)
+	self.quantize = armor.quantize.quantize(useLazyEvaluation=self.useLazyEvaluation)
 
 
     def setData(self,slot):
         if not slot:
             return
-	if self.quantize.inputSlotVec.senderSlot is None or self.quantize.inputSlotVec.senderSlot() is None:
-	    self.quantize.inputSlotVec.registerInput(slot)
-        self.send("Clusters", self.quantize.outputSlot)
+	if self.quantize.InputSlotVec.senderSlot is None or self.quantize.InputSlotVec.senderSlot() is None:
+	    self.quantize.InputSlotVec.registerInput(slot)
+        self.send("Clusters", self.quantize.OutputSlot)
 
     def setCodebook(self, slot):
 	if not slot:
 	    return
-	if self.quantize.inputSlotCodebook.senderSlot is None or self.quantize.inputSlotCodebook.senderSlot() is None:
-	    self.quantize.inputSlotCodebook.registerInput(slot)
-	self.send("Clusters", self.quantize.outputSlot)
+	if self.quantize.InputSlotCodebook.senderSlot is None or self.quantize.InputSlotCodebook.senderSlot() is None:
+	    self.quantize.InputSlotCodebook.registerInput(slot)
+	self.send("Clusters", self.quantize.OutputSlot)
 	
 	# Create orange.ExampleTable
 	#histoList = []
@@ -68,8 +68,8 @@ class OWQuantize(OWWidget):
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
 
-        #self.histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.histograms)
+        #self.Histograms = orange.ExampleTable(domain, histoList)
+        #self.send("Histograms", self.Histograms)
 	
 
 def main():

@@ -23,7 +23,7 @@ class OWLoadSlot(OWWidget):
         self.inputs = []
         self.outputs = [("Data", SeqContainer)]
 
-        self.useGenerator = armor.useGenerator
+        self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
         self.name = name

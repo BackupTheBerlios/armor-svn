@@ -3,21 +3,32 @@ import armor.slot
 import armor.datatypes
 import armor
 
-class siftObj(object):
-    def __init__(self, useGenerator=armor.useGenerator, **kwargs):
+class Sift(object):
+    """ SIFT  Scale-invariant feature transform
+    (F,D) = sift(I) where computes the SIFT frames (keypoints) F and 
+    the SIFT descriptors D of the image I. I is a gray-scale image in 
+    single precision. Each column of F is a feature frame and has the 
+    format [X;Y;S;TH], where X,Y is the (fractional) center of the frame, 
+    S is the scale and TH is the orientation (in radians).
+    Each column of D is the descriptor of the corresponding frame in F. A
+    descriptor is a 128-dimensional vector.
+    """
+    def __init__(self, useLazyEvaluation=armor.useLazyEvaluation, **kwargs):
         self.kwargs = kwargs
-	self.useGenerator = useGenerator
-	
+	self.useLazyEvaluation = useLazyEvaluation
+
+	# Define types
 	self.inputType = armor.datatypes.ImageType(format=["PIL"], color_space=["gray"])
 	self.outputType = armor.datatypes.VectorType(shape='nestedarray')
 
-	self.inputSlot = armor.slot.inputSlot(name='Images', acceptsType = self.inputType, useGenerator=useGenerator)
-	self.outputSlot = armor.slot.outputSlot(name='Sift Descriptors',
+	# Define slots
+	self.InputSlot = armor.slot.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
+	self.OutputSlot = armor.slot.OutputSlot(name='Sift Descriptors',
 						outputType=self.outputType,
-						input=self.inputSlot,
+						inputSlot=self.InputSlot,
 						processFunc=armor.weakmethod(self, 'process'),
 						slotType='sequential',
-						useGenerator=self.useGenerator)
+						useLazyEvaluation=self.useLazyEvaluation)
 
     def process(self, img):
 	if armor.verbosity > 0:

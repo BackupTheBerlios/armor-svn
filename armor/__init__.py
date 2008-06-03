@@ -1,24 +1,24 @@
 import weakref
 
 # set default to use lazy evaluation where possible
-useGenerator=True
+useLazyEvaluation=True
 useTypeChecking=True
-useGrouping=True
+useCaching=True
 groupCounter=0
 verbosity=1
 useOrange=True
 
 def stripSlot(slot):
     import pickle
-    slot.container.useGenerator=False
+    slot.container.useLazyEvaluation=False
     slot.container.getDataAsIter()
     slot.seqIterator = None
     slot.bulkIterator = None
     slot.processFunc = None
     slot.processFuncs = None
-    slot.inputSlot = None
+    slot.InputSlot = None
 
-def saveSlots(fname, outputSlot=None, outputSlots=None):
+def saveSlots(fname, OutputSlot=None, OutputSlots=None):
     import pickle
 
     # First, let every output slot process and save all the data
@@ -26,14 +26,14 @@ def saveSlots(fname, outputSlot=None, outputSlots=None):
     try:
 	fdescr = open(fname, mode='w')
 
-	if outputSlot is not None:
-	    stripSlot(outputSlot)
-	    pickle.dump(outputSlot, fdescr)
+	if OutputSlot is not None:
+	    stripSlot(OutputSlot)
+	    pickle.dump(OutputSlot, fdescr)
 	    
-	elif outputSlots is not None:
-	    for slot in outputSlots:
+	elif OutputSlots is not None:
+	    for slot in OutputSlots:
 		stripSlot(slot)
-	    pickle.dump(outputSlots, fdescr)
+	    pickle.dump(OutputSlots, fdescr)
 	    
     finally:
 	del fdescr
@@ -44,11 +44,11 @@ def loadSlots(fname):
 
     try:
 	fdescr = open(fname, mode='r')
-	outputSlots = pickle.load(fdescr)
+	OutputSlots = pickle.load(fdescr)
     finally:
 	del fdescr
 
-    return outputSlots
+    return OutputSlots
     
 def applySettings(settingsList, widget, obj=None, kwargs=None):
     changed = False

@@ -10,13 +10,13 @@ from OWWidget import *
 import OWGUI
 from exceptions import Exception
 import armor
-import armor.histogram
+import armor.Histogram
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWHistogram(OWWidget):
-    settingsList = ['bins', 'useGenerator']
+    settingsList = ['bins', 'useLazyEvaluation']
 
-    def __init__(self, parent=None, signalManager = None, name='histogram'):
+    def __init__(self, parent=None, signalManager = None, name='Histogram'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
 
         self.callbackDeposit = []
@@ -24,11 +24,11 @@ class OWHistogram(OWWidget):
         self.inputs = [("Data", SeqContainer, self.setData)]
         self.outputs = [("Histogram", SeqContainer)] # , ("Histograms", ExampleTable)]
 
-        self.useGenerator = armor.useGenerator
+        self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
         self.name = name
-	self.histogram = None
+	self.Histogram = None
 	
         self.loadSettings()
 
@@ -47,21 +47,21 @@ class OWHistogram(OWWidget):
 
 
     def applySettings(self):
-	if armor.applySettings(self.settingsList, self, obj=self.histogram):
+	if armor.applySettings(self.settingsList, self, obj=self.Histogram):
 	    self.sendData()
 	
     def setData(self,slot):
         if slot is None:
             return
 
-	if self.histogram is None:
-	    self.histogram = armor.histogram.histogram(self.bins)
-	    self.histogram.inputSlot.registerInput(slot)
+	if self.Histogram is None:
+	    self.Histogram = armor.Histogram.Histogram(self.bins)
+	    self.Histogram.InputSlot.registerInput(slot)
 	    
 	self.sendData()
 
     def sendData(self):
-	self.send("Histogram", self.histogram.outputSlot)
+	self.send("Histogram", self.Histogram.OutputSlot)
 	
 	# Create orange.ExampleTable
 	#histoList = []
@@ -74,8 +74,8 @@ class OWHistogram(OWWidget):
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
 
-        #self.histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.histograms)
+        #self.Histograms = orange.ExampleTable(domain, histoList)
+        #self.send("Histograms", self.Histograms)
 	
 
 def main():
