@@ -43,6 +43,7 @@ class InputSlot(object):
 	self.bulk = bulk
 	self.useLazyEvaluation = useLazyEvaluation
 	self.senderSlot = None
+	self.outputType = None
 	
 	if senderSlot is not None:
 	    self.registerInput(senderSlot)
@@ -76,10 +77,12 @@ class InputSlot(object):
         if armor.useTypeChecking and senderSlot.outputType is not None:
 	    # Check if sender type is compatible with us or if we can
 	    # convert (compatible() will return converter functions)
-            self.converters = self.acceptsType.compatible(senderSlot.outputType)
-            if self.converters == False:
+            compatible = self.acceptsType.compatible(senderSlot.outputType)
+            if compatible == False:
                 raise TypeError, "Slots are not compatible"
-
+	    # Else compatible() returns the new type and conversion funcs
+	    (self.outputType, self.converters) = compatible
+	    
 	if self.senderSlot:
 	    # There is already a senderSlot registered, is it maybe
 	    # the same?

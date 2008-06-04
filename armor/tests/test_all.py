@@ -4,7 +4,7 @@ import armor.sift
 import armor.kmeans
 import armor.quantize
 import armor.tests
-import armor.Histogram
+import armor.histogram
 
 import armor
 import numpy
@@ -25,7 +25,7 @@ class testAll(unittest.TestCase):
 	sft = armor.sift.Sift()
         km = armor.kmeans.Kmeans(3)
 	qt = armor.quantize.quantize()
-	hg = armor.Histogram.Histogram(3)
+	hg = armor.histogram.Histogram(3)
 	
 	sft.InputSlot.registerInput(self.imgDataset.OutputSlotTrain)
 	km.InputSlot.registerInput(sft.OutputSlot)
@@ -34,13 +34,13 @@ class testAll(unittest.TestCase):
 	hg.InputSlot.registerInput(qt.OutputSlot)
 	
 	print list(hg.OutputSlot)
-	del sft
-	self.assertRaises(AttributeError, list(hg.OutputSlot))
+	#del sft
+	#self.assertRaises(AttributeError, list(hg.OutputSlot))
 #	del km
 #	self.assertRaises(AttributeError, list(hg.OutputSlot))
 	
-#	armor.saveSlots([km.OutputSlot], 'kmeansSlot.pickle')
-#	kmSlots = armor.loadSlots('kmeansSlot.pickle')
+	armor.saveSlots('kmeansSlot.pickle', outputSlot = sft.OutputSlot)
+	kmSlots = armor.loadSlots('kmeansSlot.pickle')
 #	assert (list(km.OutputSlot), list(kmSlots['codebook']))
 #	print list(km.OutputSlot)[0].shape
 

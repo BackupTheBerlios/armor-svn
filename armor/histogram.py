@@ -24,4 +24,4 @@ class Histogram(object):
     def histogram(self, vector):
 	if armor.verbosity > 0:
 	    print "Computing histogram with %i bins..." % self.bins
-	return numpy.Histogram(vector, bins = self.bins)[0]
+	return numpy.histogram(vector, bins = self.bins)[0]

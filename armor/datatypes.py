@@ -12,14 +12,23 @@ class BaseType(object):
 
     def __getitem__(self, item):
         return self.dataType[item]
-    
-    def compatible(self, toType):
-	"""Check if toType is compatible with my own type. If it is
-	not compatible, try find fitting conversion functions and
-	return them."""
+
+    def __setitem__(self, item, value):
+	self.dataType[item] = value
 	
-	if toType.__class__ is not self.__class__:
+    def compatible(self, inputType):
+	"""Check if toType is compatible with my own type. If it is
+	not compatible, try find fitting conversion functions.
+
+	Output: False or (type, [conversionfuncs])"""
+
+	
+	if inputType.__class__ is not self.__class__:
             return False
+
+	import copy
+	# Copy inputType
+	toType = copy.deepcopy(inputType)
 
 	compatible = True
         convert = True
@@ -35,7 +44,7 @@ class BaseType(object):
 	    compatible = False
 
 	if compatible:
-	    return []
+	    return (toType, [])
 
 	# Can we convert?
         for conversion in self.conversions:
@@ -48,7 +57,8 @@ class BaseType(object):
 			    convert = False
 
 		if convert:
-		    return [conversion['function']]
+		    toType[key] = conversion[key][1]
+		    return (toType, [conversion['function']])
 		
 
 	# No

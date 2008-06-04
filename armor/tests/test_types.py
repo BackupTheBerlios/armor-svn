@@ -10,7 +10,8 @@ class TestTypes(unittest.TestCase):
     def testConvertRGB(self):
 	a = armor.datatypes.ImageType(format=['PIL'], color_space=['gray'])
 	b = armor.datatypes.ImageType(format='PIL', color_space='RGB')
-	self.assertEqual(a.compatible(b)[0].__name__, 'convert_PIL_RGB_to_PIL_gray')
+	self.assertEqual(a.compatible(b)[0].dataType, {'color_space': 'gray', 'format': 'PIL'})
+	self.assertEqual(a.compatible(b)[1][0].__name__, '_weakmethod')
 
     def testIncompatibleType(self):
 	a = armor.datatypes.ImageType(format=['PIL'], color_space=['RGB'])
@@ -25,7 +26,8 @@ class TestTypes(unittest.TestCase):
     def testNestedVectorToFlat(self):
 	a = armor.datatypes.VectorType(shape=['flatarray'])
 	b = armor.datatypes.VectorType(shape='nestedlist')
-	self.assertEqual(a.compatible(b)[0].__name__, 'convert_nestedlist_to_flatarray')
+	self.assertEqual(a.compatible(b)[0].dataType, {'shape': 'flatarray'})
+	self.assertEqual(a.compatible(b)[1][0].__name__, '_weakmethod')
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestTypes)

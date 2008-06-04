@@ -12,13 +12,15 @@ def stripSlot(slot):
     import pickle
     slot.container.useLazyEvaluation=False
     slot.container.getDataAsIter()
+    slot.container.references = None
     slot.seqIterator = None
     slot.bulkIterator = None
     slot.processFunc = None
     slot.processFuncs = None
-    slot.InputSlot = None
+    slot.inputSlot = None
+    slot.outputType.conversions = None
 
-def saveSlots(fname, OutputSlot=None, OutputSlots=None):
+def saveSlots(fname, outputSlot=None, outputSlots=None):
     import pickle
 
     # First, let every output slot process and save all the data
@@ -26,14 +28,14 @@ def saveSlots(fname, OutputSlot=None, OutputSlots=None):
     try:
 	fdescr = open(fname, mode='w')
 
-	if OutputSlot is not None:
-	    stripSlot(OutputSlot)
-	    pickle.dump(OutputSlot, fdescr)
+	if outputSlot is not None:
+	    stripSlot(outputSlot)
+	    pickle.dump(outputSlot, fdescr)
 	    
 	elif OutputSlots is not None:
-	    for slot in OutputSlots:
+	    for slot in outputSlots:
 		stripSlot(slot)
-	    pickle.dump(OutputSlots, fdescr)
+	    pickle.dump(outputSlots, fdescr)
 	    
     finally:
 	del fdescr

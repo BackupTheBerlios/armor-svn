@@ -2,26 +2,26 @@ from glob import glob
 import os
 import os.path
 import xml.dom.minidom
-import numpy as npy
 from PIL import Image
 import armor.slot
 import armor.datatypes
 import armor
 
+
+supportedFormats = ['.jpg', '.bmp', '.png', '.gif']
+datasetsPath = os.path.join(armor.__path__[0], 'datasets')
+
 #****************************************************************
 class ImageBase(object):
     """Base class with all the functional"""
 #****************************************************************
-    def __init__(self):
-        self.datasetPath = os.path.join(armor.__path__[0], 'datasets')
-
-        
     #=================
     def loadOneImage(self, fname, flatten=False, resize=False):
         """Loads the image with filename 'fname' and returns the PIL.Image object"""
     #=================
         try:
-            if armor.verbosity > 0: print("Loading: %s" % self.absFName(fname))
+            if armor.verbosity > 0:
+                print("Loading: %s" % self.absFName(fname))
             im=Image.open(self.absFName(fname))
             if resize: # Resize to fixed size (obsolete)
                 im = im.resize((160, 160), Image.ANTIALIAS)
@@ -54,7 +54,7 @@ class ImageBase(object):
         (assumes the armor/datasets directory to be the base path)"""
     #============
         if fname[0] == '.': #relative path given
-            return os.path.join(self.datasetPath, fname)
+            return os.path.join(datasetsPath, fname)
         else:
             return fname
 
@@ -74,30 +74,29 @@ class ImageDataset(ImageBase):
         if not categories:
             categories = []
         self.categories = categories
-        self.splitRatio = splitRatio
-        self.doPermutate = doPermutate
+
         self.allFNames = None # Filled by prepare()
         self.allLabels = None # Filled by prepare()
-	self.allFNamesTrain = None
-	self.allFNamesTest = None
-	self.allLabelsTrain = None
-	self.allLabelsTest = None
+        self.allNamesTrain = None
+        self.allNamesTest = None
+        self.allLabelsTrain = None
+        self.allLabelsTest = None
         self.categoryNames = None    # Contains the category names
 
-	self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
-	self.OutputSlotTrain = armor.slot.OutputSlot(name="ImagesTrain", outputType=self.outType)
-	self.OutputSlotTest = armor.slot.OutputSlot(name="ImagesTest", outputType=self.outType)
-	self.OutputSlotLabelsTrain = armor.slot.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain)
-	self.OutputSlotLabelsTest = armor.slot.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest)
-	
-	self.OutputSlots = armor.slot.Slots(slots = [self.OutputSlotTrain, self.OutputSlotTest,
-							self.OutputSlotLabelsTrain, self.OutputSlotLabelsTest])
+        self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
+        self.OutputSlotTrain = armor.slot.OutputSlot(name="ImagesTrain", outputType=self.outType)
+        self.OutputSlotTest = armor.slot.OutputSlot(name="ImagesTest", outputType=self.outType)
+        self.OutputSlotLabelsTrain = armor.slot.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain)
+        self.OutputSlotLabelsTest = armor.slot.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest)
+        
+        self.OutputSlots = armor.slot.Slots(slots = [self.OutputSlotTrain, self.OutputSlotTest,
+                                                        self.OutputSlotLabelsTrain, self.OutputSlotLabelsTest])
 
     def __iter__(self):
         return iter(self.OutputSlot)
     
 #==================================
-    def prepare(self, useLazyEvaluation=armor.useLazyEvaluation):
+    def prepare(self, doPermutate=False, doSplit=False, splitRatio = .5, useLazyEvaluation=armor.useLazyEvaluation):
         """Once all files are added to the dataset this function has to get called
         to create a list of all images of all categories, this list is then
         permutated and split into a training and validation set (according to
@@ -115,38 +114,38 @@ class ImageDataset(ImageBase):
                 self.allLabels.append(str(category.name))
 
         # Permutate them
-        if self.doPermutate:
+        if doPermutate:
             (self.allFNames, self.allLabels) = self.randperm((self.allFNames, self.allLabels))
             
         # Split them into training and validation set
-	if self.splitRatio is not None:
-	    (self.allNamesTrain, self.allNamesTest) = self.split(self.allFNames, self.splitRatio)
-	    (self.allLabelsTrain, self.allLabelsTest) = self.split(self.allLabels, self.splitRatio)
-	else:
-	    self.allNamesTrain = self.allFNames
-	    self.allLabelsTrain = self.allLabels
-	    
-	# Prepare the output container by giving it the generator function
+        if doSplit:
+            (self.allNamesTrain, self.allNamesTest) = self.split(self.allFNames, splitRatio)
+            (self.allLabelsTrain, self.allLabelsTest) = self.split(self.allLabels, splitRatio)
+        else:
+            self.allNamesTrain = self.allFNames
+            self.allLabelsTrain = self.allLabels
+            
+        # Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
         self.OutputSlotTrain.__init__(name="ImagesTrain",
-				      outputType = self.outType,
-				      iterator = self.iterTrain,
-				      useLazyEvaluation=useLazyEvaluation)
+                                      outputType = self.outType,
+                                      iterator = self.iterTrain,
+                                      useLazyEvaluation=useLazyEvaluation)
 
-	self.OutputSlotLabelsTrain.__init__(name="LabelsTrain",
-					    sequence=self.allLabelsTrain,
-					    classes=self.categoryNames,
-					    useLazyEvaluation=useLazyEvaluation)
-	
-	if self.splitRatio is not None:
-	    self.OutputSlotTest.__init__(name="ImagesTest",
-					 outputType = self.outType,
-					 iterator = self.iterTest,
-					 useLazyEvaluation=useLazyEvaluation)
-	    self.OutputSlotLabelsTrain.__init__(name="LabelsTest",
-						sequence=self.allLabelsTest,
-						classes=self.categoryNames,
-						useLazyEvaluation=useLazyEvaluation)
+        self.OutputSlotLabelsTrain.__init__(name="LabelsTrain",
+                                            sequence=self.allLabelsTrain,
+                                            classes=self.categoryNames,
+                                            useLazyEvaluation=useLazyEvaluation)
+        
+        if doSplit:
+            self.OutputSlotTest.__init__(name="ImagesTest",
+                                         outputType = self.outType,
+                                         iterator = self.iterTest,
+                                         useLazyEvaluation=useLazyEvaluation)
+            self.OutputSlotLabelsTrain.__init__(name="LabelsTest",
+                                                sequence=self.allLabelsTest,
+                                                classes=self.categoryNames,
+                                                useLazyEvaluation=useLazyEvaluation)
 
 
 #===================================
@@ -166,7 +165,7 @@ class ImageDataset(ImageBase):
         # Yield the images element wise
         for img in self.allNamesTest:
             yield self.loadOneImage(img)
-	    
+            
 #==================================
     def loadFromXML(self, filename, verbose=False):
 #==================================
@@ -277,20 +276,10 @@ class ImageDataset(ImageBase):
         in it as the images belonging to that category."""
 #================================
         path = os.path.abspath(path)
-        # Paths in armor/datasets can use a relative path
-        if os.path.split(path)[0] == self.datasetPath:
-            path = os.path.join('.', os.path.split(path)[1])
-            for counter, (catPath, catN, catFiles) in enumerate(os.walk(os.path.join(self.datasetPath, path))):
-                if counter == 0: # first iteration is the base dir, we want subdirs
-                    continue
-                dirName = os.path.split(catPath)[1]
-                self.addCategory(name=dirName, fnames = [os.path.join(path, dirName, fname) for fname in catFiles])
-        # Others use the absolute path
-        else:
-            for counter, (catPath, catN, catFiles) in enumerate(os.walk(path)):
-                if counter == 0: # first iteration is the base dir, we want subdirs
-                    continue
-                self.addCategory(name=os.path.split(catPath)[1], fnames = [os.path.join(catPath, fname) for fname in catFiles])
+        for counter, (catPath, catN, catFiles) in enumerate(os.walk(path)):
+            if counter == 0: # first iteration is the base dir, we want subdirs
+                continue
+            self.addCategory(name=os.path.split(catPath)[1], fnames = [os.path.join(catPath, fname) for fname in catFiles])
         
 
 
@@ -304,10 +293,11 @@ class ImageCategory(ImageBase):
     def __init__(self, name="", fnames=None):
 #==================================
         super(ImageCategory, self).__init__()
-        if not fnames:
-            fnames = []
-        self.baseDir = armor.__path__[0]
-        self.fnames = fnames  # List of file names belonging to the category
+
+        self.fnames = []
+        
+        if fnames is not None:
+            self.addFiles(fnames)
         self.name = name      # Name of the category
 
     def __call__(self):
@@ -319,14 +309,20 @@ class ImageCategory(ImageBase):
 #==================================
     def addFile(self, absFileName):
         """Add the single file absFileName (with path) to the category
-	files in armor/datasets are changed to being relative."""
+        files in armor/datasets are changed to being relative."""
 #==================================
         # Replace the path with "." if the files reside armor/datasets
         # (makes creating datasets for other people usage easier
+        absFileName = str(absFileName)
+        if os.path.splitext(str(absFileName))[1] not in supportedFormats:
+            if armor.verbosity>0:
+                print "Excluding %s" % absFileName
+            return
         (completePath, fname) = os.path.split(str(absFileName))
-        (subPath, dirname) = os.path.split(completePath)
-        if self.baseDir == subPath:
-            absFileName = os.path.join(".", dirname, fname)
+        (subPath, category) = os.path.split(completePath)
+        (base, dataset) = os.path.split(subPath)
+        if base == datasetsPath:
+            absFileName = os.path.join(".", dataset, category, fname)
         self.fnames.append(absFileName)
 
 #==================================
