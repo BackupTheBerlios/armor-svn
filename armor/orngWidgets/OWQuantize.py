@@ -29,19 +29,17 @@ class OWQuantize(OWWidget):
         self.name = name
         self.loadSettings()
                 
-        wbN = OWGUI.widgetBox(self.controlArea, "kMeans Settings")
-#        OWGUI.spin(wbN, self, "numClusters", 1, 100000, 100, None, "Number of clusters   ", orientation="horizontal")
-#        OWGUI.spin(wbN, self, "maxiter", 0, 100000, 1, None, "Maximum number of iterations", orientation="horizontal")
-#        OWGUI.spin(wbN, self, "numruns", 0, 100000, 1, None, "Number of runs ", orientation="horizontal")
+        wbN = OWGUI.widgetBox(self.controlArea, "Quantization settings")
 
-        OWGUI.separator(self.controlArea)
-        
-        #OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.apply, disabled=0)
+        OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")        
+        OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.apply, disabled=0)
 
         self.resize(100,150)
 
 	self.quantize = armor.quantize.quantize(useLazyEvaluation=self.useLazyEvaluation)
 
+    def applySettings(self):
+        armor.applySettings(self.settingsList, self, obj=self.quantize)
 
     def setData(self,slot):
         if not slot:
@@ -57,19 +55,6 @@ class OWQuantize(OWWidget):
 	    self.quantize.InputSlotCodebook.registerInput(slot)
 	self.send("Clusters", self.quantize.OutputSlot)
 	
-	# Create orange.ExampleTable
-	#histoList = []
-	#histoContainer = self.kmeans.getData()
-	#for d in histoContainer:
-	#    histoList.append(list(d[0]) + [str(d[1])])
-	    
-        #domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(self.kmeans.dataHistogram[0][0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in histoContainer.classes]))])
-        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        #from IPython.Debugger import Tracer; debug_here = Tracer()
-        #debug_here()
-
-        #self.Histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.Histograms)
 	
 
 def main():

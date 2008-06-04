@@ -23,11 +23,13 @@ class OWSift(OWWidget):
         self.inputs = [("Images PIL", SeqContainer, self.setData)]
         self.outputs = [("Descriptors", SeqContainer)]
 
-        self.useLazyEvaluation = armor.useLazyEvaluation
+        
         
         # Settings
         self.name = name
 	self.sift = None
+
+	self.useLazyEvaluation = armor.useLazyEvaluation
 	
         self.Octave = 6
         self.Levels = 3

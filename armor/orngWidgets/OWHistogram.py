@@ -40,7 +40,7 @@ class OWHistogram(OWWidget):
         OWGUI.spin(wbN, self, "bins", 1, 100000, 100, None, "Number of bins  ", orientation="horizontal")
 
         OWGUI.separator(self.controlArea)
-        
+        OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
         OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.applySettings, disabled=0)
 
         self.resize(100,150)
@@ -63,21 +63,6 @@ class OWHistogram(OWWidget):
     def sendData(self):
 	self.send("Histogram", self.histogram.OutputSlot)
 	
-	# Create orange.ExampleTable
-	#histoList = []
-	#histoContainer = self.kmeans.getData()
-	#for d in histoContainer:
-	#    histoList.append(list(d[0]) + [str(d[1])])
-	    
-        #domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(self.kmeans.dataHistogram[0][0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in histoContainer.classes]))])
-        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        #from IPython.Debugger import Tracer; debug_here = Tracer()
-        #debug_here()
-
-        #self.Histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.Histograms)
-	
-
 def main():
     a=QApplication(sys.argv)
     ows=OWHistogram()

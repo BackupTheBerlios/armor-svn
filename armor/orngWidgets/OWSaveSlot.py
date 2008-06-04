@@ -32,13 +32,10 @@ class OWSaveSlot(OWWidget):
 	self.fname = None
         self.slot = None
 	
-        wbN = OWGUI.widgetBox(self.controlArea, "SaveSlot settings")
-	
-        #OWGUI.separator(self.controlArea)
         
         OWGUI.button(self.controlArea, self, "Save to...", callback = self.browseFile, disabled=0)
 
-        self.resize(100,150)
+        self.resize(50,150)
 
     def browseFile(self, filters=None):
         """Display a FileDialog and select an existing file, 
@@ -67,21 +64,6 @@ class OWSaveSlot(OWWidget):
         if self.slot is None or self.fname is None:
             return
         armor.saveSlots(self.fname, outputSlot=slot)
-
-	# Create orange.ExampleTable
-	#histoList = []
-	#histoContainer = self.kmeans.getData()
-	#for d in histoContainer:
-	#    histoList.append(list(d[0]) + [str(d[1])])
-	    
-        #domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(self.kmeans.dataHistogram[0][0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in histoContainer.classes]))])
-        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        #from IPython.Debugger import Tracer; debug_here = Tracer()
-        #debug_here()
-
-        #self.Histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.Histograms)
-	
 
 def main():
     a=QApplication(sys.argv)

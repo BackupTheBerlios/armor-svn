@@ -74,10 +74,21 @@ class InputSlot(object):
 	    yield i
 	    
     def registerInput(self, senderSlot):
-        if armor.useTypeChecking and senderSlot.outputType is not None:
+	"""Register senderSlot as an inputSlot. inputType and
+	outputType have to match (or be convertable).
+	"""
+	if armor.useTypeChecking:
+	    if senderSlot.outputType is not None:
+		senderType = senderSlot.outputType
+	    elif senderSlot.inputSlot.outputType is not None:
+		# If the output slot does not transform the input
+		# type, it may be found in the inputslot
+		senderType = senderSlot.inputSlot.outputType
+	    else:
+		raise ValueError, "No types specified"
 	    # Check if sender type is compatible with us or if we can
 	    # convert (compatible() will return converter functions)
-            compatible = self.acceptsType.compatible(senderSlot.outputType)
+            compatible = self.acceptsType.compatible(senderType)
             if compatible == False:
                 raise TypeError, "Slots are not compatible"
 	    # Else compatible() returns the new type and conversion funcs

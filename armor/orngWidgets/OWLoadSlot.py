@@ -32,13 +32,11 @@ class OWLoadSlot(OWWidget):
 	self.fname = None
         self.slot = None
 	
-        wbN = OWGUI.widgetBox(self.controlArea, "LoadSlot settings")
-	
         #OWGUI.separator(self.controlArea)
         
         OWGUI.button(self.controlArea, self, "Load from...", callback = self.browseFile, disabled=0)
 
-        self.resize(100,150)
+        self.resize(50,150)
 
     def browseFile(self, filters=None):
         """Display a FileDialog and select an existing file, 

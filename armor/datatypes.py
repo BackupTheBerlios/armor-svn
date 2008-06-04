@@ -89,6 +89,8 @@ class ImageType(BaseType):
 			    
     
     def convert_PIL_RGB_to_PIL_gray(self, image):
+	if armor.verbosity>0:
+	    print "Converting RGB image to gray color space"
         image = image.convert('L')
         return image
 

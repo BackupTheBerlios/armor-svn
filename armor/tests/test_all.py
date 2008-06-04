@@ -5,6 +5,7 @@ import armor.kmeans
 import armor.quantize
 import armor.tests
 import armor.histogram
+import armor.smooth
 
 import armor
 import numpy
@@ -21,13 +22,14 @@ class testAll(unittest.TestCase):
     def testGenerator(self):
 	#from IPython.Debugger import Tracer; debug_here = Tracer()
 	#debug_here()
-
+	sm = armor.smooth.Smooth()
 	sft = armor.sift.Sift()
         km = armor.kmeans.Kmeans(3)
 	qt = armor.quantize.quantize()
 	hg = armor.histogram.Histogram(3)
-	
-	sft.InputSlot.registerInput(self.imgDataset.OutputSlotTrain)
+
+	sm.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
+	sft.InputSlot.registerInput(sm.outputSlot)
 	km.InputSlot.registerInput(sft.OutputSlot)
 	qt.InputSlotCodebook.registerInput(km.OutputSlot)
 	qt.InputSlotVec.registerInput(sft.OutputSlot)

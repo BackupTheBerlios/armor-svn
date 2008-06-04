@@ -9,11 +9,11 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 import armor
-import armor.smooth
+import armor.filter
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWFilter(OWWidget):
-    settingsList = []
+    settingsList = ['filter']
 
     def __init__(self, parent=None, signalManager = None, name='filter'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
@@ -27,13 +27,14 @@ class OWFilter(OWWidget):
         
         # Settings
         self.name = name
-        self.filter = None
-        
+        self.filter = 1
+        self.filters = armor.filter.Filter().filters.keys()
         self.loadSettings()
 
         self.data = None                    # input data set
 
         wbN = OWGUI.widgetBox(self.controlArea, "Filter Settings")
+        self.filecombo = OWGUI.comboBoxWithCaption(wbN, self, "filter", "Filters: ", items=self.filters, valueType = str)
 
         wbS = OWGUI.widgetBox(self.controlArea, "Widget Settings")
         OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
@@ -41,7 +42,7 @@ class OWFilter(OWWidget):
         
         OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.applySettings, disabled=0)
 
-        self.resize(100,250)
+        self.resize(100,150)
 
 
     def applySettings(self):
@@ -65,15 +66,15 @@ class OWFilter(OWWidget):
         if not slot:
             return
         if self.filter is None:
-            self.filter = armor.smooth.Smooth(useLazyEvaluation=self.useLazyEvaluation)
+            self.filter = armor.filter.Filter(useLazyEvaluation=self.useLazyEvaluation)
 
-            self.filter.InputSlot.registerInput(slot)
+            self.filter.inputSlot.registerInput(slot)
 
         self.sendData()
         
 if __name__ == "__main__":
     a=QApplication(sys.argv)
-    ows=OWSift()
+    ows=OWFilter()
     ows.activateLoadedSettings()
     ows.show()
     sys.exit(a.exec_())
