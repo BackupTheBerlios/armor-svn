@@ -5,7 +5,9 @@ import armor.kmeans
 import armor.quantize
 import armor.tests
 import armor.histogram
-import armor.smooth
+import armor.filter
+import armor.normalize
+import armor.transform
 
 import armor
 import numpy
@@ -22,27 +24,32 @@ class testAll(unittest.TestCase):
     def testGenerator(self):
 	#from IPython.Debugger import Tracer; debug_here = Tracer()
 	#debug_here()
-	sm = armor.smooth.Smooth()
+	ft = armor.filter.Filter(filter='smooth')
 	sft = armor.sift.Sift()
         km = armor.kmeans.Kmeans(3)
 	qt = armor.quantize.quantize()
 	hg = armor.histogram.Histogram(3)
-
-	sm.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
-	sft.InputSlot.registerInput(sm.outputSlot)
+	nz = armor.normalize.Normalize('bin')
+	tf = armor.transform.Transform('PCA')
+	
+	ft.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
+	sft.InputSlot.registerInput(ft.outputSlot)
 	km.InputSlot.registerInput(sft.OutputSlot)
 	qt.InputSlotCodebook.registerInput(km.OutputSlot)
 	qt.InputSlotVec.registerInput(sft.OutputSlot)
 	hg.InputSlot.registerInput(qt.OutputSlot)
+	nz.inputSlot.registerInput(hg.OutputSlot)
+	tf.inputSlot.registerInput(nz.outputSlot)
 	
-	print list(hg.OutputSlot)
+	print list(tf.outputSlot)
 	#del sft
 	#self.assertRaises(AttributeError, list(hg.OutputSlot))
 #	del km
 #	self.assertRaises(AttributeError, list(hg.OutputSlot))
 	
 	armor.saveSlots('kmeansSlot.pickle', outputSlot = sft.OutputSlot)
-	kmSlots = armor.loadSlots('kmeansSlot.pickle')
+	savedslot = armor.loadSlots('kmeansSlot.pickle')
+	print list(savedslot)
 #	assert (list(km.OutputSlot), list(kmSlots['codebook']))
 #	print list(km.OutputSlot)[0].shape
 

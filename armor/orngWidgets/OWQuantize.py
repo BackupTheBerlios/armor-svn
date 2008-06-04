@@ -31,12 +31,13 @@ class OWQuantize(OWWidget):
                 
         wbN = OWGUI.widgetBox(self.controlArea, "Quantization settings")
 
-        OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")        
-        OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.apply, disabled=0)
+        
+        OWGUI.checkBox(wbN, self, "useLazyEvaluation", "Use lazy evaluation")
+        OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.applySettings, disabled=0)
 
         self.resize(100,150)
 
-	self.quantize = armor.quantize.quantize(useLazyEvaluation=self.useLazyEvaluation)
+        self.quantize = armor.quantize.quantize(useLazyEvaluation=self.useLazyEvaluation)
 
     def applySettings(self):
         armor.applySettings(self.settingsList, self, obj=self.quantize)
@@ -44,18 +45,18 @@ class OWQuantize(OWWidget):
     def setData(self,slot):
         if not slot:
             return
-	if self.quantize.InputSlotVec.senderSlot is None or self.quantize.InputSlotVec.senderSlot() is None:
-	    self.quantize.InputSlotVec.registerInput(slot)
+        if self.quantize.InputSlotVec.senderSlot is None or self.quantize.InputSlotVec.senderSlot() is None:
+            self.quantize.InputSlotVec.registerInput(slot)
         self.send("Clusters", self.quantize.OutputSlot)
 
     def setCodebook(self, slot):
-	if not slot:
-	    return
-	if self.quantize.InputSlotCodebook.senderSlot is None or self.quantize.InputSlotCodebook.senderSlot() is None:
-	    self.quantize.InputSlotCodebook.registerInput(slot)
-	self.send("Clusters", self.quantize.OutputSlot)
-	
-	
+        if not slot:
+            return
+        if self.quantize.InputSlotCodebook.senderSlot is None or self.quantize.InputSlotCodebook.senderSlot() is None:
+            self.quantize.InputSlotCodebook.registerInput(slot)
+        self.send("Clusters", self.quantize.OutputSlot)
+        
+        
 
 def main():
     a=QApplication(sys.argv)

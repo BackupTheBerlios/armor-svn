@@ -40,6 +40,7 @@ class OWHistogram(OWWidget):
         OWGUI.spin(wbN, self, "bins", 1, 100000, 100, None, "Number of bins  ", orientation="horizontal")
 
         OWGUI.separator(self.controlArea)
+	wbS = OWGUI.widgetBox(self.controlArea, "Widget Settings")
         OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
         OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.applySettings, disabled=0)
 

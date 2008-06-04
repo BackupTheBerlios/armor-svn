@@ -46,11 +46,13 @@ def loadSlots(fname):
 
     try:
 	fdescr = open(fname, mode='r')
-	OutputSlots = pickle.load(fdescr)
+	outputSlot = pickle.load(fdescr)
+	outputSlot.container.references = weakref.WeakValueDictionary()
+	
     finally:
 	del fdescr
 
-    return OutputSlots
+    return outputSlot
     
 def applySettings(settingsList, widget, obj=None, kwargs=None):
     changed = False

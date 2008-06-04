@@ -1,41 +1,41 @@
 """
-<name>Filter</name>
-<description>Apply a filter to the images.</description>
+<name>Normalize</name>
+<description>Normalize input data by different distance measurements.</description>
 <icon>icons/unknown.png</icon>
 <contact>Thomas Wiecki thomas.wiecki(@at@)gmail.com)</contact>
-<priority>7</priority>
+<priority>13</priority>
 """
 import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 import armor
-import armor.filter
+import armor.normalize
 from armor.SeqContainer import SeqContainer as SeqContainer
 
-class OWFilter(OWWidget):
-    settingsList = ['filterID']
+class OWNormalize(OWWidget):
+    settingsList = ['normtype']
 
     def __init__(self, parent=None, signalManager = None, name='filter'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
 
         self.callbackDeposit = []
 
-        self.inputs = [("Images PIL", SeqContainer, self.setData)]
-        self.outputs = [("Filtered Images PIL", SeqContainer)]
+        self.inputs = [("Unnormalized Data", SeqContainer, self.setData)]
+        self.outputs = [("Normalized Data", SeqContainer)]
 
         self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
         self.name = name
-	self.filter = None
-        self.filterID = 5
-        self.filters = armor.filter.Filter().filters.keys()
+	self.normalize = None
+        self.normtype = 1
+	self.normtypes = ['bin', 'L1', 'L2', 'whiten', 'bias', 'crop', 'log']
         self.loadSettings()
 
         self.data = None                    # input data set
 
-        wbN = OWGUI.widgetBox(self.controlArea, "Filter Settings")
-        self.filecombo = OWGUI.comboBoxWithCaption(wbN, self, "filterID", "Filters: ", items=self.filters, valueType = str)
+        wbN = OWGUI.widgetBox(self.controlArea, "Normalization Settings")
+        self.filecombo = OWGUI.comboBoxWithCaption(wbN, self, "normtype", "Normalize type: ", items=self.normtypes, valueType = int)
 
         wbS = OWGUI.widgetBox(self.controlArea, "Widget Settings")
         OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
@@ -47,31 +47,27 @@ class OWFilter(OWWidget):
 
 
     def applySettings(self):
-        changed = False
+	if self.normalize:
+	    if self.normalize.normtype != self.normtypes[self.normtype]:
+		self.normalize = armor.normalize.Normalize(normtype=self.normtypes[self.normtype])
+	
         
-        if self.filter is not None:
-            if armor.applySettings(self.settingsList, self, self.filter):
-                changed = True
-
-            if changed:
-                self.sendData()
-
     def sendData(self):
-        self.send("Filtered Images PIL", self.filter.outputSlot)
+        self.send("Normalized Data", self.normalize.outputSlot)
         
     def setData(self, slot):
         if not slot:
             return
-        if self.filter is None:
-            self.filter = armor.filter.Filter(filter=self.filters[self.filterID], useLazyEvaluation=self.useLazyEvaluation)
+        if self.normalize is None:
+            self.normalize = armor.normalize.Normalize(normtype=self.normtypes[self.normtype], useLazyEvaluation=self.useLazyEvaluation)
 
-            self.filter.inputSlot.registerInput(slot)
+            self.normalize.inputSlot.registerInput(slot)
 
         self.sendData()
         
 if __name__ == "__main__":
     a=QApplication(sys.argv)
-    ows=OWFilter()
+    ows=OWNormalize()
     ows.activateLoadedSettings()
     ows.show()
     sys.exit(a.exec_())

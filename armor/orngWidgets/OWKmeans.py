@@ -41,6 +41,7 @@ class OWKmeans(OWWidget):
         OWGUI.spin(wbN, self, "numruns", 0, 100000, 1, None, "Number of runs ", orientation="horizontal")
 
         OWGUI.separator(self.controlArea)
+	wbS = OWGUI.widgetBox(self.controlArea, "Widget Settings")
         OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
         OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.applySettings, disabled=0)
 
@@ -58,7 +59,7 @@ class OWKmeans(OWWidget):
 	    self.kmeans = armor.kmeans.Kmeans(numClusters = self.numClusters,
 					      maxiter = self.maxiter,
 					      numruns = self.numruns,
-					      lazeEvaluation=self.lazeEvaluation)
+					      useLazyEvaluation=self.useLazyEvaluation)
 	    self.kmeans.InputSlot.registerInput(slot)
 
         self.sendData()

@@ -24,17 +24,17 @@ class Filter(object):
 
 	# Define slots
 	self.inputSlot = armor.slot.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
-	self.outputSlot = armor.slot.OutputSlot(name='Smooted Images',
+	self.outputSlot = armor.slot.OutputSlot(name='Filtered Images',
 						inputSlot=self.inputSlot,
-						processFunc=armor.weakmethod(self, 'smooth'),
+						processFunc=armor.weakmethod(self, 'applyfilter'),
 						slotType='sequential',
 						useLazyEvaluation=self.useLazyEvaluation)
 	self.filter = filter
 
 	
-    def smooth(self, img):
+    def applyfilter(self, img):
 	if armor.verbosity > 0:
-	    print "Smoothing Image..."
+	    print "Applying filter %s..." % self.filter
 	return img.filter(self.filters[self.filter])
 
         
