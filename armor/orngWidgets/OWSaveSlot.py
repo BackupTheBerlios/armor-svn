@@ -11,6 +11,7 @@ import OWGUI
 from exceptions import Exception
 import armor
 from armor.SeqContainer import SeqContainer as SeqContainer
+
 class OWSaveSlot(OWWidget):
     settingsList = []
 
@@ -65,7 +66,7 @@ class OWSaveSlot(OWWidget):
 	self.slot = slot
         if self.slot is None or self.fname is None:
             return
-        armor.saveSlots(self.fname, OutputSlot=slot)
+        armor.saveSlots(self.fname, outputSlot=slot)
 
 	# Create orange.ExampleTable
 	#histoList = []

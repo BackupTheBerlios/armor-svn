@@ -8,7 +8,6 @@
 import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
-from exceptions import Exception
 import armor
 import armor.sift
 from armor.SeqContainer import SeqContainer as SeqContainer
@@ -27,11 +26,9 @@ class OWSift(OWWidget):
         self.useLazyEvaluation = armor.useLazyEvaluation
         
         # Settings
-        self.name = 'sift'
+        self.name = name
 	self.sift = None
 	
-        self.loadSettings()
-
         self.Octave = 6
         self.Levels = 3
         self.FirstOctave = 0
@@ -39,6 +36,8 @@ class OWSift(OWWidget):
         self.EdgeThresh = 10
 	self.NormThresh = 0
         self.Orientations = 0
+
+        self.loadSettings()
         
         self.data = None                    # input data set
 

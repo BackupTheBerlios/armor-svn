@@ -10,7 +10,7 @@ from OWWidget import *
 import OWGUI
 from exceptions import Exception
 import armor
-import armor.Histogram
+import armor.histogram
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWHistogram(OWWidget):
@@ -28,7 +28,7 @@ class OWHistogram(OWWidget):
         
         # Settings
         self.name = name
-	self.Histogram = None
+	self.histogram = None
 	
         self.loadSettings()
 
@@ -47,21 +47,21 @@ class OWHistogram(OWWidget):
 
 
     def applySettings(self):
-	if armor.applySettings(self.settingsList, self, obj=self.Histogram):
+	if armor.applySettings(self.settingsList, self, obj=self.histogram):
 	    self.sendData()
 	
     def setData(self,slot):
         if slot is None:
             return
 
-	if self.Histogram is None:
-	    self.Histogram = armor.Histogram.Histogram(self.bins)
-	    self.Histogram.InputSlot.registerInput(slot)
+	if self.histogram is None:
+	    self.histogram = armor.histogram.Histogram(self.bins)
+	    self.histogram.InputSlot.registerInput(slot)
 	    
 	self.sendData()
 
     def sendData(self):
-	self.send("Histogram", self.Histogram.OutputSlot)
+	self.send("Histogram", self.histogram.OutputSlot)
 	
 	# Create orange.ExampleTable
 	#histoList = []

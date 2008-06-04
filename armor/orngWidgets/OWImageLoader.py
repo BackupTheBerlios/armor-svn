@@ -97,10 +97,10 @@ class OWImageLoader(OWImageSubFile):
 #*********************************************************
     def __init__(self, parent=None, signalManager = None):
         OWImageSubFile.__init__(self, parent, signalManager, "Image Dataset")
-        settingsList=["imgDataset"]
-	
+        settingsList=['doSplit', 'splitRatio', 'doPermutate']
+        
         self.imgDataset = armor.ImageDataset.ImageDataset()
-	
+        
         self.inputs = []
         self.outputs = [("Images Train", SeqContainer), ("Images Test", SeqContainer), ("Labels Train", SeqContainer),("Labels Test", SeqContainer)]
 
@@ -110,6 +110,10 @@ class OWImageLoader(OWImageSubFile):
         self.recentFiles=["(none)"]
         self.domain = None
         #get settings from the ini file, if they exist
+        self.doPermutate = False
+        self.doSplit = False
+        self.splitRatio = .5
+        
         self.loadSettings()
         buttonWidth = 1.5
 
@@ -127,12 +131,19 @@ class OWImageLoader(OWImageSubFile):
         self.filecombo.setMinimumWidth(self.dialogWidth)
 
         self.createNewButton = OWGUI.button(box, self, 'Create new category', callback = self.createNew, disabled=0, width=self.dialogWidth)
-        self.addExistingButton = OWGUI.button(box, self, 'Add existing dataset', callback = self.addExisting, disabled=0, width=self.dialogWidth)
         self.removeSelectedButton = OWGUI.button(box, self, 'Remove selected category', callback = self.removeSelected, disabled=1, width=self.dialogWidth)
+        self.addExistingButton = OWGUI.button(box, self, 'Add existing dataset', callback = self.addExisting, disabled=0, width=self.dialogWidth)
         self.saveDatasetButton = OWGUI.button(box, self, 'Save dataset', callback = self.saveDataset, disabled=0, width=self.dialogWidth)
         self.autoAddButton = OWGUI.button(box, self, 'Automatically add dataset', callback = self.autoAdd, disabled=0, width=self.dialogWidth) 
-        
-        OWGUI.checkBox(box, self, "useLazyEvaluation", "Use lazy evaluation")
+
+        databox = OWGUI.widgetBox(self.controlArea, 'Dataset', addSpace = True, orientation=1)
+        self.permutateBox = OWGUI.checkBox(databox, self, "doPermutate", "Randomly permutate the dataset")
+        self.splitBox = OWGUI.checkBox(databox, self, "doSplit", "Split dataset into train and test sets")
+        OWGUI.spin(databox, self, "splitRatio", 0, 100, 1, None, "Split Ratio  ", orientation="horizontal")
+#        self.splitRatio = OWGUI.spin(databox, self, "splitRatio", 0, 1, 0.01, None, "Split ratio", orientation='horizontal')
+
+	
+        OWGUI.checkBox(databox, self, "useLazyEvaluation", "Use lazy evaluation")
         self.resize(self.dialogWidth,480)
 
 
@@ -277,7 +288,10 @@ class OWImageLoader(OWImageSubFile):
     def apply(self):
     # User pressed apply button, hide the dialog (should we close here?)
 #==================================
-        self.imgDataset.prepare(useLazyEvaluation=self.useLazyEvaluation)
+        self.imgDataset.prepare(doPermutate=self.doPermutate,
+				doSplit=self.doSplit,
+				splitRatio=self.splitRatio,
+				useLazyEvaluation=self.useLazyEvaluation)
         self.sendData()
         self.setVisible(0)
 
