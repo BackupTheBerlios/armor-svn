@@ -55,9 +55,7 @@ class OWSlotToExampleTable(OWWidget):
     def createExampleTable(self):
         # Create orange.ExampleTable
         datalabels = []
-        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        #from IPython.Debugger import Tracer; debug_here = Tracer()
-        #debug_here()
+
         data = list(self.data())
         labels = list(self.labels())
         
@@ -65,7 +63,9 @@ class OWSlotToExampleTable(OWWidget):
             datalabels.append(list(vec) + [str(label)])
             
         domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(data[0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in self.labels().container.classes]))])
-
+        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
+        #from IPython.Debugger import Tracer; debug_here = Tracer()
+        #debug_here()
         orngTable = orange.ExampleTable(domain, datalabels)
         self.send("Table", orngTable)
         

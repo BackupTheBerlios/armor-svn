@@ -94,21 +94,21 @@ class InputSlot(object):
 	    # Else compatible() returns the new type and conversion funcs
 	    (self.outputType, self.converters) = compatible
 	    
-	if self.senderSlot:
+	#if self.senderSlot:
 	    # There is already a senderSlot registered, is it maybe
 	    # the same?
-	    if self.senderSlot() is not senderSlot:
+	#    if self.senderSlot() is not senderSlot:
 		# Create a weak reference so that when the senderSlot
 		# gets removed this reference wont keep it alive
-		self.senderSlot = weakref.ref(senderSlot)
+	#	self.senderSlot = weakref.ref(senderSlot)
 	
-		if armor.useCaching:
-		    senderSlot.container.registerReference(self)
-	else:
+	#	if armor.useCaching:
+	#	    senderSlot.container.registerReference(self)
+	#else:
 	    # Register the new slot
-	    self.senderSlot = weakref.ref(senderSlot)
-	    if armor.useCaching:
-		senderSlot.container.registerReference(self)
+	self.senderSlot = weakref.ref(senderSlot)
+	if armor.useCaching:
+	    senderSlot.container.registerReference(self)
 
 	# Initialize the container to store the data (or the reference to it)
 	if not self.bulk:
@@ -139,7 +139,7 @@ class OutputSlot(object):
     """
     def __init__(self, name, inputSlot=None, processFunc=None, processFuncs=None,
 		 outputType=None, slotType=None, iterator=None, sequence=None, classes=None,
-		 useLazyEvaluation=armor.useLazyEvaluation):
+		 useLazyEvaluation=armor.useLazyEvaluation, useCaching=armor.useCaching):
 
         self.name = name
         self.inputSlot = inputSlot
@@ -158,17 +158,17 @@ class OutputSlot(object):
 
         # Create an output container
 	if self.sequence is not None:
-	    self.container = SeqContainer(sequence=self.sequence, classes=classes, useLazyEvaluation=useLazyEvaluation)
+	    self.container = SeqContainer(sequence=self.sequence, classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
 	elif self.iterator is not None: # User defined iterator
-	    self.container = SeqContainer(generator=self.iterator, classes=classes, useLazyEvaluation=useLazyEvaluation)
+	    self.container = SeqContainer(generator=self.iterator, classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
 	elif slotType == 'sequential': # Sequential iterator
 	    if self.processFunc is None and self.processFuncs is None:
 		raise AttributeError, "You must provide processFunc or processFuncs to use generic iterators"
-	    self.container = SeqContainer(generator=armor.weakmethod(self, 'seqIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation)
+	    self.container = SeqContainer(generator=armor.weakmethod(self, 'seqIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
 	elif slotType == 'bulk': # Bulk iterator
     	    if self.processFunc is None and self.processFuncs is None:
 		raise AttributeError, "You must provide processFunc or processFuncs to use generic iterators"
-	    self.container = SeqContainer(generator=armor.weakmethod(self, 'bulkIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation)
+	    self.container = SeqContainer(generator=armor.weakmethod(self, 'bulkIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
 	else:
 	    self.container = None
 	    

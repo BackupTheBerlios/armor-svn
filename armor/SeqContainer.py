@@ -14,11 +14,11 @@ class SeqContainer(object):
     - You can have multiple references iterating over SeqContainer as
     every reference will receive its own iterator.
     """
-    def __init__(self, sequence=None, generator=None, classes=None, useLazyEvaluation=armor.useLazyEvaluation):
+    def __init__(self, sequence=None, generator=None, classes=None, useLazyEvaluation=armor.useLazyEvaluation, useCaching=armor.useCaching):
         self.sequence = sequence
 	self.generator = generator
-	    
         self.useLazyEvaluation = useLazyEvaluation
+	self.useCaching = useCaching
         self.classes = classes
 
         self.references = weakref.WeakValueDictionary()    # Registered objects with appropriate group ID
@@ -59,9 +59,9 @@ class SeqContainer(object):
         # Hand one cached iterator to the group member.
         return self.iterpool.pop()
     
-    def registerReference(self, obj, replaces=None):
+    def registerReference(self, obj):
         """Register an object. Registered objects receive cached
         iterators (for more details see the description of the
         SeqContainer class)"""
-
-	self.references[id(obj)] = obj
+	if self.useCaching:
+	    self.references[id(obj)] = obj

@@ -11,11 +11,11 @@ class Histogram(object):
 	inputType = armor.datatypes.VectorType(shape=['flatarray'])
 	outputType = armor.datatypes.VectorType(shape=['flatarray'])
 
-	self.InputSlot = armor.slot.InputSlot(name='vector',
+	self.inputSlot = armor.slot.InputSlot(name='vector',
 					      acceptsType=inputType)
 
-	self.OutputSlot = armor.slot.OutputSlot(name='histogram',
-						inputSlot = self.InputSlot,
+	self.outputSlot = armor.slot.OutputSlot(name='histogram',
+						inputSlot = self.inputSlot,
 						slotType = 'sequential',
 						processFunc = armor.weakmethod(self, 'histogram'),
 						useLazyEvaluation = self.useLazyEvaluation)

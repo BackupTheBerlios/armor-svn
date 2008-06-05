@@ -8,6 +8,7 @@ import armor.histogram
 import armor.filter
 import armor.normalize
 import armor.transform
+import armor.features
 
 import armor
 import numpy
@@ -26,19 +27,24 @@ class testAll(unittest.TestCase):
 	#debug_here()
 	ft = armor.filter.Filter(filter='smooth')
 	sft = armor.sift.Sift()
+	rce = armor.features.Feature('edge')
+	
         km = armor.kmeans.Kmeans(3)
 	qt = armor.quantize.quantize()
 	hg = armor.histogram.Histogram(3)
-	nz = armor.normalize.Normalize('bin')
+	nz = armor.normalize.Normalize('L2')
 	tf = armor.transform.Transform('PCA')
 	
 	ft.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
-	sft.InputSlot.registerInput(ft.outputSlot)
-	km.InputSlot.registerInput(sft.OutputSlot)
+	#sft.InputSlot.registerInput(ft.outputSlot)
+	rce.inputSlot.registerInput(ft.outputSlot)
+	#km.InputSlot.registerInput(sft.OutputSlot)
+	km.InputSlot.registerInput(rce.outputSlot)
 	qt.InputSlotCodebook.registerInput(km.OutputSlot)
-	qt.InputSlotVec.registerInput(sft.OutputSlot)
-	hg.InputSlot.registerInput(qt.OutputSlot)
-	nz.inputSlot.registerInput(hg.OutputSlot)
+	#qt.InputSlotVec.registerInput(sft.OutputSlot)
+	qt.InputSlotVec.registerInput(rce.outputSlot)
+	hg.inputSlot.registerInput(qt.OutputSlot)
+	nz.inputSlot.registerInput(hg.outputSlot)
 	tf.inputSlot.registerInput(nz.outputSlot)
 	
 	print list(tf.outputSlot)

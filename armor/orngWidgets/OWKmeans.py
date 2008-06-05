@@ -60,7 +60,8 @@ class OWKmeans(OWWidget):
 					      maxiter = self.maxiter,
 					      numruns = self.numruns,
 					      useLazyEvaluation=self.useLazyEvaluation)
-	    self.kmeans.InputSlot.registerInput(slot)
+	
+	self.kmeans.InputSlot.registerInput(slot)
 
         self.sendData()
 

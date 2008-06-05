@@ -1,8 +1,9 @@
-from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt
+from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot
 from ctypes import c_double
 import armor
 import armor.datatypes
 import armor.slot
+
 
 class Transform(object):
     def __init__(self, transtype, useLazyEvaluation=armor.useLazyEvaluation):
@@ -25,6 +26,8 @@ class Transform(object):
 						useLazyEvaluation=useLazyEvaluation)
 
     def transform(self, data):
+	if armor.verbosity>0:
+	    print "Transforming: %s..." % self.transtype
 	return transform(array(data), self.transtype)
 
 # The following code was kindly provided by Christoph Lampert
@@ -37,9 +40,8 @@ class Transform(object):
 def transform(Xarray, proctype):
     """Process data using the specified methods: 'PCA', 'KPCA' (kernel-PCA), 
        'LLE' (laplacian eigenmaps), 'none'"""
-
+    from arpack.speigs import ARPACK_eigs as eigs
     if proctype=='PCA':
-        from scipy.sandbox.arpack.speigs import ARPACK_eigs as eigs
         Kmatrix = linear_kernel(Xarray)
         centeredKmatrix = centered(Kmatrix)
         val, vec = eigs(lambda x: dot(centeredKmatrix,x), num_examples, num_components, which='LM')
@@ -48,7 +50,6 @@ def transform(Xarray, proctype):
 
     elif proctype.startswith('KPCA'):
         # "kernel-K-means" (similar to Laplacian-based spectral clustering)
-        from scipy.sandbox.arpack.speigs import ARPACK_eigs as eigs
         try:
             kernel=proctype.split('-')[1]+'_kernel'
 	except IndexError:
@@ -60,7 +61,6 @@ def transform(Xarray, proctype):
 
     elif proctype.startswith('LLE'):
         # Spectral Clustering in the Ng/Jordan formulation
-        from scipy.sandbox.arpack.speigs import ARPACK_eigs as eigs
         try:
             kernel=proctype.split('-')[1]+'_kernel'
 	except IndexError:

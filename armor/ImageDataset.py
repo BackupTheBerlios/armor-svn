@@ -130,7 +130,8 @@ class ImageDataset(ImageBase):
         self.OutputSlotTrain.__init__(name="ImagesTrain",
                                       outputType = self.outType,
                                       iterator = self.iterTrain,
-                                      useLazyEvaluation=useLazyEvaluation)
+                                      useLazyEvaluation=useLazyEvaluation,
+				      useCaching = False)
 
         self.OutputSlotLabelsTrain.__init__(name="LabelsTrain",
                                             sequence=self.allLabelsTrain,
@@ -141,7 +142,8 @@ class ImageDataset(ImageBase):
             self.OutputSlotTest.__init__(name="ImagesTest",
                                          outputType = self.outType,
                                          iterator = self.iterTest,
-                                         useLazyEvaluation=useLazyEvaluation)
+                                         useLazyEvaluation=useLazyEvaluation,
+					 useCaching = False)
             self.OutputSlotLabelsTrain.__init__(name="LabelsTest",
                                                 sequence=self.allLabelsTest,
                                                 classes=self.categoryNames,

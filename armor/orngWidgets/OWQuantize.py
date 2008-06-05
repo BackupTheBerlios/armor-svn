@@ -45,15 +45,15 @@ class OWQuantize(OWWidget):
     def setData(self,slot):
         if not slot:
             return
-        if self.quantize.InputSlotVec.senderSlot is None or self.quantize.InputSlotVec.senderSlot() is None:
-            self.quantize.InputSlotVec.registerInput(slot)
+
+        self.quantize.InputSlotVec.registerInput(slot)
         self.send("Clusters", self.quantize.OutputSlot)
 
     def setCodebook(self, slot):
         if not slot:
             return
-        if self.quantize.InputSlotCodebook.senderSlot is None or self.quantize.InputSlotCodebook.senderSlot() is None:
-            self.quantize.InputSlotCodebook.registerInput(slot)
+
+        self.quantize.InputSlotCodebook.registerInput(slot)
         self.send("Clusters", self.quantize.OutputSlot)
         
         

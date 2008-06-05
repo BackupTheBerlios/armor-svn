@@ -14,7 +14,7 @@ import armor.histogram
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWHistogram(OWWidget):
-    settingsList = ['bins', 'useLazyEvaluation']
+    settingsList = ['bins']
 
     def __init__(self, parent=None, signalManager = None, name='Histogram'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
@@ -48,21 +48,23 @@ class OWHistogram(OWWidget):
 
 
     def applySettings(self):
-	if armor.applySettings(self.settingsList, self, obj=self.histogram):
-	    self.sendData()
+	if self.histogram:
+	    if armor.applySettings(self.settingsList, self, obj=self.histogram, outputSlot=self.histogram.outputSlot):
+		self.sendData()
 	
     def setData(self,slot):
         if slot is None:
             return
 
 	if self.histogram is None:
-	    self.histogram = armor.histogram.Histogram(self.bins)
-	    self.histogram.InputSlot.registerInput(slot)
+	    self.histogram = armor.histogram.Histogram(self.bins, useLazyEvaluation=self.useLazyEvaluation)
+
+	self.histogram.inputSlot.registerInput(slot)
 	    
 	self.sendData()
 
     def sendData(self):
-	self.send("Histogram", self.histogram.OutputSlot)
+	self.send("Histogram", self.histogram.outputSlot)
 	
 def main():
     a=QApplication(sys.argv)

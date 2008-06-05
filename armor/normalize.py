@@ -50,14 +50,14 @@ class Normalize(object):
     def normalize_seq(self, data):
         if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
-        Xnorm = array(data,c_double)
+        Xnorm = array(data)
         if self.normtype=='bin':
             Xscale = median(Xnorm) # median is usually better than mean
             Xnorm = 1.*(Xnorm>Xscale)
         elif self.normtype=='whiten':
             Xnorm = Xnorm-mean(Xnorm,axis=0)
             Xscale = std(Xnorm,axis=0)
-            Xscale[Xscale==0]=1.
+            Xnorm[Xnorm==0.]=1.
             Xnorm = Xnorm/Xscale
         elif self.normtype=='bias':
             Xnorm += 1  # pre-processing to normalization
@@ -73,7 +73,7 @@ class Normalize(object):
         if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
 
-        Xnorm = array(data,c_double)
+        Xnorm = array(data)
         if self.normtype=='L1':
             Xscale = ascolumn( sum(abs(Xnorm),axis=1) )
             Xscale[Xscale==0]=1.

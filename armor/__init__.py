@@ -26,59 +26,81 @@ def saveSlots(fname, outputSlot=None, outputSlots=None):
     # First, let every output slot process and save all the data
     # Also, remove all instancemethods
     try:
-	fdescr = open(fname, mode='w')
+        fdescr = open(fname, mode='w')
 
-	if outputSlot is not None:
-	    stripSlot(outputSlot)
-	    pickle.dump(outputSlot, fdescr)
-	    
-	elif OutputSlots is not None:
-	    for slot in outputSlots:
-		stripSlot(slot)
-	    pickle.dump(outputSlots, fdescr)
-	    
+        if outputSlot is not None:
+            stripSlot(outputSlot)
+            pickle.dump(outputSlot, fdescr)
+            
+        elif OutputSlots is not None:
+            for slot in outputSlots:
+                stripSlot(slot)
+            pickle.dump(outputSlots, fdescr)
+            
     finally:
-	del fdescr
+        del fdescr
 
     
 def loadSlots(fname):
     import pickle
 
     try:
-	fdescr = open(fname, mode='r')
-	outputSlot = pickle.load(fdescr)
-	outputSlot.container.references = weakref.WeakValueDictionary()
-	
+        fdescr = open(fname, mode='r')
+        outputSlot = pickle.load(fdescr)
+        outputSlot.container.references = weakref.WeakValueDictionary()
+        
     finally:
-	del fdescr
+        del fdescr
 
     return outputSlot
     
-def applySettings(settingsList, widget, obj=None, kwargs=None):
+def applySettings(settingsList, widget, obj=None, kwargs=None, outputSlot=None, outputSlots=None):
+    """Function to apply settings of a widget to a armor module. The
+    widget variables to apply to the module must have the same name
+    and be listed in settingsList.
+
+    You may specify outputSlot or outputSlots to test if
+    useLazyEvaluation changed so that data can be computed and stored.
+    """
+
     changed = False
 
     if obj is not None:
-	for setting in settingsList:
-	    try:
-		if getattr(obj, setting):
-		    if getattr(widget, setting) != getattr(obj, setting):
-			setattr(obj, setting, getattr(widget, setting))
-			changed = True
-	    except AttributeError:
-		pass
+        for setting in settingsList:
+            try:
+                if getattr(obj, setting):
+                    if getattr(widget, setting) != getattr(obj, setting):
+                        setattr(obj, setting, getattr(widget, setting))
+                        changed = True
+            except AttributeError:
+                pass
 
     if kwargs is not None:
-	for setting in settingsList:
-	    if setting in kwargs:
-		if kwargs[setting] != getattr(widget, setting):
-		    kwargs[setting] = getattr(widget, setting)
-		    changed = True
+        for setting in settingsList:
+            if setting in kwargs:
+                if kwargs[setting] != getattr(widget, setting):
+                    kwargs[setting] = getattr(widget, setting)
+                    changed = True
 
+    # Check if outputSlots are provided
+    if outputSlot is not None or outputSlots is not None:
+        # Check if lazy evaluation was turned off
+        if widget.useLazyEvaluation is False:
+            if outputSlot is not None:
+                outputSlots = [outputSlot]
+            if outputSlots is not None:
+                for slot in outputSlots:
+                    # Turn off Lazy Evaluation
+                    slot.useLazyEvaluation = False
+                    slot.container.useLazyEvaluation = False
+                    # Compute data (if necessary)
+                    slot.container.getDataAsIter()
+            
 
     if changed:
-	print "Changed"
-	return True
-	
+        print "Changed"
+        return True
+        
     return False
 
 def weakmethod(obj, methname):
