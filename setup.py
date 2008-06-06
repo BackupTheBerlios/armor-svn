@@ -2,28 +2,17 @@ import sys
 import os
 import platform
 
-scriptName = sys.argv[0]
-
-if not (scriptName == "setup.py" and os.path.exists("armor")):
-	print """
-Please start the installation from the directory above "armor" by executing
-"python setup.py build" 
-"python setup.py test"
-"python setup.py install"
-"""
-	exit(1)
-	
-
 import ez_setup
 ez_setup.use_setuptools()
 
 from setuptools import setup, Extension
+
 try:
     import numpy
     import scipy
     import PIL
 except:
-    print "You need to have numpy, scipy an PIL installed."
+    print "You need to have numpy, scipy and PIL installed."
     
 import glob
 
@@ -39,7 +28,8 @@ kmeansModule = Extension('libmpikmeans',
 		       sources = ['source/mpi_kmeans/mpi_kmeans.cxx'],
 		       extra_compile_args=['-Wl,-soname=libmpikmeans.so','-Wall', '-O3'])
 
-setup (name = 'Armor',
+
+setup (name = 'armor',
        version = '0.1',
        description = 'Object Recognition Toolkit for Orange',
        author = 'Thomas V. Wiecki',
@@ -48,8 +38,10 @@ setup (name = 'Armor',
        long_description = '''...''',
        ext_modules = [siftModule, kmeansModule],
        packages = ['armor', 'armor.orngWidgets', 'armor.tests'],
+       package_dir={'': 'src'},
        include_package_data = True,
+       install_requires=['setuptools', 'numpy >= 1.0', 'scipy >= 0.5', 'PIL >= 1.1.6'],
        test_suite = "armor.tests.test_all",
        zip_safe = False
-#       install_requires = ['numpy >= 1.0', 'scipy >= 0.5', 'PIL >= 1.1.6']
        )
+

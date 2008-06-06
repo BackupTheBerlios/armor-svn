@@ -33,7 +33,7 @@ class testAll(unittest.TestCase):
 	qt = armor.quantize.quantize()
 	hg = armor.histogram.Histogram(3)
 	nz = armor.normalize.Normalize('L2')
-	tf = armor.transform.Transform('PCA')
+	tf = armor.transform.Transform('KPCA')
 	
 	ft.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
 	#sft.InputSlot.registerInput(ft.outputSlot)
