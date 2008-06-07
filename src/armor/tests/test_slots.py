@@ -1,6 +1,6 @@
 import unittest
 import armor
-import armor.slotss
+import armor.slots
 import armor.datatypes
 import gc
 
@@ -24,14 +24,14 @@ class TestTypes(unittest.TestCase):
         self.outType2 = armor.datatypes.VectorType(shape='nestedlist')
 
     def setSlots(self):
-        self.slotSend = armor.slotss.OutputSlot('sender',
+        self.slotSend = armor.slots.OutputSlot('sender',
                                               iterator=self.iterator,
                                               outputType=self.outType1)
 
-        self.slotInput = armor.slotss.InputSlot('input',
+        self.slotInput = armor.slots.InputSlot('input',
                                               acceptsType=self.inType2)
         
-        self.slotRecv = armor.slotss.OutputSlot('receiver',
+        self.slotRecv = armor.slots.OutputSlot('receiver',
 					      inputSlot = self.slotInput,
 					      processFunc=self.process,
 					      outputType=self.outType2,
@@ -39,12 +39,12 @@ class TestTypes(unittest.TestCase):
 
 
     def setMultiInput(self):
-        self.slotSend = armor.slotss.OutputSlot('sender', iterator=self.iterator)
+        self.slotSend = armor.slots.OutputSlot('sender', iterator=self.iterator)
         
-        self.slotInput1 = armor.slotss.InputSlot('input1')
-        self.slotInput2 = armor.slotss.InputSlot('input2')
+        self.slotInput1 = armor.slots.InputSlot('input1')
+        self.slotInput2 = armor.slots.InputSlot('input2')
         
-        self.InputSlots = armor.slotss.Slots([self.slotInput1, self.slotInput2])
+        self.InputSlots = armor.slots.Slots([self.slotInput1, self.slotInput2])
         self.InputSlots['input1'].registerInput(self.slotSend)
         self.InputSlots['input2'].registerInput(self.slotSend)
         
@@ -78,7 +78,7 @@ class TestTypes(unittest.TestCase):
         self.setTypesNoConversion()
         self.setSlots()
         self.slotInput.registerInput(self.slotSend)
-        self.slotSend = armor.slotss.OutputSlot('sender',
+        self.slotSend = armor.slots.OutputSlot('sender',
                                               sequence=range(11),
                                               outputType=self.outType1)
         self.slotInput.registerInput(self.slotSend)
@@ -86,7 +86,7 @@ class TestTypes(unittest.TestCase):
 
     def testMultiInput(self):
         self.setMultiInput()
-        self.slotRecv = armor.slotss.OutputSlot('receiver', iterator=self.iterMulti)
+        self.slotRecv = armor.slots.OutputSlot('receiver', iterator=self.iterMulti)
         self.assertEqual([i for i in self.slotRecv], [x+y for x,y in zip(range(10),range(10))])
 
     def testGroup(self):
@@ -94,10 +94,10 @@ class TestTypes(unittest.TestCase):
         self.setSlots()
         self.slotInput.registerInput(self.slotSend)
         
-        self.slotInput2 = armor.slotss.InputSlot('input2',
+        self.slotInput2 = armor.slots.InputSlot('input2',
                                               acceptsType=self.inType2)
         
-        self.slotRecv2 = armor.slotss.OutputSlot('receiver2',
+        self.slotRecv2 = armor.slots.OutputSlot('receiver2',
 					       inputSlot = self.slotInput2,
 					       processFunc=self.process,
 					       outputType=self.outType2,

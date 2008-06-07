@@ -3,7 +3,7 @@ import os
 import os.path
 import xml.dom.minidom
 from PIL import Image
-import armor.slotss
+import armor.slots
 import armor.datatypes
 import armor
 
@@ -86,14 +86,14 @@ class ImageDataset(ImageBase):
         self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
 	self.outTypeLabels = armor.datatypes.VectorType(format='flatlist', name='labels')
 	
-        self.OutputSlotTrain = armor.slotss.OutputSlot(name="ImagesTrain", outputType=self.outType)
-        self.OutputSlotTest = armor.slotss.OutputSlot(name="ImagesTest", outputType=self.outType)
-        self.OutputSlotLabelsTrain = armor.slotss.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain,
+        self.OutputSlotTrain = armor.slots.OutputSlot(name="ImagesTrain", outputType=self.outType)
+        self.OutputSlotTest = armor.slots.OutputSlot(name="ImagesTest", outputType=self.outType)
+        self.OutputSlotLabelsTrain = armor.slots.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain,
 							   outputType=self.outTypeLabels)
-        self.OutputSlotLabelsTest = armor.slotss.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest,
+        self.OutputSlotLabelsTest = armor.slots.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest,
 							  outputType=self.outTypeLabels)
         
-        self.OutputSlots = armor.slotss.Slots(slots = [self.OutputSlotTrain, self.OutputSlotTest,
+        self.OutputSlots = armor.slots.Slots(slots = [self.OutputSlotTrain, self.OutputSlotTest,
                                                         self.OutputSlotLabelsTrain, self.OutputSlotLabelsTest])
 
     def __iter__(self):

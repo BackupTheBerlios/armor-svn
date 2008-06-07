@@ -1,6 +1,6 @@
 import mpi_kmeans
 import numpy
-import armor.slotss
+import armor.slots
 import armor.datatypes
 import armor
 from ctypes import c_double
@@ -24,9 +24,9 @@ class Kmeans(object):
 	inputType = armor.datatypes.VectorType(shape=['flatarray'])
 	outputType = armor.datatypes.VectorType(name='codebook', shape='flatarray')
 
-	self.InputSlot = armor.slotss.InputSlot(name='vectors', acceptsType = inputType, bulk=True, useLazyEvaluation=useLazyEvaluation)
+	self.InputSlot = armor.slots.InputSlot(name='vectors', acceptsType = inputType, bulk=True, useLazyEvaluation=useLazyEvaluation)
 	
-	self.OutputSlot = armor.slotss.OutputSlot(name='codebook',
+	self.OutputSlot = armor.slots.OutputSlot(name='codebook',
 						inputSlot = self.InputSlot,
 						slotType = 'bulk',
 						processFunc = armor.weakmethod(self, 'process'),
@@ -55,13 +55,13 @@ class quantize(object):
         outputType = armor.datatypes.VectorType(shape='flatarray')
 
         # Define slots
-        self.InputSlotVec = armor.slotss.InputSlot(name='vectors',
+        self.InputSlotVec = armor.slots.InputSlot(name='vectors',
                                                  acceptsType=inputTypeVec)
 
-        self.InputSlotCodebook = armor.slotss.InputSlot(name='codebook',
+        self.InputSlotCodebook = armor.slots.InputSlot(name='codebook',
                                                       acceptsType=inputTypeCodebook)
         
-        self.OutputSlot = armor.slotss.OutputSlot(name='cluster',
+        self.OutputSlot = armor.slots.OutputSlot(name='cluster',
                                                 outputType=outputType,
                                                 iterator=armor.weakmethod(self, 'quantize'),
                                                 useLazyEvaluation=self.useLazyEvaluation)

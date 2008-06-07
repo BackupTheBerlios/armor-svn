@@ -1,6 +1,6 @@
 from numpy import array,ndarray,float32,loadtxt,float
 import subprocess, os
-import armor.slotss
+import armor.slots
 import armor.datatypes
 import armor
 
@@ -27,8 +27,8 @@ class Nowozin(object):
         self.outputType = armor.datatypes.VectorType(shape='nestedarray')
 
         # Define slots
-        self.inputSlot = armor.slotss.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
-        self.outputSlot = armor.slotss.OutputSlot(name='Sift Descriptors',
+        self.inputSlot = armor.slots.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
+        self.outputSlot = armor.slots.OutputSlot(name='Sift Descriptors',
                                                 outputType=self.outputType,
                                                 inputSlot=self.inputSlot,
                                                 processFunc=armor.weakmethod(self, 'process'),
@@ -81,8 +81,8 @@ class SiftRobHess(object):
         self.outputType = armor.datatypes.VectorType(shape='nestedarray')
 
         # Define slots
-        self.inputSlot = armor.slotss.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
-        self.outputSlot = armor.slotss.OutputSlot(name='Sift Descriptors',
+        self.inputSlot = armor.slots.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
+        self.outputSlot = armor.slots.OutputSlot(name='Sift Descriptors',
                                                 outputType=self.outputType,
                                                 inputSlot=self.inputSlot,
                                                 processFunc=armor.weakmethod(self, 'process'),
@@ -149,8 +149,8 @@ class SiftValedi(object):
         self.outputType = armor.datatypes.VectorType(shape='nestedarray')
 
         # Define slots
-        self.inputSlot = armor.slotss.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
-        self.outputSlot = armor.slotss.OutputSlot(name='Sift Descriptors',
+        self.inputSlot = armor.slots.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
+        self.outputSlot = armor.slots.OutputSlot(name='Sift Descriptors',
                                                 outputType=self.outputType,
                                                 inputSlot=self.inputSlot,
                                                 processFunc=armor.weakmethod(self, 'process'),

@@ -1,7 +1,7 @@
 from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot,exp
 from ctypes import c_double
 import armor
-import armor.slotsss
+import armor.slots
 
 
 class Transform(object):
@@ -16,18 +16,18 @@ class Transform(object):
             raise NotImplementedError, "Wrong kernel chosen"
         
 
-        self.inputTypeData = armor.slotsss.VectorType(shape=['flatarray'], bulk=True)
-        self.inputTypeLabels = armor.slotsss.VectorType(name=['labels'], shape=['flatlist'])
+        self.inputTypeData = armor.slots.VectorType(shape=['flatarray'], bulk=True)
+        self.inputTypeLabels = armor.slots.VectorType(name=['labels'], shape=['flatlist'])
         
-        self.outputType = armor.slotsss.VectorType(shape='flatarray')
+        self.outputType = armor.slotss.VectorType(shape='flatarray')
 
-        self.inputSlotData = armor.slotsss.InputSlot(name='untransformed',
+        self.inputSlotData = armor.slots.InputSlot(name='untransformed',
                                                    acceptsType=self.inputTypeData)
 
-        self.inputSlotLabels = armor.slotsss.InputSlot(name='labels',
+        self.inputSlotLabels = armor.slots.InputSlot(name='labels',
                                                      acceptsType=self.inputTypeLabels)
 
-        self.outputSlot = armor.slotsss.OutputSlot(name='transformed',
+        self.outputSlot = armor.slots.OutputSlot(name='transformed',
                                                  outputType=self.outputType,
                                                  useLazyEvaluation=useLazyEvaluation,
                                                  iterator=armor.weakmethod(self, 'iterator'))
@@ -103,23 +103,23 @@ class Normalize(object):
             raise ValueError, "No operation mode specified"
 
         if self.sequential:
-            self.inputType = armor.slotsss.VectorType(shape=['flatarray'])
+            self.inputType = armor.slotss.VectorType(shape=['flatarray'])
         else:
-            self.inputType = armor.slotsss.VectorType(shape=['flatarray'], bulk=True)
+            self.inputType = armor.slotss.VectorType(shape=['flatarray'], bulk=True)
 
-        self.outputType = armor.slotsss.VectorType(shape='flatarray')
+        self.outputType = armor.slotss.VectorType(shape='flatarray')
 
-        self.inputSlot = armor.slotsss.InputSlot(name='unnormalized',
+        self.inputSlot = armor.slotss.InputSlot(name='unnormalized',
                                                acceptsType=self.inputType)
         if self.sequential:
-            self.outputSlot = armor.slotsss.OutputSlot(name='normalized',
+            self.outputSlot = armor.slotss.OutputSlot(name='normalized',
                                                      inputSlot=self.inputSlot,
                                                      slotType='sequential',
                                                      processFunc=armor.weakmethod(self, 'normalize_seq'),
                                                      outputType=self.outputType,
                                                      useLazyEvaluation=useLazyEvaluation)
         else:
-            self.outputSlot = armor.slotsss.OutputSlot(name='normalized',
+            self.outputSlot = armor.slotss.OutputSlot(name='normalized',
                                                      inputSlot=self.inputSlot,
                                                      slotType='bulk',
                                                      processFunc=armor.weakmethod(self, 'normalize_bulk'),
