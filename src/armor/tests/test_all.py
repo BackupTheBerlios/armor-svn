@@ -1,6 +1,5 @@
 import unittest
 import armor.ImageDataset
-import armor.sift
 import armor.kmeans
 import armor.quantize
 import armor.tests
@@ -26,10 +25,12 @@ class testAll(unittest.TestCase):
 
 	self.imgDataset.prepare()
 
-    def createDescrColor(self):
+    def createDescr(self):
 	ft = armor.filter.Filter(filter='smooth')
 	#sft = armor.sift.Sift()
-	rce = armor.features.Feature('color')
+	#rce = armor.features.Feature('color')
+	rce = armor.features.SiftRobHess()
+	
 	ft.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
 	#sft.InputSlot.registerInput(ft.outputSlot)
 	rce.inputSlot.registerInput(ft.outputSlot)
@@ -39,15 +40,15 @@ class testAll(unittest.TestCase):
     def testGenerator(self):
 	#from IPython.Debugger import Tracer; debug_here = Tracer()
 	#debug_here()
-	#rce = self.createDescrColor()
-	rce = armor.loadSlots('rce.pickle')
+	rce = self.createDescr()
+	#rce = armor.loadSlots('rce.pickle')
 	
         km = armor.kmeans.Kmeans(1000)
 	qt = armor.quantize.quantize()
 	hg = armor.histogram.Histogram(1000)
-	nz = armor.normalize.Normalize('L2')
-	tf = armor.transform.Transform('KPCA')
-	nz2 = armor.normalize.Normalize('L2')
+	nz = armor.normalize.Normalize('bin')
+	tf = armor.transform.Transform('PCA')
+	nz2 = armor.normalize.Normalize('whiten')
 	sc = armor.score.Score()
 	
 	#km.InputSlot.registerInput(sft.OutputSlot)

@@ -5,7 +5,7 @@ useLazyEvaluation=True
 useTypeChecking=True
 useCaching=True
 groupCounter=0
-verbosity=1
+verbosity=2
 useOrange=True
 
 def stripSlot(slot):
