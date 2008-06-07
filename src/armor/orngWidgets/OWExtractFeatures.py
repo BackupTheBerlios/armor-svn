@@ -10,7 +10,7 @@ from OWWidget import *
 import OWGUI
 import armor
 import armor.features
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWExtractFeatures(OWWidget):
     settingsList = ['featureType']
@@ -30,7 +30,7 @@ class OWExtractFeatures(OWWidget):
         self.feature = None
         self.featureID = 0
         self.featureType = None
-        self.features = armor.features.features
+        self.features = armor.features.Nowozin.features
         self.loadSettings()
 
         self.data = None                    # input data set
@@ -60,7 +60,7 @@ class OWExtractFeatures(OWWidget):
         if not slot:
             return
         if self.feature is None:
-            self.feature = armor.features.Feature(featureType=self.features[self.featureID], useLazyEvaluation=self.useLazyEvaluation)
+            self.feature = armor.features.Nowozin(featureType=self.features[self.featureID], useLazyEvaluation=self.useLazyEvaluation)
 
         self.feature.inputSlot.registerInput(slot)
         self.sendData()

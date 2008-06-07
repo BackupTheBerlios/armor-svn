@@ -30,7 +30,7 @@ import os.path
 import numpy
 import armor
 from armor.ImageDataset import *
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWImageSubFile(OWWidget):
     """Basic functionality like opening a file dialog"""
@@ -168,10 +168,10 @@ class OWImageLoader(OWImageSubFile):
             return
         
 #        self.imgDataset.prepare(useLazyEvaluation=self.useLazyEvaluation)
-        self.send("Images Train", self.imgDataset.OutputSlotTrain)
-	self.send("Images Test", self.imgDataset.OutputSlotTest)
-        self.send("Labels Train", self.imgDataset.OutputSlotLabelsTrain)
-	self.send("Labels Test", self.imgDataset.OutputSlotLabelsTest)
+        self.send("Images Train", self.imgDataset.outputSlotTrain)
+	self.send("Images Test", self.imgDataset.outputSlotTest)
+        self.send("Labels Train", self.imgDataset.outputSlotLabelsTrain)
+	self.send("Labels Test", self.imgDataset.outputSlotLabelsTest)
         
 #==================================
     def addCategory(self, parent=None, name="", fnames=None, visible=False):

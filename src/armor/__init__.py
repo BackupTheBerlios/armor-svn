@@ -34,7 +34,7 @@ def saveSlots(fname, outputSlot=None, outputSlots=None):
             stripSlot(outputSlot)
             pickle.dump(outputSlot, fdescr)
             
-        elif OutputSlots is not None:
+        elif outputSlots is not None:
             for slot in outputSlots:
                 stripSlot(slot)
             pickle.dump(outputSlots, fdescr)

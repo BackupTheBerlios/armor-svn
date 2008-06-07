@@ -11,7 +11,7 @@ import OWGUI
 from exceptions import Exception
 import armor
 import armor.cluster
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWKmeans(OWWidget):
     settingsList = ["numClusters", "maxiter", "numruns"]
@@ -49,9 +49,10 @@ class OWKmeans(OWWidget):
 
 
     def applySettings(self):
-        if armor.applySettings(self.settingsList, self, obj=self.kmeans):
-            self.sendData()
-                
+        if self.kmeans:
+            if armor.applySettings(self.settingsList, self, obj=self.kmeans, outputSlot=self.kmeans.outputSlot):
+                self.sendData()
+            
     def setData(self,slot):
         if slot is None:
             return
@@ -61,12 +62,12 @@ class OWKmeans(OWWidget):
 					      numruns = self.numruns,
 					      useLazyEvaluation=self.useLazyEvaluation)
 	
-	self.kmeans.InputSlot.registerInput(slot)
+	self.kmeans.inputSlot.registerInput(slot)
 
         self.sendData()
 
     def sendData(self):
-        self.send("Codebook", self.kmeans.OutputSlot)
+        self.send("Codebook", self.kmeans.outputSlot)
 
         # Create orange.ExampleTable
         #histoList = []

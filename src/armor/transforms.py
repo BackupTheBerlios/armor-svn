@@ -19,7 +19,7 @@ class Transform(object):
         self.inputTypeData = armor.slots.VectorType(shape=['flatarray'], bulk=True)
         self.inputTypeLabels = armor.slots.VectorType(name=['labels'], shape=['flatlist'])
         
-        self.outputType = armor.slotss.VectorType(shape='flatarray')
+        self.outputType = armor.slots.VectorType(shape='flatarray')
 
         self.inputSlotData = armor.slots.InputSlot(name='untransformed',
                                                    acceptsType=self.inputTypeData)
@@ -103,23 +103,23 @@ class Normalize(object):
             raise ValueError, "No operation mode specified"
 
         if self.sequential:
-            self.inputType = armor.slotss.VectorType(shape=['flatarray'])
+            self.inputType = armor.slots.VectorType(shape=['flatarray'])
         else:
-            self.inputType = armor.slotss.VectorType(shape=['flatarray'], bulk=True)
+            self.inputType = armor.slots.VectorType(shape=['flatarray'], bulk=True)
 
-        self.outputType = armor.slotss.VectorType(shape='flatarray')
+        self.outputType = armor.slots.VectorType(shape='flatarray')
 
-        self.inputSlot = armor.slotss.InputSlot(name='unnormalized',
+        self.inputSlot = armor.slots.InputSlot(name='unnormalized',
                                                acceptsType=self.inputType)
         if self.sequential:
-            self.outputSlot = armor.slotss.OutputSlot(name='normalized',
+            self.outputSlot = armor.slots.OutputSlot(name='normalized',
                                                      inputSlot=self.inputSlot,
                                                      slotType='sequential',
                                                      processFunc=armor.weakmethod(self, 'normalize_seq'),
                                                      outputType=self.outputType,
                                                      useLazyEvaluation=useLazyEvaluation)
         else:
-            self.outputSlot = armor.slotss.OutputSlot(name='normalized',
+            self.outputSlot = armor.slots.OutputSlot(name='normalized',
                                                      inputSlot=self.inputSlot,
                                                      slotType='bulk',
                                                      processFunc=armor.weakmethod(self, 'normalize_bulk'),

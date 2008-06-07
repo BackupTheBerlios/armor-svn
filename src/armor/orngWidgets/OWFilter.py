@@ -10,7 +10,7 @@ from OWWidget import *
 import OWGUI
 import armor
 import armor.filter
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWFilter(OWWidget):
     settingsList = ['filterID']

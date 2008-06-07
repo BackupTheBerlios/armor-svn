@@ -10,7 +10,7 @@ from OWWidget import *
 import OWGUI
 from exceptions import Exception
 import armor
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWSaveSlot(OWWidget):
     settingsList = []

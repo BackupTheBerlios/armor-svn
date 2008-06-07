@@ -8,7 +8,7 @@
 import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 import weakref
 import orange
 

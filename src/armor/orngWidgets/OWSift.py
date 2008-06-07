@@ -9,8 +9,8 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 import armor
-import armor.sift
-from armor.SeqContainer import SeqContainer as SeqContainer
+import armor.features
+from armor.slots import SeqContainer
 
 class OWSift(OWWidget):
     settingsList = ["Octave", "Levels", "FirstOctave", "PeakThresh", "EdgeThresh", "NormThresh", "Orientations"]
@@ -75,7 +75,7 @@ class OWSift(OWWidget):
 		self.sendData()
 
     def sendData(self):
-	self.send("Descriptors", self.sift.OutputSlot)
+	self.send("Descriptors", self.sift.outputSlot)
 	
     def setData(self, slot):
         if not slot:
@@ -83,7 +83,7 @@ class OWSift(OWWidget):
 	if self.sift is None:
 	    self.sift = armor.features.SiftValedi(Octave=self.Octave, Levels=self.Levels, FirstOctave=self.FirstOctave, PeakThresh=self.PeakThresh, EdgeThresh=self.EdgeThresh, Orientations=self.Orientations, useLazyEvaluation=self.useLazyEvaluation)
 
-	    self.sift.InputSlot.registerInput(slot)
+	    self.sift.inputSlot.registerInput(slot)
 
 	self.sendData()
         

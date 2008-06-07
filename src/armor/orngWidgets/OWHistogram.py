@@ -11,7 +11,7 @@ import OWGUI
 from exceptions import Exception
 import armor
 import armor.histogram
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWHistogram(OWWidget):
     settingsList = ['bins']

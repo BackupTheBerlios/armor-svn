@@ -26,7 +26,7 @@ class Kmeans(object):
 	self.inputSlot = armor.slots.InputSlot(name='vectors', acceptsType = inputType, bulk=True, useLazyEvaluation=useLazyEvaluation)
 	
 	self.outputSlot = armor.slots.OutputSlot(name='codebook',
-						inputSlot = self.InputSlot,
+						inputSlot = self.inputSlot,
 						slotType = 'bulk',
 						processFunc = armor.weakmethod(self, 'process'),
 						outputType = outputType,

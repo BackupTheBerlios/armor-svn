@@ -10,7 +10,7 @@ from OWWidget import *
 import OWGUI
 from exceptions import Exception
 import armor.cluster
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWQuantize(OWWidget):
     settingsList = ['useLazyEvaluation']
@@ -40,21 +40,21 @@ class OWQuantize(OWWidget):
         self.quantize = armor.cluster.Quantize(useLazyEvaluation=self.useLazyEvaluation)
 
     def applySettings(self):
-        armor.applySettings(self.settingsList, self, obj=self.quantize)
+        armor.applySettings(self.settingsList, self, obj=self.quantize, outputSlot=self.quantize.outputSlot)
 
     def setData(self,slot):
         if not slot:
             return
 
-        self.quantize.InputSlotVec.registerInput(slot)
-        self.send("Clusters", self.quantize.OutputSlot)
+        self.quantize.inputSlotVec.registerInput(slot)
+        self.send("Clusters", self.quantize.outputSlot)
 
     def setCodebook(self, slot):
         if not slot:
             return
 
-        self.quantize.InputSlotCodebook.registerInput(slot)
-        self.send("Clusters", self.quantize.OutputSlot)
+        self.quantize.inputSlotCodebook.registerInput(slot)
+        self.send("Clusters", self.quantize.outputSlot)
         
         
 

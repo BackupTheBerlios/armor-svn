@@ -10,7 +10,7 @@ from OWWidget import *
 import OWGUI
 import armor
 import armor.transforms
-from armor.SeqContainer import SeqContainer as SeqContainer
+from armor.slots import SeqContainer
 
 class OWNormalize(OWWidget):
     settingsList = ['normtype']
