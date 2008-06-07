@@ -1,6 +1,5 @@
 import armor
 import armor.slots
-import armor.datatypes
 import numpy
 
 class Histogram(object):
@@ -8,17 +7,17 @@ class Histogram(object):
 	self.useLazyEvaluation = useLazyEvaluation
 	self.bins = bins
 	
-	inputType = armor.datatypes.VectorType(shape=['flatarray'])
-	outputType = armor.datatypes.VectorType(shape=['flatarray'])
+	inputType = armor.slots.VectorType(shape=['flatarray'])
+	outputType = armor.slots.VectorType(shape=['flatarray'])
 
 	self.inputSlot = armor.slots.InputSlot(name='vector',
-					      acceptsType=inputType)
+                                               acceptsType=inputType)
 
 	self.outputSlot = armor.slots.OutputSlot(name='histogram',
-						inputSlot = self.inputSlot,
-						slotType = 'sequential',
-						processFunc = armor.weakmethod(self, 'histogram'),
-						useLazyEvaluation = self.useLazyEvaluation)
+                                                 inputSlot = self.inputSlot,
+                                                 slotType = 'sequential',
+                                                 processFunc = armor.weakmethod(self, 'histogram'),
+                                                 useLazyEvaluation = self.useLazyEvaluation)
 
 	
     def histogram(self, vector):

@@ -1,7 +1,6 @@
 from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot,exp,histogram,float,empty,unique
 from ctypes import c_double
 import armor
-import armor.datatypes
 import armor.slots
 from mpi_kmeans import kmeans as mpi_kmeans
 
@@ -12,10 +11,10 @@ class Score(object):
             raise NotImplementedError, "No such score type"
 
 
-        self.inputTypeData = armor.datatypes.VectorType(shape=['flatarray'], bulk=True)
-        self.inputTypeLabels = armor.datatypes.VectorType(name=['labels'], shape=['flatlist'])
+        self.inputTypeData = armor.slots.VectorType(shape=['flatarray'], bulk=True)
+        self.inputTypeLabels = armor.slots.VectorType(name=['labels'], shape=['flatlist'])
         
-        self.outputType = armor.datatypes.VectorType(shape='flatarray')
+        self.outputType = armor.slots.VectorType(shape='flatarray')
 
         self.inputSlotData = armor.slots.InputSlot(name='untransformed',
                                                   acceptsType=self.inputTypeData)

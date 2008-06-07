@@ -1,7 +1,6 @@
 from numpy import array,ndarray,float32,loadtxt,float
 import subprocess, os
 import armor.slots
-import armor.datatypes
 import armor
 
 
@@ -23,8 +22,8 @@ class Nowozin(object):
         
         
         # Define types
-        self.inputType = armor.datatypes.ImageType(format=["PIL"])
-        self.outputType = armor.datatypes.VectorType(shape='nestedarray')
+        self.inputType = armor.slots.ImageType(format=["PIL"])
+        self.outputType = armor.slots.VectorType(shape='nestedarray')
 
         # Define slots
         self.inputSlot = armor.slots.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
@@ -77,8 +76,8 @@ class SiftRobHess(object):
         self.kwargs = kwargs
 
         # Define types
-        self.inputType = armor.datatypes.ImageType(format=["PIL"])
-        self.outputType = armor.datatypes.VectorType(shape='nestedarray')
+        self.inputType = armor.slots.ImageType(format=["PIL"])
+        self.outputType = armor.slots.VectorType(shape='nestedarray')
 
         # Define slots
         self.inputSlot = armor.slots.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
@@ -145,8 +144,8 @@ class SiftValedi(object):
         self.useLazyEvaluation = useLazyEvaluation
 
         # Define types
-        self.inputType = armor.datatypes.ImageType(format=["PIL"], color_space=["gray"])
-        self.outputType = armor.datatypes.VectorType(shape='nestedarray')
+        self.inputType = armor.slots.ImageType(format=["PIL"], color_space=["gray"])
+        self.outputType = armor.slots.VectorType(shape='nestedarray')
 
         # Define slots
         self.inputSlot = armor.slots.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)

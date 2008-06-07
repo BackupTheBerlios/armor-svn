@@ -4,7 +4,6 @@ import os.path
 import xml.dom.minidom
 from PIL import Image
 import armor.slots
-import armor.datatypes
 import armor
 
 
@@ -83,21 +82,21 @@ class ImageDataset(ImageBase):
         self.allLabelsTest = None
         self.categoryNames = None    # Contains the category names
 
-        self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
-	self.outTypeLabels = armor.datatypes.VectorType(format='flatlist', name='labels')
+        self.outType = armor.slots.ImageType(format='PIL', color_space='RGB')
+	self.outTypeLabels = armor.slots.VectorType(format='flatlist', name='labels')
 	
-        self.OutputSlotTrain = armor.slots.OutputSlot(name="ImagesTrain", outputType=self.outType)
-        self.OutputSlotTest = armor.slots.OutputSlot(name="ImagesTest", outputType=self.outType)
-        self.OutputSlotLabelsTrain = armor.slots.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain,
+        self.outputSlotTrain = armor.slots.OutputSlot(name="ImagesTrain", outputType=self.outType)
+        self.outputSlotTest = armor.slots.OutputSlot(name="ImagesTest", outputType=self.outType)
+        self.outputSlotLabelsTrain = armor.slots.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain,
 							   outputType=self.outTypeLabels)
-        self.OutputSlotLabelsTest = armor.slots.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest,
+        self.outputSlotLabelsTest = armor.slots.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest,
 							  outputType=self.outTypeLabels)
         
-        self.OutputSlots = armor.slots.Slots(slots = [self.OutputSlotTrain, self.OutputSlotTest,
-                                                        self.OutputSlotLabelsTrain, self.OutputSlotLabelsTest])
+        self.outputSlots = armor.slots.Slots(slots = [self.outputSlotTrain, self.outputSlotTest,
+                                                        self.outputSlotLabelsTrain, self.outputSlotLabelsTest])
 
     def __iter__(self):
-        return iter(self.OutputSlot)
+        return iter(self.outputSlot)
     
 #==================================
     def prepare(self, doPermutate=False, doSplit=False, splitRatio = .5, useLazyEvaluation=armor.useLazyEvaluation):
@@ -131,25 +130,25 @@ class ImageDataset(ImageBase):
             
         # Prepare the output container by giving it the generator function
         # self.iterator() which yields the images element wise.
-        self.OutputSlotTrain.__init__(name="ImagesTrain",
+        self.outputSlotTrain.__init__(name="ImagesTrain",
                                       outputType = self.outType,
                                       iterator = self.iterTrain,
                                       useLazyEvaluation=useLazyEvaluation,
 				      useCaching = False)
 
-        self.OutputSlotLabelsTrain.__init__(name="LabelsTrain",
+        self.outputSlotLabelsTrain.__init__(name="LabelsTrain",
                                             sequence=self.allLabelsTrain,
                                             classes=self.categoryNames,
 					    outputType=self.outTypeLabels,
                                             useLazyEvaluation=useLazyEvaluation)
         
         if doSplit:
-            self.OutputSlotTest.__init__(name="ImagesTest",
+            self.outputSlotTest.__init__(name="ImagesTest",
                                          outputType = self.outType,
                                          iterator = self.iterTest,
                                          useLazyEvaluation=useLazyEvaluation,
 					 useCaching = False)
-            self.OutputSlotLabelsTrain.__init__(name="LabelsTest",
+            self.outputSlotLabelsTrain.__init__(name="LabelsTest",
                                                 sequence=self.allLabelsTest,
                                                 classes=self.categoryNames,
 						outputType=self.outTypeLabels,

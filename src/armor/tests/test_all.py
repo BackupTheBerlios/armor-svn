@@ -1,12 +1,10 @@
 import unittest
 import armor.ImageDataset
 import armor.cluster
-import armor.cluster
 import armor.tests
 import armor.histogram
 import armor.filter
 import armor.transforms
-import armor.transform
 import armor.features
 import armor.score
 
@@ -32,7 +30,7 @@ class testAll(unittest.TestCase):
 	#rce = armor.features.SiftRobHess()
 	rce = armor.features.SiftValedi()
         
-	ft.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
+	ft.inputSlot.registerInput(self.imgDataset.outputSlotTrain)
 	#sft.InputSlot.registerInput(ft.outputSlot)
 	rce.inputSlot.registerInput(ft.outputSlot)
 	armor.saveSlots('rce.pickle', rce.outputSlot)
@@ -45,10 +43,10 @@ class testAll(unittest.TestCase):
 	#rce = armor.loadSlots('rce.pickle')
 	
         km = armor.cluster.Kmeans(1000)
-	qt = armor.cluster.quantize()
+	qt = armor.cluster.Quantize()
 	hg = armor.histogram.Histogram(1000)
 	nz = armor.transforms.Normalize('bin')
-	tf = armor.transform.Transform('PCA')
+	tf = armor.transforms.Transform('PCA')
 	nz2 = armor.transforms.Normalize('whiten')
 	sc = armor.score.Score()
 	
@@ -56,16 +54,16 @@ class testAll(unittest.TestCase):
 	#km.InputSlot.registerInput(rce)
 	#armor.saveSlots('km.pickle', km.OutputSlot)
 	km = armor.loadSlots('km.pickle')
-	qt.InputSlotCodebook.registerInput(km)
+	qt.inputSlotCodebook.registerInput(km)
 	#qt.InputSlotVec.registerInput(sft.OutputSlot)
-	qt.InputSlotVec.registerInput(rce)
-	hg.inputSlot.registerInput(qt.OutputSlot)
+	qt.inputSlotVec.registerInput(rce)
+	hg.inputSlot.registerInput(qt.outputSlot)
 	nz.inputSlot.registerInput(hg.outputSlot)
 	tf.inputSlotData.registerInput(nz.outputSlot)
-	tf.inputSlotLabels.registerInput(self.imgDataset.OutputSlotLabelsTrain)
+	tf.inputSlotLabels.registerInput(self.imgDataset.outputSlotLabelsTrain)
 	nz2.inputSlot.registerInput(tf.outputSlot)
 	sc.inputSlotData.registerInput(tf.outputSlot)
-	sc.inputSlotLabels.registerInput(self.imgDataset.OutputSlotLabelsTrain)
+	sc.inputSlotLabels.registerInput(self.imgDataset.outputSlotLabelsTrain)
 	
 	print list(sc.outputSlot)
 	#del sft

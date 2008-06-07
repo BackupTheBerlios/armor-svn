@@ -37,7 +37,7 @@ class OWQuantize(OWWidget):
 
         self.resize(100,150)
 
-        self.quantize = armor.cluster.quantize(useLazyEvaluation=self.useLazyEvaluation)
+        self.quantize = armor.cluster.Quantize(useLazyEvaluation=self.useLazyEvaluation)
 
     def applySettings(self):
         armor.applySettings(self.settingsList, self, obj=self.quantize)
