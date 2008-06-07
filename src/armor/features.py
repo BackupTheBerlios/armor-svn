@@ -4,7 +4,7 @@ import armor.slot
 import armor.datatypes
 import armor
 
-binPath = os.path.join(armor.__path__[0],'..', 'bin')
+binPath = os.path.join(armor.__path__[0], 'bin')
 regcovexec = os.path.join(binPath, 'regcovextract')
 output = os.path.join(binPath, 'output.txt')
 imgfile = os.path.join(binPath, 'img.png')

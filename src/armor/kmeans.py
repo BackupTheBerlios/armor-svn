@@ -3,6 +3,7 @@ import numpy
 import armor.slot
 import armor.datatypes
 import armor
+from ctypes import c_double
 
 class Kmeans(object):
     """Class to perform kmeans clustering on input data (e.g. descriptors).
@@ -12,7 +13,7 @@ class Kmeans(object):
 
     Default is lazy, so the clustering will only be performed when the codebook
     gets accessed."""
-    def __init__(self, numClusters, maxiter=0, numruns=1, useLazyEvaluation=armor.useLazyEvaluation):
+    def __init__(self, numClusters, maxiter=2000, numruns=200, useLazyEvaluation=armor.useLazyEvaluation):
         self.numClusters = numClusters
         self.maxiter = maxiter
         self.numruns = numruns
@@ -35,7 +36,7 @@ class Kmeans(object):
 	# Perform KMeans clustering
 	if armor.verbosity > 0:
 	    print "Performing kmeans clustering with k=%i..." % self.numClusters
-	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data), self.numClusters, self.maxiter, self.numruns)
+	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data, dtype=c_double), self.numClusters, self.maxiter, self.numruns)
 
 	return self.codebook
 	    

@@ -12,6 +12,8 @@ def stripSlot(slot):
     import pickle
     slot.container.useLazyEvaluation=False
     slot.container.getDataAsIter()
+    slot.container.generator = None
+    slot.container.sequence = slot.container.data
     slot.container.references = None
     slot.seqIterator = None
     slot.bulkIterator = None

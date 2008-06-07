@@ -40,13 +40,13 @@ class InputSlot(object):
         self.acceptsType = acceptsType
         self.container = None
         self.converters = None
-	self.bulk = bulk
-	self.useLazyEvaluation = useLazyEvaluation
-	self.senderSlot = None
-	self.outputType = None
-	
-	if senderSlot is not None:
-	    self.registerInput(senderSlot)
+        self.bulk = bulk
+        self.useLazyEvaluation = useLazyEvaluation
+        self.senderSlot = None
+        self.outputType = None
+        
+        if senderSlot is not None:
+            self.registerInput(senderSlot)
         
     def __iter__(self):
         if not self.senderSlot:
@@ -54,67 +54,71 @@ class InputSlot(object):
         return iter(self.container)
 
     def convertSequential(self):
-	for item in self.senderSlot().container:
-	    if self.converters is not None: # self.converts contains functions
-		if len(self.converters) > 0:
-		    for converter in self.converters:
-			item = converter(item)
-	    yield item
+        for item in self.senderSlot().container:
+            if self.converters is not None: # self.converts contains functions
+                if len(self.converters) > 0:
+                    for converter in self.converters:
+                        item = converter(item)
+            yield item
 
     def convertBulk(self):
-	# Get all input data
-	bunch = list(self.senderSlot().container)
-	# Convert using the functions in self.converters
-	if self.converters is not None:
-	    if len(self.converters) > 0:
-		for converter in self.converters:
-		    bunch = converter(bunch)
+        # Get all input data
+        bunch = list(self.senderSlot().container)
+        # Convert using the functions in self.converters
+        if self.converters is not None:
+            if len(self.converters) > 0:
+                for converter in self.converters:
+                    bunch = converter(bunch)
 
-	for i in bunch:
-	    yield i
-	    
+        for i in bunch:
+            yield i
+            
     def registerInput(self, senderSlot):
-	"""Register senderSlot as an inputSlot. inputType and
-	outputType have to match (or be convertable).
-	"""
-	if armor.useTypeChecking:
-	    if senderSlot.outputType is not None:
-		senderType = senderSlot.outputType
-	    elif senderSlot.inputSlot.outputType is not None:
-		# If the output slot does not transform the input
-		# type, it may be found in the inputslot
-		senderType = senderSlot.inputSlot.outputType
-	    else:
-		raise ValueError, "No types specified"
-	    # Check if sender type is compatible with us or if we can
-	    # convert (compatible() will return converter functions)
+        """Register senderSlot as an inputSlot. inputType and
+        outputType have to match (or be convertable).
+        """
+        if armor.useTypeChecking:
+            if senderSlot.outputType is not None:
+                senderType = senderSlot.outputType
+            elif senderSlot.inputSlot.outputType is not None:
+                # If the output slot does not transform the input
+                # type, it may be found in the inputslot
+                senderType = senderSlot.inputSlot.outputType
+            else:
+                raise ValueError, "No types specified"
+            # Check if sender type is compatible with us or if we can
+            # convert (compatible() will return converter functions)
             compatible = self.acceptsType.compatible(senderType)
             if compatible == False:
                 raise TypeError, "Slots are not compatible"
-	    # Else compatible() returns the new type and conversion funcs
-	    (self.outputType, self.converters) = compatible
-	    
-	#if self.senderSlot:
-	    # There is already a senderSlot registered, is it maybe
-	    # the same?
-	#    if self.senderSlot() is not senderSlot:
-		# Create a weak reference so that when the senderSlot
-		# gets removed this reference wont keep it alive
-	#	self.senderSlot = weakref.ref(senderSlot)
-	
-	#	if armor.useCaching:
-	#	    senderSlot.container.registerReference(self)
-	#else:
-	    # Register the new slot
-	self.senderSlot = weakref.ref(senderSlot)
-	if armor.useCaching:
-	    senderSlot.container.registerReference(self)
+            # Else compatible() returns the new type and conversion funcs
+            (self.outputType, self.converters) = compatible
+            
+        #if self.senderSlot:
+            # There is already a senderSlot registered, is it maybe
+            # the same?
+        #    if self.senderSlot() is not senderSlot:
+                # Create a weak reference so that when the senderSlot
+                # gets removed this reference wont keep it alive
+        #       self.senderSlot = weakref.ref(senderSlot)
+        
+        #       if armor.useCaching:
+        #           senderSlot.container.registerReference(self)
+        #else:
 
-	# Initialize the container to store the data (or the reference to it)
-	if not self.bulk:
-	    self.container = SeqContainer(generator=armor.weakmethod(self, 'convertSequential'), useLazyEvaluation=self.useLazyEvaluation)
-	else:
-	    self.container = SeqContainer(generator=armor.weakmethod(self, 'convertBulk'), useLazyEvaluation=self.useLazyEvaluation)
+        # Register the new slot
+        self.senderSlot = weakref.ref(senderSlot)
+        # Tell the senderSlot container to update its data (if necessary)
+        senderSlot.container.recompute()
+        if armor.useCaching:
+            # Register us to the senderSlot
+            senderSlot.container.registerReference(self)
+
+        # Initialize the container to store the data (or the reference to it)
+        if not self.bulk:
+            self.container = SeqContainer(generator=armor.weakmethod(self, 'convertSequential'), useLazyEvaluation=self.useLazyEvaluation)
+        else:
+            self.container = SeqContainer(generator=armor.weakmethod(self, 'convertBulk'), useLazyEvaluation=self.useLazyEvaluation)
 
         
 
@@ -138,15 +142,15 @@ class OutputSlot(object):
     3. provide a sequence - can be any iterable.
     """
     def __init__(self, name, inputSlot=None, processFunc=None, processFuncs=None,
-		 outputType=None, slotType=None, iterator=None, sequence=None, classes=None,
-		 useLazyEvaluation=armor.useLazyEvaluation, useCaching=armor.useCaching):
+                 outputType=None, slotType=None, iterator=None, sequence=None, classes=None,
+                 useLazyEvaluation=armor.useLazyEvaluation, useCaching=armor.useCaching):
 
         self.name = name
         self.inputSlot = inputSlot
         self.outputType = outputType
         self.iterator = iterator
         self.sequence = sequence
-	self.processFunc = processFunc
+        self.processFunc = processFunc
 
         if processFunc is not None:
             if processFuncs is not None:
@@ -157,24 +161,24 @@ class OutputSlot(object):
             self.processFuncs = processFuncs
 
         # Create an output container
-	if self.sequence is not None:
-	    self.container = SeqContainer(sequence=self.sequence, classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
-	elif self.iterator is not None: # User defined iterator
-	    self.container = SeqContainer(generator=self.iterator, classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
-	elif slotType == 'sequential': # Sequential iterator
-	    if self.processFunc is None and self.processFuncs is None:
-		raise AttributeError, "You must provide processFunc or processFuncs to use generic iterators"
-	    self.container = SeqContainer(generator=armor.weakmethod(self, 'seqIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
-	elif slotType == 'bulk': # Bulk iterator
-    	    if self.processFunc is None and self.processFuncs is None:
-		raise AttributeError, "You must provide processFunc or processFuncs to use generic iterators"
-	    self.container = SeqContainer(generator=armor.weakmethod(self, 'bulkIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
-	else:
-	    self.container = None
-	    
+        if self.sequence is not None:
+            self.container = SeqContainer(sequence=self.sequence, classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
+        elif self.iterator is not None: # User defined iterator
+            self.container = SeqContainer(generator=self.iterator, classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
+        elif slotType == 'sequential': # Sequential iterator
+            if self.processFunc is None and self.processFuncs is None:
+                raise AttributeError, "You must provide processFunc or processFuncs to use generic iterators"
+            self.container = SeqContainer(generator=armor.weakmethod(self, 'seqIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
+        elif slotType == 'bulk': # Bulk iterator
+            if self.processFunc is None and self.processFuncs is None:
+                raise AttributeError, "You must provide processFunc or processFuncs to use generic iterators"
+            self.container = SeqContainer(generator=armor.weakmethod(self, 'bulkIterator'), classes=classes, useLazyEvaluation=useLazyEvaluation, useCaching=useCaching)
+        else:
+            self.container = None
+            
     def __iter__(self):
-	if not self.container:
-	    raise AttributeError, "self.container is not set"
+        if not self.container:
+            raise AttributeError, "self.container is not set"
         return iter(self.container)
     
     def seqIterator(self):
@@ -183,9 +187,9 @@ class OutputSlot(object):
         """
         for item in self.inputSlot.container:
             for processFunc in self.processFuncs:
-		if armor.useOrange:
-		    from PyQt4.QtGui import qApp
-		    qApp.processEvents()
+                if armor.useOrange:
+                    from PyQt4.QtGui import qApp
+                    qApp.processEvents()
                 item = processFunc(item)
             yield item
             
@@ -201,3 +205,4 @@ class OutputSlot(object):
             
         for item in inData:
             yield item
+ 

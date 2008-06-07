@@ -9,7 +9,7 @@ class Normalize(object):
         self.normtype = normtype
         if self.normtype in ['L1','L2']:
             self.sequential = False
-        elif self.normtype in ['bin', 'whiten', 'bias', 'crop', 'log']:
+        elif self.normtype in ['bin', 'whiten', 'bias', 'crop', 'log', 'none']:
             self.sequential = True
         else:
             raise ValueError, "No operation mode specified"
@@ -66,7 +66,6 @@ class Normalize(object):
             Xnorm[Xnorm>crop_thresh] = crop_thresh # pre-processing to normalization
         elif self.normtype=='log':
             Xnorm = log(Xnorm+1.)
-
         return Xnorm
 
     def normalize_bulk(self, data):

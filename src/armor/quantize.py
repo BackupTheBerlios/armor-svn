@@ -34,7 +34,6 @@ class quantize(object):
         # Sequentiall get data from vector slot
         for features in self.InputSlotVec:
             if armor.verbosity > 0:
-                print ("Quantizing... Codebook shape: %i,%i Vector Shape: %i %i " % (codebook.shape[0], codebook.shape[1], features.shape[0], features.shape[1]))
+                print ("Quantizing... Codebook shape: %i,%i Vector Shape: %i,%i " % (codebook.shape[0], codebook.shape[1], features.shape[0], features.shape[1]))
             clusters = cluster.vq.vq(features, codebook)[0]
             yield clusters
-                                                

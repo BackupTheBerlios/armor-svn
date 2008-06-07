@@ -84,10 +84,14 @@ class ImageDataset(ImageBase):
         self.categoryNames = None    # Contains the category names
 
         self.outType = armor.datatypes.ImageType(format='PIL', color_space='RGB')
+	self.outTypeLabels = armor.datatypes.VectorType(format='flatlist', name='labels')
+	
         self.OutputSlotTrain = armor.slot.OutputSlot(name="ImagesTrain", outputType=self.outType)
         self.OutputSlotTest = armor.slot.OutputSlot(name="ImagesTest", outputType=self.outType)
-        self.OutputSlotLabelsTrain = armor.slot.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain)
-        self.OutputSlotLabelsTest = armor.slot.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest)
+        self.OutputSlotLabelsTrain = armor.slot.OutputSlot(name="LabelsTrain", sequence=self.allLabelsTrain,
+							   outputType=self.outTypeLabels)
+        self.OutputSlotLabelsTest = armor.slot.OutputSlot(name="LabelsTest", sequence=self.allLabelsTest,
+							  outputType=self.outTypeLabels)
         
         self.OutputSlots = armor.slot.Slots(slots = [self.OutputSlotTrain, self.OutputSlotTest,
                                                         self.OutputSlotLabelsTrain, self.OutputSlotLabelsTest])
@@ -136,6 +140,7 @@ class ImageDataset(ImageBase):
         self.OutputSlotLabelsTrain.__init__(name="LabelsTrain",
                                             sequence=self.allLabelsTrain,
                                             classes=self.categoryNames,
+					    outputType=self.outTypeLabels,
                                             useLazyEvaluation=useLazyEvaluation)
         
         if doSplit:
@@ -147,6 +152,7 @@ class ImageDataset(ImageBase):
             self.OutputSlotLabelsTrain.__init__(name="LabelsTest",
                                                 sequence=self.allLabelsTest,
                                                 classes=self.categoryNames,
+						outputType=self.outTypeLabels,
                                                 useLazyEvaluation=useLazyEvaluation)
 
 

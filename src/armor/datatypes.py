@@ -116,7 +116,11 @@ class VectorType(BaseType):
 
     def convert_nestedlist_to_flatarray(self, lst):
 	from numpy import concatenate
-        return concatenate(lst)
+	if armor.verbosity>0:
+	    print "Concatenating..."
+	x=concatenate(lst)
+	print x.shape
+        return x
 
 
 

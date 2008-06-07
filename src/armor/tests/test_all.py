@@ -9,6 +9,7 @@ import armor.filter
 import armor.normalize
 import armor.transform
 import armor.features
+import armor.score
 
 import armor
 import numpy
@@ -17,45 +18,62 @@ import gc
 
 class testAll(unittest.TestCase):
     def setUp(self):
-	self.path = armor.tests.__path__[0]
+	self.path = armor.__path__[0]
+	self.pathtest = armor.tests.__path__[0]
 	self.imgDataset = armor.ImageDataset.ImageDataset()
-	self.imgDataset.loadFromXML(os.path.join(self.path, 'test_valid.xml'))
+	#self.imgDataset.loadFromXML(os.path.join(self.pathtest, 'test_valid.xml'))
+	self.imgDataset.loadFromXML(os.path.join(self.path, 'datasets', 'caltech_4_small.xml'))
+
 	self.imgDataset.prepare()
 
-    def testGenerator(self):
-	#from IPython.Debugger import Tracer; debug_here = Tracer()
-	#debug_here()
+    def createDescrColor(self):
 	ft = armor.filter.Filter(filter='smooth')
-	sft = armor.sift.Sift()
-	rce = armor.features.Feature('edge')
-	
-        km = armor.kmeans.Kmeans(3)
-	qt = armor.quantize.quantize()
-	hg = armor.histogram.Histogram(3)
-	nz = armor.normalize.Normalize('L2')
-	tf = armor.transform.Transform('KPCA')
-	
+	#sft = armor.sift.Sift()
+	rce = armor.features.Feature('color')
 	ft.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
 	#sft.InputSlot.registerInput(ft.outputSlot)
 	rce.inputSlot.registerInput(ft.outputSlot)
+	armor.saveSlots('rce.pickle', rce.outputSlot)
+	return rce.outputSlot
+    
+    def testGenerator(self):
+	#from IPython.Debugger import Tracer; debug_here = Tracer()
+	#debug_here()
+	#rce = self.createDescrColor()
+	rce = armor.loadSlots('rce.pickle')
+	
+        km = armor.kmeans.Kmeans(1000)
+	qt = armor.quantize.quantize()
+	hg = armor.histogram.Histogram(1000)
+	nz = armor.normalize.Normalize('L2')
+	tf = armor.transform.Transform('KPCA')
+	nz2 = armor.normalize.Normalize('L2')
+	sc = armor.score.Score()
+	
 	#km.InputSlot.registerInput(sft.OutputSlot)
-	km.InputSlot.registerInput(rce.outputSlot)
-	qt.InputSlotCodebook.registerInput(km.OutputSlot)
+	#km.InputSlot.registerInput(rce)
+	#armor.saveSlots('km.pickle', km.OutputSlot)
+	km = armor.loadSlots('km.pickle')
+	qt.InputSlotCodebook.registerInput(km)
 	#qt.InputSlotVec.registerInput(sft.OutputSlot)
-	qt.InputSlotVec.registerInput(rce.outputSlot)
+	qt.InputSlotVec.registerInput(rce)
 	hg.inputSlot.registerInput(qt.OutputSlot)
 	nz.inputSlot.registerInput(hg.outputSlot)
-	tf.inputSlot.registerInput(nz.outputSlot)
+	tf.inputSlotData.registerInput(nz.outputSlot)
+	tf.inputSlotLabels.registerInput(self.imgDataset.OutputSlotLabelsTrain)
+	nz2.inputSlot.registerInput(tf.outputSlot)
+	sc.inputSlotData.registerInput(tf.outputSlot)
+	sc.inputSlotLabels.registerInput(self.imgDataset.OutputSlotLabelsTrain)
 	
-	print list(tf.outputSlot)
+	print list(sc.outputSlot)
 	#del sft
 	#self.assertRaises(AttributeError, list(hg.OutputSlot))
 #	del km
 #	self.assertRaises(AttributeError, list(hg.OutputSlot))
 	
-	armor.saveSlots('kmeansSlot.pickle', outputSlot = sft.OutputSlot)
-	savedslot = armor.loadSlots('kmeansSlot.pickle')
-	print list(savedslot)
+	#armor.saveSlots('kmeansSlot.pickle', outputSlot = sft.OutputSlot)
+	#savedslot = armor.loadSlots('kmeansSlot.pickle')
+	#print list(savedslot)
 #	assert (list(km.OutputSlot), list(kmSlots['codebook']))
 #	print list(km.OutputSlot)[0].shape
 
