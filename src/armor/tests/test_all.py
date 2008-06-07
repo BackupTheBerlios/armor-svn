@@ -28,9 +28,10 @@ class testAll(unittest.TestCase):
     def createDescr(self):
 	ft = armor.filter.Filter(filter='smooth')
 	#sft = armor.sift.Sift()
-	#rce = armor.features.Feature('color')
-	rce = armor.features.SiftRobHess()
-	
+	#rce = armor.features.Nowozin('color')
+	#rce = armor.features.SiftRobHess()
+	rce = armor.features.SiftValedi()
+        
 	ft.inputSlot.registerInput(self.imgDataset.OutputSlotTrain)
 	#sft.InputSlot.registerInput(ft.outputSlot)
 	rce.inputSlot.registerInput(ft.outputSlot)

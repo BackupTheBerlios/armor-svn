@@ -149,10 +149,10 @@ class SiftValedi(object):
         self.outputType = armor.datatypes.VectorType(shape='nestedarray')
 
         # Define slots
-        self.InputSlot = armor.slot.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
-        self.OutputSlot = armor.slot.OutputSlot(name='Sift Descriptors',
+        self.inputSlot = armor.slot.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
+        self.outputSlot = armor.slot.OutputSlot(name='Sift Descriptors',
                                                 outputType=self.outputType,
-                                                inputSlot=self.InputSlot,
+                                                inputSlot=self.inputSlot,
                                                 processFunc=armor.weakmethod(self, 'process'),
                                                 slotType='sequential',
                                                 useLazyEvaluation=self.useLazyEvaluation)
@@ -162,8 +162,9 @@ class SiftValedi(object):
             print "Computing sift-descriptors (Valedi implementation)..."
         descr = sift(array(img, dtype=float32), **self.kwargs)[1]
         if armor.verbosity >= 2:
-            print array(descr).shape
+            print (len(descr), len(descr[0]))
         return descr
+    
 
         
 def sift(*args, **kwargs):
