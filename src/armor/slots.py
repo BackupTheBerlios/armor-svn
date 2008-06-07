@@ -1,5 +1,5 @@
+import itertools
 import armor
-from armor.SeqContainer import SeqContainer
 import weakref
 
 class Slots(object):
@@ -206,3 +206,200 @@ class OutputSlot(object):
         for item in inData:
             yield item
  
+
+class SeqContainer(object):
+    """Central class to store sequential data. It has basic
+    list properties with some additional features:
+    - Instead of a list, a generator function (NOT the called
+    generator function) can be used, it will only get called and
+    evaluated when the data is really needed (i.e. lazy evaluation).
+    - Once data has been pooled from SeqContainer it will be reset
+    so it is possible to iterate multiple times over the same
+    SeqContainer.
+    - You can have multiple references iterating over SeqContainer as
+    every reference will receive its own iterator.
+    """
+    def __init__(self, sequence=None, generator=None, classes=None, useLazyEvaluation=armor.useLazyEvaluation, useCaching=armor.useCaching):
+        self.sequence = sequence
+        self.generator = generator
+        self.data = None
+        self.useLazyEvaluation = useLazyEvaluation
+        self.useCaching = useCaching
+        self.classes = classes
+
+        self.references = weakref.WeakValueDictionary()    # Registered objects with appropriate group ID
+        self.iterpool = []     # For storing the iterators of each
+                               # group until every group member
+                               # received it
+
+    def recompute(self):
+        """Update computed data"""
+        if not self.useLazyEvaluation:
+            # Input changed and we have to update our data, set
+            # self.data to none so the next time getDataAsIter() gets
+            # called the data will be recomputed
+            self.data = None
+            
+    def getDataAsIter(self):
+        """Return the stored data in a way it can be passed to iter()."""
+        if self.generator is not None and self.sequence is None:
+            # Input type is a generator function (hopefully)
+            if self.useLazyEvaluation:
+                return(self.generator()) # Call the generator
+            else:
+                if self.data is not None:
+                    # Data already computed, return
+                    return (self.data)
+                else:
+                    # Compute data from generator and save it
+                    generator = self.generator()
+                    self.data = list(generator)
+                    return (self.data)
+
+        elif self.sequence is not None and self.generator is None:
+            if self.useLazyEvaluation:
+                # Makes no sense to use generator here
+                self.useLazyEvaluation = False
+            return(self.sequence)
+        else:
+            raise NotImplementedError, "generator AND sequence given"
+
+    def __iter__(self):
+        if len(self.references) <= 1:
+            return iter(self.getDataAsIter())
+
+        if len(self.iterpool) == 0:
+            # Create a pool of cached iterators
+            self.iterpool = list(itertools.tee(self.getDataAsIter(), len(self.references)))
+
+        # Hand one cached iterator to the group member.
+        return self.iterpool.pop()
+    
+    def registerReference(self, obj):
+        """Register an object. Registered objects receive cached
+        iterators (for more details see the description of the
+        SeqContainer class)"""
+        if self.useCaching:
+            self.references[id(obj)] = obj
+
+
+class BaseType(object):
+    def __init__(self, **kwargs):
+        self.dataType = kwargs
+        self.attributes = {}
+        self.conversions = {}
+	
+    def __iter__(self):
+        return iter(self.dataType)
+
+    def __getitem__(self, item):
+        return self.dataType[item]
+
+    def __setitem__(self, item, value):
+	self.dataType[item] = value
+	
+    def compatible(self, inputType):
+	"""Check if toType is compatible with my own type. If it is
+	not compatible, try find fitting conversion functions.
+
+	Output: False or (type, [conversionfuncs])"""
+
+	
+	if inputType.__class__ is not self.__class__:
+            return False
+
+	import copy
+	# Copy inputType
+	toType = copy.deepcopy(inputType)
+
+	compatible = True
+        convert = True
+	
+        for key in toType:
+            # If key is not present, we assume compatibility
+            if key not in self.dataType:
+                continue
+
+            if toType[key] in self.dataType[key]:
+                continue # Compatible
+
+	    compatible = False
+
+	if compatible:
+	    return (toType, [])
+
+	# Can we convert?
+        for conversion in self.conversions:
+	    for key in conversion:
+		if key == 'function':
+		    continue
+		for inType in self.dataType[key]:
+		    if toType[key] != inType:
+			if conversion[key][0] != toType[key] and conversion[key][1] != inType:
+			    convert = False
+
+		if convert:
+		    toType[key] = conversion[key][1]
+		    return (toType, [conversion['function']])
+		
+
+	# No
+	return False
+            
+        
+class ImageType(BaseType):
+    from PIL import Image
+    from numpy import array
+    
+    def __init__(self, **kwargs):
+        super(ImageType, self).__init__(**kwargs)
+        
+        self.attributes = {'format': ['PIL', 'numpy'],
+                          'color_space': ['gray', 'RGB']
+                           }
+
+        self.conversions = [{'format': ('PIL', 'PIL'),
+			     'color_space': ('RGB', 'gray'),
+			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_PIL_gray')},
+			    {'format': ('PIL', 'numpy'),
+			     'color_space': ('RGB', 'RGB'),
+			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_RGB')},
+			    {'format': ('PIL', 'numpy'),
+			     'color_space': ('RGB', 'gray'),
+			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_gray')}
+			    ]
+			    
+    
+    def convert_PIL_RGB_to_PIL_gray(self, image):
+	if armor.verbosity>0:
+	    print "Converting RGB image to gray color space"
+        image = image.convert('L')
+        return image
+
+    def convert_PIL_RGB_to_numpy_RGB(self, image):
+	return array(image)
+
+    def convert_PIL_RGB_to_numpy_gray(self, image):
+	return array(self.convert_PIL_RGB_to_PIL_gray(image))
+
+class VectorType(BaseType):
+    def __init__(self, **kwargs):
+        super(VectorType, self).__init__(**kwargs)
+
+        self.attributes = {'shape': ['nestedlist', 'nestedarray', 'flatarray', 'flatlist'],
+                           'length': [type(1)]
+                           }
+
+        self.conversions = [{'shape': ('nestedlist', 'flatarray'),
+			     'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')},
+			    {'shape': ('nestedarray', 'flatarray'),
+			     'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')}
+			    ]
+
+    def convert_nestedlist_to_flatarray(self, lst):
+	from numpy import concatenate
+	if armor.verbosity>0:
+	    print "Concatenating..."
+	x=concatenate(lst)
+	print x.shape
+        return x

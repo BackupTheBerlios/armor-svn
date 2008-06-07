@@ -9,7 +9,7 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from exceptions import Exception
-import armor.quantize
+import armor.cluster
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWQuantize(OWWidget):
@@ -37,7 +37,7 @@ class OWQuantize(OWWidget):
 
         self.resize(100,150)
 
-        self.quantize = armor.quantize.quantize(useLazyEvaluation=self.useLazyEvaluation)
+        self.quantize = armor.cluster.quantize(useLazyEvaluation=self.useLazyEvaluation)
 
     def applySettings(self):
         armor.applySettings(self.settingsList, self, obj=self.quantize)

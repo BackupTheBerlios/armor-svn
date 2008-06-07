@@ -9,7 +9,7 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 import armor
-import armor.normalize
+import armor.transforms
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWNormalize(OWWidget):
@@ -64,7 +64,7 @@ class OWNormalize(OWWidget):
         if not slot:
             return
         if self.normalize is None:
-            self.normalize = armor.normalize.Normalize(normtype=self.normtypes[self.normtype], useLazyEvaluation=self.useLazyEvaluation)
+            self.normalize = armor.transforms.Normalize(normtype=self.normtypes[self.normtype], useLazyEvaluation=self.useLazyEvaluation)
 
 	self.normalize.inputSlot.registerInput(slot)
 

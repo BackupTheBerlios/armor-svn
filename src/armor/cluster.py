@@ -1,9 +1,10 @@
 import mpi_kmeans
 import numpy
-import armor.slot
+import armor.slotss
 import armor.datatypes
 import armor
 from ctypes import c_double
+from scipy import cluster
 
 class Kmeans(object):
     """Class to perform kmeans clustering on input data (e.g. descriptors).
@@ -23,9 +24,9 @@ class Kmeans(object):
 	inputType = armor.datatypes.VectorType(shape=['flatarray'])
 	outputType = armor.datatypes.VectorType(name='codebook', shape='flatarray')
 
-	self.InputSlot = armor.slot.InputSlot(name='vectors', acceptsType = inputType, bulk=True, useLazyEvaluation=useLazyEvaluation)
+	self.InputSlot = armor.slotss.InputSlot(name='vectors', acceptsType = inputType, bulk=True, useLazyEvaluation=useLazyEvaluation)
 	
-	self.OutputSlot = armor.slot.OutputSlot(name='codebook',
+	self.OutputSlot = armor.slotss.OutputSlot(name='codebook',
 						inputSlot = self.InputSlot,
 						slotType = 'bulk',
 						processFunc = armor.weakmethod(self, 'process'),
@@ -39,7 +40,46 @@ class Kmeans(object):
 	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data, dtype=c_double), self.numClusters, self.maxiter, self.numruns)
 
 	return self.codebook
-	    
+
+
+
+class quantize(object):
+    def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
+
+        self.useLazyEvaluation = useLazyEvaluation
+
+        # Define types
+        inputTypeVec = armor.datatypes.VectorType(shape=['nestedlist', 'nestedarray'])
+        inputTypeCodebook = armor.datatypes.VectorType(name=['codebook'], shape=['flatarray'])
+        
+        outputType = armor.datatypes.VectorType(shape='flatarray')
+
+        # Define slots
+        self.InputSlotVec = armor.slotss.InputSlot(name='vectors',
+                                                 acceptsType=inputTypeVec)
+
+        self.InputSlotCodebook = armor.slotss.InputSlot(name='codebook',
+                                                      acceptsType=inputTypeCodebook)
+        
+        self.OutputSlot = armor.slotss.OutputSlot(name='cluster',
+                                                outputType=outputType,
+                                                iterator=armor.weakmethod(self, 'quantize'),
+                                                useLazyEvaluation=self.useLazyEvaluation)
+
+    def quantize(self):
+        # Get data from codebook slot
+        codebook = numpy.array(list(self.InputSlotCodebook))
+
+        # Sequentiall get data from vector slot
+        for features in self.InputSlotVec:
+            if armor.verbosity > 0:
+                print ("Quantizing... Codebook shape: %i,%i Vector Shape: %i,%i " % (codebook.shape[0], codebook.shape[1], features.shape[0], features.shape[1]))
+            clusters = cluster.vq.vq(features, codebook)[0]
+            yield clusters
+
+
+
+
 #    def quantize(self):
 #	self.dataClusters = []
 #	

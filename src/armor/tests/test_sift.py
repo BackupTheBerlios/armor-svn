@@ -14,12 +14,12 @@ class TestSift(unittest.TestCase):
 	
     def testSiftGenerator(self):
 	#TODO: Check if values are correct descriptors
-	self.sft = armor.sift.Sift(Verbose=1)
+	self.sft = armor.features.SiftValedi(Verbose=1)
 	self.sft.InputSlot.registerInput(self.imgDataset.OutputSlotTrain)
 	list(self.sft.OutputSlot)
 
     def testSiftList(self):
-	self.sft = armor.sift.Sift(Verbose=1)
+	self.sft = armor.features.SiftValedi(Verbose=1)
 	self.sft.InputSlot.registerInput(self.imgDataset.OutputSlotTrain)
 	list(self.sft.OutputSlot)
 

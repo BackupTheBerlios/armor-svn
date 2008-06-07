@@ -2,7 +2,7 @@ from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt
 from ctypes import c_double
 import armor
 import armor.datatypes
-import armor.slot
+import armor.slotss
 
 class Normalize(object):
     def __init__(self, normtype, useLazyEvaluation=armor.useLazyEvaluation):
@@ -21,17 +21,17 @@ class Normalize(object):
 
         self.outputType = armor.datatypes.VectorType(shape='flatarray')
 
-        self.inputSlot = armor.slot.InputSlot(name='unnormalized',
+        self.inputSlot = armor.slotss.InputSlot(name='unnormalized',
                                               acceptsType=self.inputType)
         if self.sequential:
-            self.outputSlot = armor.slot.OutputSlot(name='normalized',
+            self.outputSlot = armor.slotss.OutputSlot(name='normalized',
                                                     inputSlot=self.inputSlot,
                                                     slotType='sequential',
                                                     processFunc=armor.weakmethod(self, 'normalize_seq'),
                                                     outputType=self.outputType,
 						    useLazyEvaluation=useLazyEvaluation)
         else:
-            self.outputSlot = armor.slot.OutputSlot(name='normalized',
+            self.outputSlot = armor.slotss.OutputSlot(name='normalized',
                                                     inputSlot=self.inputSlot,
                                                     slotType='bulk',
                                                     processFunc=armor.weakmethod(self, 'normalize_bulk'),

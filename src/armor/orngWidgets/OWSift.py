@@ -81,7 +81,7 @@ class OWSift(OWWidget):
         if not slot:
             return
 	if self.sift is None:
-	    self.sift = armor.sift.Sift(Octave=self.Octave, Levels=self.Levels, FirstOctave=self.FirstOctave, PeakThresh=self.PeakThresh, EdgeThresh=self.EdgeThresh, Orientations=self.Orientations, useLazyEvaluation=self.useLazyEvaluation)
+	    self.sift = armor.features.SiftValedi(Octave=self.Octave, Levels=self.Levels, FirstOctave=self.FirstOctave, PeakThresh=self.PeakThresh, EdgeThresh=self.EdgeThresh, Orientations=self.Orientations, useLazyEvaluation=self.useLazyEvaluation)
 
 	    self.sift.InputSlot.registerInput(slot)
 

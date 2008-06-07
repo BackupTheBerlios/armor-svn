@@ -10,7 +10,7 @@ from OWWidget import *
 import OWGUI
 from exceptions import Exception
 import armor
-import armor.kmeans
+import armor.cluster
 from armor.SeqContainer import SeqContainer as SeqContainer
 
 class OWKmeans(OWWidget):
@@ -56,7 +56,7 @@ class OWKmeans(OWWidget):
         if slot is None:
             return
 	if self.kmeans is None:
-	    self.kmeans = armor.kmeans.Kmeans(numClusters = self.numClusters,
+	    self.kmeans = armor.cluster.Kmeans(numClusters = self.numClusters,
 					      maxiter = self.maxiter,
 					      numruns = self.numruns,
 					      useLazyEvaluation=self.useLazyEvaluation)

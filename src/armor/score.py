@@ -2,7 +2,7 @@ from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot,exp
 from ctypes import c_double
 import armor
 import armor.datatypes
-import armor.slot
+import armor.slotss
 from mpi_kmeans import kmeans as mpi_kmeans
 
 class Score(object):
@@ -17,13 +17,13 @@ class Score(object):
         
         self.outputType = armor.datatypes.VectorType(shape='flatarray')
 
-        self.inputSlotData = armor.slot.InputSlot(name='untransformed',
+        self.inputSlotData = armor.slotss.InputSlot(name='untransformed',
                                                   acceptsType=self.inputTypeData)
 
-        self.inputSlotLabels = armor.slot.InputSlot(name='labels',
+        self.inputSlotLabels = armor.slotss.InputSlot(name='labels',
                                                     acceptsType=self.inputTypeLabels)
 
-        self.outputSlot = armor.slot.OutputSlot(name='transformed',
+        self.outputSlot = armor.slotss.OutputSlot(name='transformed',
                                                 outputType=self.outputType,
                                                 useLazyEvaluation=useLazyEvaluation,
                                                 iterator=armor.weakmethod(self, 'iterator'))

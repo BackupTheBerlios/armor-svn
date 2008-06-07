@@ -1,5 +1,5 @@
 import armor
-import armor.slot
+import armor.slotss
 import armor.datatypes
 import numpy
 
@@ -11,10 +11,10 @@ class Histogram(object):
 	inputType = armor.datatypes.VectorType(shape=['flatarray'])
 	outputType = armor.datatypes.VectorType(shape=['flatarray'])
 
-	self.inputSlot = armor.slot.InputSlot(name='vector',
+	self.inputSlot = armor.slotss.InputSlot(name='vector',
 					      acceptsType=inputType)
 
-	self.outputSlot = armor.slot.OutputSlot(name='histogram',
+	self.outputSlot = armor.slotss.OutputSlot(name='histogram',
 						inputSlot = self.inputSlot,
 						slotType = 'sequential',
 						processFunc = armor.weakmethod(self, 'histogram'),

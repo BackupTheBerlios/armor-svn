@@ -1,11 +1,11 @@
 import unittest
 import armor.ImageDataset
-import armor.kmeans
-import armor.quantize
+import armor.cluster
+import armor.cluster
 import armor.tests
 import armor.histogram
 import armor.filter
-import armor.normalize
+import armor.transforms
 import armor.transform
 import armor.features
 import armor.score
@@ -27,7 +27,7 @@ class testAll(unittest.TestCase):
 
     def createDescr(self):
 	ft = armor.filter.Filter(filter='smooth')
-	#sft = armor.sift.Sift()
+	#sft = armor.features.SiftValedi()
 	#rce = armor.features.Nowozin('color')
 	#rce = armor.features.SiftRobHess()
 	rce = armor.features.SiftValedi()
@@ -44,12 +44,12 @@ class testAll(unittest.TestCase):
 	rce = self.createDescr()
 	#rce = armor.loadSlots('rce.pickle')
 	
-        km = armor.kmeans.Kmeans(1000)
-	qt = armor.quantize.quantize()
+        km = armor.cluster.Kmeans(1000)
+	qt = armor.cluster.quantize()
 	hg = armor.histogram.Histogram(1000)
-	nz = armor.normalize.Normalize('bin')
+	nz = armor.transforms.Normalize('bin')
 	tf = armor.transform.Transform('PCA')
-	nz2 = armor.normalize.Normalize('whiten')
+	nz2 = armor.transforms.Normalize('whiten')
 	sc = armor.score.Score()
 	
 	#km.InputSlot.registerInput(sft.OutputSlot)
@@ -86,7 +86,7 @@ class testAll(unittest.TestCase):
 	
 #     def testList(self):
 # 	sft = armor.sift(self.imgDataset.getData())
-# 	km = armor.kmeans(sft.getData(), 3)
+# 	km = armor.cluster(sft.getData(), 3)
 # 	data = list(km.getData())
 # 	self.assertEqual([x[1] for x in data], [u'test1', u'test2'])
 	#TODO: Call kmeans with fixed start vectors

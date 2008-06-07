@@ -1,5 +1,5 @@
 import armor
-import armor.slot
+import armor.slotss
 import armor.datatypes
 from PIL import ImageFilter
 
@@ -23,8 +23,8 @@ class Filter(object):
 	self.inputType = armor.datatypes.ImageType(format=["PIL"])
 
 	# Define slots
-	self.inputSlot = armor.slot.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
-	self.outputSlot = armor.slot.OutputSlot(name='Filtered Images',
+	self.inputSlot = armor.slotss.InputSlot(name='Images', acceptsType = self.inputType, useLazyEvaluation=useLazyEvaluation)
+	self.outputSlot = armor.slotss.OutputSlot(name='Filtered Images',
 						inputSlot=self.inputSlot,
 						processFunc=armor.weakmethod(self, 'applyfilter'),
 						slotType='sequential',
