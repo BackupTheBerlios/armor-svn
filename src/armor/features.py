@@ -13,7 +13,7 @@ class Nowozin(object):
     features = ['regcov', 'regcov_image', 'lbp', 'color', 'edge']
 
     def __init__(self, featureType, useLazyEvaluation=armor.useLazyEvaluation, **kwargs):
-        if featureType in features:
+        if featureType in Nowozin.features:
             self.featureType = featureType
         else:
             raise NotImplementedError, "Feature Type %s not implemented" % featureType
@@ -160,7 +160,10 @@ class SiftValedi(object):
     def process(self, img):
         if armor.verbosity > 0:
             print "Computing sift-descriptors (Valedi implementation)..."
-        return sift(array(img, dtype=float32), **self.kwargs)[1]
+        descr = sift(array(img, dtype=float32), **self.kwargs)[1]
+        if armor.verbosity >= 2:
+            print array(descr).shape
+        return descr
 
         
 def sift(*args, **kwargs):
