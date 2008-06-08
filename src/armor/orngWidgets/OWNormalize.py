@@ -29,7 +29,7 @@ class OWNormalize(OWWidget):
         self.name = name
 	self.normalize = None
         self.normtype = 1
-	self.normtypes = ['bin', 'L1', 'L2', 'whiten', 'bias', 'crop', 'log']
+	self.normtypes = ['none', 'bin', 'L1', 'L2', 'whiten', 'bias', 'crop', 'log']
         self.loadSettings()
 
         self.data = None                    # input data set

@@ -13,7 +13,7 @@ import armor.features
 from armor.slots import SeqContainer
 
 class OWSift(OWWidget):
-    settingsList = ["Octave", "Levels", "FirstOctave", "PeakThresh", "EdgeThresh", "NormThresh", "Orientations"]
+    settingsList = ["useLazyEvaluation", "Octave", "Levels", "FirstOctave", "PeakThresh", "EdgeThresh", "NormThresh", "Orientations"]
 
     def __init__(self, parent=None, signalManager = None, name='sift'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
@@ -64,14 +64,7 @@ class OWSift(OWWidget):
 	changed = False
 	
 	if self.sift is not None:
-	    if self.sift.useLazyEvaluation != self.useLazyEvaluation:
-		self.sift.useLazyEvaluation = self.useLazyEvaluation
-		changed = True
-		
 	    if armor.applySettings(self.settingsList, self, kwargs=self.sift.kwargs):
-		changed = True
-
-	    if changed:
 		self.sendData()
 
     def sendData(self):

@@ -1,4 +1,5 @@
 import weakref
+import copy
 
 # set default to use lazy evaluation where possible
 useLazyEvaluation=True
@@ -31,11 +32,16 @@ def saveSlots(fname, outputSlot=None, outputSlots=None):
         fdescr = open(fname, mode='w')
 
         if outputSlot is not None:
-            stripSlot(outputSlot)
-            pickle.dump(outputSlot, fdescr)
+            slot = copy.copy(outputSlot)
+            stripSlot(slot)
+            if verbosity > 0:
+                print "Saving slot to %s" % fname
+            pickle.dump(slot, fdescr)
             
         elif outputSlots is not None:
-            for slot in outputSlots:
+            raise NotImplementedError, "At the moment you can only pickle one slot at a time"
+            for outputSlot in outputSlots:
+                slot = copy.deepcopy(outputSlot)
                 stripSlot(slot)
             pickle.dump(outputSlots, fdescr)
             
@@ -48,6 +54,8 @@ def loadSlots(fname):
 
     try:
         fdescr = open(fname, mode='r')
+        if verbosity > 0:
+            print "Loading slot from %s" % fname
         outputSlot = pickle.load(fdescr)
         outputSlot.container.references = weakref.WeakValueDictionary()
         
@@ -95,6 +103,8 @@ def applySettings(settingsList, widget, obj=None, kwargs=None, outputSlot=None, 
                     # Turn off Lazy Evaluation
                     slot.useLazyEvaluation = False
                     slot.container.useLazyEvaluation = False
+                    if verbosity>0:
+                        print "Computing and storing data..."
                     # Compute data (if necessary)
                     slot.container.getDataAsIter()
             

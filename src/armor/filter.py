@@ -14,7 +14,8 @@ class Filter(object):
 			'find_edges': ImageFilter.FIND_EDGES,
 			'sharpen': ImageFilter.SHARPEN,
 			'smooth': ImageFilter.SMOOTH,
-			'smooth_more': ImageFilter.SMOOTH_MORE}
+			'smooth_more': ImageFilter.SMOOTH_MORE,
+                        'none': None}
 			   
         self.useLazyEvaluation = useLazyEvaluation
 
@@ -34,6 +35,8 @@ class Filter(object):
     def applyfilter(self, img):
 	if armor.verbosity > 0:
 	    print "Applying filter %s..." % self.filter
+        if self.filter == 'none':
+            return img
 	return img.filter(self.filters[self.filter])
 
         

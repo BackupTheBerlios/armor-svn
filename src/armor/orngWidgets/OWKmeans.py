@@ -14,7 +14,7 @@ import armor.cluster
 from armor.slots import SeqContainer
 
 class OWKmeans(OWWidget):
-    settingsList = ["numClusters", "maxiter", "numruns"]
+    settingsList = ["numClusters", "maxiter", "numruns", "useLazyEvaluation"]
     
     def __init__(self, parent=None, signalManager = None, name='kmeans'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)

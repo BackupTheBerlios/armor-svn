@@ -7,6 +7,7 @@ import armor.filter
 import armor.transforms
 import armor.features
 import armor.score
+import hcluster
 
 import armor
 import numpy
@@ -19,53 +20,66 @@ class testAll(unittest.TestCase):
         self.pathtest = armor.tests.__path__[0]
         self.imgDataset = armor.ImageDataset.ImageDataset()
         #self.imgDataset.loadFromXML(os.path.join(self.pathtest, 'test_valid.xml'))
-        self.imgDataset.loadFromXML(os.path.join(self.path, 'datasets', 'caltech_4_small.xml'))
+        self.imgDataset.loadFromXML(os.path.join(self.path, 'datasets', 'caltech_small.xml'))
 
         self.imgDataset.prepare()
 
     def createDescr(self):
-        ft = armor.filter.Filter(filter='smooth')
+        ft = armor.filter.Filter(filter='none')
         #sft = armor.features.SiftValedi()
-        #rce = armor.features.Nowozin('color')
+        rce = armor.features.Nowozin('regcov_image')
         #rce = armor.features.SiftRobHess()
-        rce = armor.features.SiftValedi()
+        #rce = armor.features.SiftValedi()
         
         ft.inputSlot.registerInput(self.imgDataset.outputSlotTrain)
         #sft.InputSlot.registerInput(ft.outputSlot)
         rce.inputSlot.registerInput(ft.outputSlot)
         armor.saveSlots('rce.pickle', rce.outputSlot)
-        return rce.outputSlot
+        return rce
     
     def testGenerator(self):
+        CLUSTERS = 200
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
         rce = self.createDescr()
-        #rce = armor.loadSlots('rce.pickle')
+        rce = armor.loadSlots('rce.pickle')
+
         
-        km = armor.cluster.Kmeans(1000)
+        km = armor.cluster.Kmeans(CLUSTERS)
         qt = armor.cluster.Quantize()
-        hg = armor.histogram.Histogram(1000)
-        nz = armor.transforms.Normalize('bin')
-        tf = armor.transforms.Transform('PCA')
-        nz2 = armor.transforms.Normalize('whiten')
+        hg = armor.histogram.Histogram(CLUSTERS)
+        nz = armor.transforms.Normalize('none')
+        tf = armor.transforms.Transform('KPCA')
+        nz2 = armor.transforms.Normalize('none')
         sc = armor.score.Score()
+        pd = armor.score.PairwiseDistances(metric='euclidean')
         
-        #km.InputSlot.registerInput(sft.OutputSlot)
-        #km.InputSlot.registerInput(rce)
-        #armor.saveSlots('km.pickle', km.OutputSlot)
+        #km.inputSlot.registerInput(rce.outputSlot)
+        km.inputSlot.registerInput(rce)
+        armor.saveSlots('km.pickle', km.outputSlot)
         km = armor.loadSlots('km.pickle')
+        
+        #km = armor.loadSlots('km.pickle')
         qt.inputSlotCodebook.registerInput(km)
-        #qt.InputSlotVec.registerInput(sft.OutputSlot)
         qt.inputSlotVec.registerInput(rce)
+        #qt.inputSlotVec.registerInput(rce.outputSlot)
         hg.inputSlot.registerInput(qt.outputSlot)
         nz.inputSlot.registerInput(hg.outputSlot)
         tf.inputSlotData.registerInput(nz.outputSlot)
         tf.inputSlotLabels.registerInput(self.imgDataset.outputSlotLabelsTrain)
         nz2.inputSlot.registerInput(tf.outputSlot)
-        sc.inputSlotData.registerInput(tf.outputSlot)
+        sc.inputSlotData.registerInput(nz2.outputSlot)
         sc.inputSlotLabels.registerInput(self.imgDataset.outputSlotLabelsTrain)
-        
+
+        #pd.inputSlot.registerInput(nz2.outputSlot)
+        pd.inputSlot.registerInput(nz2.outputSlot)
+        x = list(pd.outputSlot)
         print list(sc.outputSlot)
+        #x = numpy.array(list(hg.outputSlot))
+        #from IPython.Debugger import Tracer; debug_here = Tracer()
+        #debug_here()
+
+        #print list(sc.outputSlot)
         #del sft
         #self.assertRaises(AttributeError, list(hg.OutputSlot))
 #       del km

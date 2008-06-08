@@ -14,7 +14,7 @@ import armor.histogram
 from armor.slots import SeqContainer
 
 class OWHistogram(OWWidget):
-    settingsList = ['bins']
+    settingsList = ['bins', 'useLazyEvaluation']
 
     def __init__(self, parent=None, signalManager = None, name='Histogram'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)

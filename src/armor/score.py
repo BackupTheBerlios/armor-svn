@@ -4,6 +4,43 @@ import armor
 import armor.slots
 from mpi_kmeans import kmeans as mpi_kmeans
 
+class PairwiseDistances(object):
+    mertics = ['euclidean', 'cityblock', 'sqeuclidean', 'cosine', 'correlation', 'hamming', 'jaccard',
+               'chebyshev', 'canberra', 'braycurtis', 'mahalanobis', 'yule', 'dice', 'kulsinski',
+               'russellrao', 'sokalmichener', 'sokalsneath']
+    def __init__(self, metric = 'euclidean', plot=True, useLazyEvaluation=armor.useLazyEvaluation):
+
+        self.metric = metric
+        self.plot = plot
+        
+        self.inputTypeData = armor.slots.VectorType(shape=['flatarray'])
+        self.outputType = armor.slots.VectorType(shape='flatarray')
+
+        self.inputSlot = armor.slots.InputSlot(name='data',
+                                               acceptsType=self.inputTypeData,
+                                               bulk=True)
+
+
+        self.outputSlot = armor.slots.OutputSlot(name='distance matrix',
+                                                 outputType=self.outputType,
+                                                 useLazyEvaluation=useLazyEvaluation,
+                                                 slotType = 'bulk',
+                                                 inputSlot=self.inputSlot,
+                                                 processFunc = armor.weakmethod(self, 'pdist'))
+
+    def pdist(self, X):
+        import hcluster
+        import pylab
+
+        Y = hcluster.squareform(hcluster.pdist(array(X), metric=self.metric))
+
+        if self.plot:
+            pylab.imshow(Y)
+            pylab.show()
+            
+        yield Y
+        
+
 class Score(object):
     def __init__(self, scoretype='clustering', useLazyEvaluation=armor.useLazyEvaluation):
         self.scoretype = scoretype

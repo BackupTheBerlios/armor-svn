@@ -1,5 +1,6 @@
 import mpi_kmeans
 import numpy
+import numpy.random
 import armor.slots
 import armor
 from ctypes import c_double
@@ -13,7 +14,7 @@ class Kmeans(object):
 
     Default is lazy, so the clustering will only be performed when the codebook
     gets accessed."""
-    def __init__(self, numClusters, maxiter=2000, numruns=200, useLazyEvaluation=armor.useLazyEvaluation):
+    def __init__(self, numClusters, maxiter=0, numruns=20, useLazyEvaluation=armor.useLazyEvaluation):
         self.numClusters = numClusters
         self.maxiter = maxiter
         self.numruns = numruns
@@ -36,6 +37,8 @@ class Kmeans(object):
 	# Perform KMeans clustering
 	if armor.verbosity > 0:
 	    print "Performing kmeans clustering with k=%i..." % self.numClusters
+
+        data = numpy.random.permutation(data)
 	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data, dtype=c_double), self.numClusters, self.maxiter, self.numruns)
 
 	return self.codebook
@@ -72,7 +75,8 @@ class Quantize(object):
         # Sequentiall get data from vector slot
         for features in self.inputSlotVec:
             if armor.verbosity > 0:
-                print ("Quantizing... Codebook shape: %i,%i Vector Shape: %i,%i " % (codebook.shape[0], codebook.shape[1], features.shape[0], features.shape[1]))
+                print ("Quantizing... Codebook shape: %i,%i Vector Shape: %i,%i " % (codebook.shape[0], codebook.shape[1], \
+                                                                                     len(features), len(features[0])))
             clusters = cluster.vq.vq(features, codebook)[0]
             yield clusters
 

@@ -97,9 +97,9 @@ class SiftRobHess(object):
         # Run the extractor
         self.callExtractor(SiftRobHess.imgfile, SiftRobHess.output)
         # Read the descriptors
-        descr = self.loadDescr(SiftRobHess.output)[1]
+        descr = array(self.loadDescr(SiftRobHess.output)[1])
         if armor.verbosity > 1:
-            print array(descr).shape
+            print descr.shape
         return descr
 
 

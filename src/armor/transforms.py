@@ -1,4 +1,4 @@
-from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot,exp
+from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot,exp,diag
 from ctypes import c_double
 import armor
 import armor.slots
@@ -14,6 +14,8 @@ class Transform(object):
             self.kernel = 'gaussian_kernel'
         elif kernel not in ['linear_kernel', 'gaussian_kernel', 'chi2_kernel']:
             raise NotImplementedError, "Wrong kernel chosen"
+        else:
+            self.kernel = kernel
         
 
         self.inputTypeData = armor.slots.VectorType(shape=['flatarray'], bulk=True)
@@ -95,9 +97,9 @@ def transform(Xarray, proctype, num_examples, num_components, kernel='gaussian_k
 class Normalize(object):
     def __init__(self, normtype, useLazyEvaluation=armor.useLazyEvaluation):
         self.normtype = normtype
-        if self.normtype in ['L1','L2']:
+        if self.normtype in ['bin', 'L1','L2']:
             self.sequential = False
-        elif self.normtype in ['bin', 'whiten', 'bias', 'crop', 'log', 'none']:
+        elif self.normtype in ['whiten', 'bias', 'crop', 'log', 'none']:
             self.sequential = True
         else:
             raise ValueError, "No operation mode specified"
@@ -138,11 +140,9 @@ class Normalize(object):
     def normalize_seq(self, data):
         if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
-        Xnorm = array(data)
-        if self.normtype=='bin':
-            Xscale = median(Xnorm) # median is usually better than mean
-            Xnorm = 1.*(Xnorm>Xscale)
-        elif self.normtype=='whiten':
+        Xnorm = array(data, dtype=c_double)
+
+        if self.normtype=='whiten':
             Xnorm = Xnorm-mean(Xnorm,axis=0)
             Xscale = std(Xnorm,axis=0)
             Xnorm[Xnorm==0.]=1.
@@ -160,8 +160,13 @@ class Normalize(object):
         if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
 
-        Xnorm = array(data)
-        if self.normtype=='L1':
+        Xnorm = array(data, dtype=c_double)
+        #from IPython.Debugger import Tracer; debug_here = Tracer()
+        #debug_here()
+        if self.normtype=='bin':
+            Xscale = mean(Xnorm) # median is usually better than mean
+            Xnorm = 1.*(Xnorm>Xscale)
+        elif self.normtype=='L1':
             Xscale = ascolumn( sum(abs(Xnorm),axis=1) )
             Xscale[Xscale==0]=1.
             Xnorm = Xnorm/Xscale

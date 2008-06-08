@@ -94,22 +94,13 @@ class InputSlot(object):
             # Else compatible() returns the new type and conversion funcs
             (self.outputType, self.converters) = compatible
             
-        #if self.senderSlot:
-            # There is already a senderSlot registered, is it maybe
-            # the same?
-        #    if self.senderSlot() is not senderSlot:
-                # Create a weak reference so that when the senderSlot
-                # gets removed this reference wont keep it alive
-        #       self.senderSlot = weakref.ref(senderSlot)
-        
-        #       if armor.useCaching:
-        #           senderSlot.container.registerReference(self)
-        #else:
 
         # Register the new slot
         self.senderSlot = weakref.ref(senderSlot)
-        # Tell the senderSlot container to update its data (if necessary)
+        # Callback to tell the senderSlot container to update its data
+        # (if necessary)
         senderSlot.container.recompute()
+
         if armor.useCaching:
             # Register us to the senderSlot
             senderSlot.container.registerReference(self)
@@ -141,7 +132,7 @@ class OutputSlot(object):
 
     3. provide a sequence - can be any iterable.
     """
-    def __init__(self, name, inputSlot=None, processFunc=None, processFuncs=None,
+    def __init__(self, name, inputSlot=None, processFunc=None,
                  outputType=None, slotType=None, iterator=None, sequence=None, classes=None,
                  useLazyEvaluation=armor.useLazyEvaluation, useCaching=armor.useCaching):
 
@@ -151,14 +142,6 @@ class OutputSlot(object):
         self.iterator = iterator
         self.sequence = sequence
         self.processFunc = processFunc
-
-        if processFunc is not None:
-            if processFuncs is not None:
-                raise TypeError, "Specify either processFunc OR processFuncs"
-            else:
-                self.processFuncs = [processFunc]
-        else:
-            self.processFuncs = processFuncs
 
         # Create an output container
         if self.sequence is not None:
@@ -186,11 +169,10 @@ class OutputSlot(object):
         processFuncs and yields the processed element, one at a time.
         """
         for item in self.inputSlot.container:
-            for processFunc in self.processFuncs:
-                if armor.useOrange:
-                    from PyQt4.QtGui import qApp
-                    qApp.processEvents()
-                item = processFunc(item)
+            if armor.useOrange:
+                from PyQt4.QtGui import qApp
+                qApp.processEvents()
+            item = self.processFunc(item)
             yield item
             
 
@@ -200,10 +182,9 @@ class OutputSlot(object):
         (e.g. clustering, normalization). """
         inData = list(self.inputSlot.container)
 
-        for processFunc in self.processFuncs:
-            inData = processFunc(inData)
+        outData = self.processFunc(inData)
             
-        for item in inData:
+        for item in outData:
             yield item
  
 
@@ -243,7 +224,7 @@ class SeqContainer(object):
     def getDataAsIter(self):
         """Return the stored data in a way it can be passed to iter()."""
         if self.generator is not None and self.sequence is None:
-            # Input type is a generator function (hopefully)
+            # Input type is a generator function
             if self.useLazyEvaluation:
                 return(self.generator()) # Call the generator
             else:
@@ -262,7 +243,7 @@ class SeqContainer(object):
                 self.useLazyEvaluation = False
             return(self.sequence)
         else:
-            raise NotImplementedError, "generator AND sequence given"
+            raise ValueError, "generator AND sequence given"
 
     def __iter__(self):
         if len(self.references) <= 1:
