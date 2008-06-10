@@ -13,7 +13,7 @@ import armor.features
 from armor.slots import SeqContainer
 
 class OWExtractFeatures(OWWidget):
-    settingsList = ['featureType']
+    settingsList = ['featureID', 'featureType', 'useLazyEvaluation']
 
     def __init__(self, parent=None, signalManager = None, name='ExtractFeatures'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)

@@ -138,9 +138,12 @@ class Normalize(object):
     # Apache-License.
 
     def normalize_seq(self, data):
-        if armor.verbosity>0:
+        if self.normtype=='none':
+	    return data
+
+	if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
-        Xnorm = array(data, dtype=c_double)
+        Xnorm = array(data)
 
         if self.normtype=='whiten':
             Xnorm = Xnorm-mean(Xnorm,axis=0)
@@ -160,7 +163,7 @@ class Normalize(object):
         if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
 
-        Xnorm = array(data, dtype=c_double)
+        Xnorm = array(data)
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
         if self.normtype=='bin':

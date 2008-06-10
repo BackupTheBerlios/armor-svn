@@ -27,7 +27,7 @@ class testAll(unittest.TestCase):
     def createDescr(self):
         ft = armor.filter.Filter(filter='none')
         #sft = armor.features.SiftValedi()
-        rce = armor.features.Nowozin('regcov_image')
+        rce = armor.features.Nowozin('color')
         #rce = armor.features.SiftRobHess()
         #rce = armor.features.SiftValedi()
         
@@ -38,7 +38,7 @@ class testAll(unittest.TestCase):
         return rce
     
     def testGenerator(self):
-        CLUSTERS = 200
+        CLUSTERS = 500
         #from IPython.Debugger import Tracer; debug_here = Tracer()
         #debug_here()
         rce = self.createDescr()
@@ -49,7 +49,7 @@ class testAll(unittest.TestCase):
         qt = armor.cluster.Quantize()
         hg = armor.histogram.Histogram(CLUSTERS)
         nz = armor.transforms.Normalize('none')
-        tf = armor.transforms.Transform('KPCA')
+        tf = armor.transforms.Transform('none')
         nz2 = armor.transforms.Normalize('none')
         sc = armor.score.Score()
         pd = armor.score.PairwiseDistances(metric='euclidean')

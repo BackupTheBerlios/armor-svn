@@ -41,7 +41,7 @@ class InputSlot(object):
         self.container = None
         self.converters = None
         self.bulk = bulk
-        self.useLazyEvaluation = useLazyEvaluation
+        self.useLazyEvaluation = True
         self.senderSlot = None
         self.outputType = None
         
