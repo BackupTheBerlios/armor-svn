@@ -252,3 +252,68 @@ def asrow(X):
 def centered(M):
     """Center a kernel matrix"""
     return M - asrow(mean(M,axis=0)) - ascolumn(mean(M,axis=1)) + mean(M)
+
+
+
+class Fft2(object):
+    def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
+	self.inputType = armor.slots.ImageType(format=['PIL'], color_space=['gray'])
+	self.outputType = armor.slots.VectorType(shape='flatarray')
+
+	self.inputSlot = armor.slots.InputSlot(name='unnormalized',
+                                               acceptsType=self.inputType)
+
+	self.outputSlot = armor.slots.OutputSlot(name='normalized',
+						 inputSlot=self.inputSlot,
+						 slotType='sequential',
+						 processFunc=armor.weakmethod(self, 'fft2'),
+						 outputType=self.outputType,
+						 useLazyEvaluation=useLazyEvaluation)
+
+    def fft2(self, img):
+	import scipy.fftpack, numpy
+	if armor.verbosity > 0:
+	    print "Computing fft2 of image..."
+	x = numpy.array(img)
+	fft = numpy.power(numpy.abs(scipy.fftpack.fft2(x)), 2)
+	fft_shifted = scipy.fftpack.fftshift(fft)
+	fft_normalized = numpy.log(fft_shifted)
+	
+	return fft_normalized
+
+class Average(object):
+    def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
+    	self.inputTypeData = armor.slots.VectorType(shape=['flatarray'])
+	self.inputTypeLabels = armor.slots.VectorType(name=['labels'], shape=['flatlist'])
+	
+	self.outputType = armor.slots.VectorType(shape='flatarray')
+
+        self.inputSlotData = armor.slots.InputSlot(name='untransformed',
+                                                   acceptsType=self.inputTypeData)
+
+        self.inputSlotLabels = armor.slots.InputSlot(name='labels',
+                                                     acceptsType=self.inputTypeLabels)
+
+        self.outputSlot = armor.slots.OutputSlot(name='transformed',
+                                                 outputType=self.outputType,
+                                                 useLazyEvaluation=useLazyEvaluation,
+                                                 iterator=armor.weakmethod(self, 'iterator'))
+
+    def iterator(self):
+	import pylab, numpy
+        # Pool data
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
+
+        data = array(list(self.inputSlotData))
+        labels = array(list(self.inputSlotLabels))
+
+	animals = numpy.mean(data[labels=='Distractors',:,:], axis=0)
+	bgrnd = numpy.mean(data[labels=='Targets',:,:], axis=0)
+
+	pylab.figure(1)
+	pylab.imshow(animals)
+	pylab.figure(2)
+	pylab.imshow(bgrnd)
+	pylab.show()
+	
