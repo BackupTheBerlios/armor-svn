@@ -324,7 +324,7 @@ double kmeans_run(double *CX,const PREC *X,unsigned int *c,unsigned int dim,unsi
 	unsigned int i,j,k,nchanged,iteration,cnt;
 	BOUND_PREC *s, *offset, *cl_dist, *low_b;
 
-	tCX = (double *)calloc(npts * dim, sizeof(double));
+	tCX = (double *)calloc(nclus * dim, sizeof(double));
 	assert(tCX);
 
 	/* number of points per cluster */
