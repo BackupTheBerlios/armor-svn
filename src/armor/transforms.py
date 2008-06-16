@@ -1,3 +1,4 @@
+import numpy
 from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot,exp,diag
 from ctypes import c_double
 import armor
@@ -139,9 +140,9 @@ class Normalize(object):
 
     def normalize_seq(self, data):
         if self.normtype=='none':
-	    return data
+            return data
 
-	if armor.verbosity>0:
+        if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
         Xnorm = array(data)
 
@@ -257,36 +258,40 @@ def centered(M):
 
 class Fft2(object):
     def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
-	self.inputType = armor.slots.ImageType(format=['PIL'], color_space=['gray'])
-	self.outputType = armor.slots.VectorType(shape='flatarray')
+        self.inputType = armor.slots.ImageType(format=['PIL'], color_space=['gray'])
+        self.outputType = armor.slots.VectorType(shape='flatarray')
 
-	self.inputSlot = armor.slots.InputSlot(name='unnormalized',
+        self.inputSlot = armor.slots.InputSlot(name='unnormalized',
                                                acceptsType=self.inputType)
 
-	self.outputSlot = armor.slots.OutputSlot(name='normalized',
-						 inputSlot=self.inputSlot,
-						 slotType='sequential',
-						 processFunc=armor.weakmethod(self, 'fft2'),
-						 outputType=self.outputType,
-						 useLazyEvaluation=useLazyEvaluation)
+        self.outputSlot = armor.slots.OutputSlot(name='normalized',
+                                                 inputSlot=self.inputSlot,
+                                                 slotType='sequential',
+                                                 processFunc=armor.weakmethod(self, 'fft2'),
+                                                 outputType=self.outputType,
+                                                 useLazyEvaluation=useLazyEvaluation)
 
     def fft2(self, img):
-	import scipy.fftpack, numpy
-	if armor.verbosity > 0:
-	    print "Computing fft2 of image..."
-	x = numpy.array(img)
-	fft = numpy.power(numpy.abs(scipy.fftpack.fft2(x)), 2)
-	fft_shifted = scipy.fftpack.fftshift(fft)
-	fft_normalized = numpy.log(fft_shifted)
-	
-	return fft_normalized
+        import scipy.fftpack, numpy
+        from PIL import Image
+        
+        if armor.verbosity > 0:
+            print "Computing fft2 of image..."
+        img = img.resize((160,160), Image.ANTIALIAS)
+        x = numpy.array(img)
+        x = x-mean(x)
+        fft = numpy.power(numpy.abs(scipy.fftpack.fft2(x)), 2)
+        fft_shifted = scipy.fftpack.fftshift(fft)
+        fft_normalized = fft_shifted/numpy.var(fft_shifted)
+        (size_x, size_y) = fft_normalized.shape
+        return fft_normalized[:size_x/2, :]
 
 class Average(object):
     def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
-    	self.inputTypeData = armor.slots.VectorType(shape=['flatarray'])
-	self.inputTypeLabels = armor.slots.VectorType(name=['labels'], shape=['flatlist'])
-	
-	self.outputType = armor.slots.VectorType(shape='flatarray')
+        self.inputTypeData = armor.slots.VectorType(shape=['flatarray'])
+        self.inputTypeLabels = armor.slots.VectorType(name=['labels'], shape=['flatlist'])
+        
+        self.outputType = armor.slots.VectorType(shape='flatarray')
 
         self.inputSlotData = armor.slots.InputSlot(name='untransformed',
                                                    acceptsType=self.inputTypeData)
@@ -300,20 +305,82 @@ class Average(object):
                                                  iterator=armor.weakmethod(self, 'iterator'))
 
     def iterator(self):
-	import pylab, numpy
+        import pylab, numpy
         # Pool data
-        from IPython.Debugger import Tracer; debug_here = Tracer()
-        debug_here()
-
         data = array(list(self.inputSlotData))
+        classes = self.inputSlotLabels.senderSlot().container.classes
         labels = array(list(self.inputSlotLabels))
 
-	animals = numpy.mean(data[labels=='Distractors',:,:], axis=0)
-	bgrnd = numpy.mean(data[labels=='Targets',:,:], axis=0)
 
-	pylab.figure(1)
-	pylab.imshow(animals)
-	pylab.figure(2)
-	pylab.imshow(bgrnd)
-	pylab.show()
-	
+        animal_idx = data[labels==classes[0],:,:]
+        bgrnd_idx = data[labels==classes[1],:,:]
+        del data
+        
+        animal_mean = numpy.mean(animal_idx, axis=0)
+        bgrnd_mean = numpy.mean(bgrnd_idx, axis=0)
+        pylab.figure(1)
+        pylab.imshow(numpy.log(animal_mean))
+        pylab.title('Animals - Mean')
+        pylab.figure(2)
+        pylab.imshow(numpy.log(bgrnd_mean))
+        pylab.title('Background - Mean')
+        
+        animal_var = numpy.var(animal_idx, axis=0)
+        bgrnd_var = numpy.var(bgrnd_idx, axis=0)
+        pylab.figure(3)
+        pylab.imshow(numpy.log(animal_var))
+        pylab.title('Animals - Variance')
+        pylab.figure(4)
+        pylab.imshow(numpy.log(bgrnd_var))
+        pylab.title('Background - Variance')
+
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
+       
+        mean_diff = numpy.abs(animal_mean - bgrnd_mean)
+        var_diff = numpy.abs(animal_var - bgrnd_var)
+
+        mean_mult = numpy.log(mean_diff)
+        mean_norm = (mean_mult - numpy.min(mean_mult)) / (numpy.max(mean_mult)-numpy.min(mean_mult))
+        var_mult = numpy.log(numpy.abs(animal_var * bgrnd_var))
+        var_norm = (var_mult - numpy.min(var_mult)) / (numpy.max(var_mult)-numpy.min(var_mult))
+        why_diff = mean_norm / var_norm
+        why_diff[why_diff == numpy.Inf] = 1.0
+        pylab.figure(5)
+        pylab.imshow(numpy.log(mean_diff))
+        pylab.title('Difference - Mean')
+        pylab.figure(6)
+        pylab.imshow(numpy.log(var_diff))
+        pylab.title('Difference - Variance')
+        pylab.figure(7)
+        pylab.imshow(why_diff)
+        pylab.title('Difference - Special')
+
+        animal_row = reshape(animal_idx, (animal_idx.shape[0], -1))
+        bgrnd_row = reshape(bgrnd_idx, (bgrnd_idx.shape[0], -1))
+        
+        animal_mean_feat = numpy.dot(animal_row, asrow(mean_diff).T)
+        bgrnd_mean_feat = numpy.dot(bgrnd_row, asrow(mean_diff).T)
+        animal_var_feat = numpy.dot(animal_row, asrow(var_diff).T)
+        bgrnd_var_feat = numpy.dot(bgrnd_row, asrow(var_diff).T)
+        animal_why_feat = numpy.dot(animal_row, asrow(var_diff).T)
+        bgrnd_why_feat = numpy.dot(bgrnd_row, asrow(var_diff).T)
+
+
+
+        animal_feat = numpy.vstack((animal_mean_feat.T, animal_var_feat.T)) #  animal_why_feat))
+        bgrnd_feat = numpy.vstack((bgrnd_mean_feat.T, bgrnd_var_feat.T)) #, bgrnd_why_feat))
+        
+        pylab.figure(8)
+        pylab.plot(animal_feat[0], animal_feat[1], '+b', label='_nolegend_')
+        pylab.plot(bgrnd_feat[0], bgrnd_feat[1], 'xr', label='_nolegend_')
+        pylab.title('Animal feat Vs Background feat')
+        
+        pylab.show()
+
+        yield animal_feat
+        
+
+    def normalize(self, x):
+        return (x - numpy.min(x)) / (numpy.max(x) - numpy.min(x))
+    

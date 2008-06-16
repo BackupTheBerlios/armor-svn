@@ -108,10 +108,10 @@ class ImageDataset(ImageBase):
         # Create list with all filenames and their class IDs
         self.allFNames = []
         self.allLabels = []
-        self.categoryNames = set()
+        self.categoryNames = []
         
         for category in self.categories:
-            self.categoryNames.add(str(category.name))
+            self.categoryNames.append(str(category.name))
             for fname in category:
                 self.allFNames.append(self.absFName(fname))
                 self.allLabels.append(str(category.name))
