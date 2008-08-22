@@ -41,7 +41,7 @@ class InputSlot(object):
         self.container = None
         self.converters = None
         self.bulk = bulk
-        self.useLazyEvaluation = True
+        self.useLazyEvaluation = useLazyEvaluation
         self.senderSlot = None
         self.outputType = None
         
@@ -77,7 +77,7 @@ class InputSlot(object):
         """Register senderSlot as an inputSlot. inputType and
         outputType have to match (or be convertable).
         """
-        if armor.useTypeChecking:
+        if armor.useTypeChecking and self.acceptsType is not None:
             if senderSlot.outputType is not None:
                 senderType = senderSlot.outputType
             elif senderSlot.inputSlot.outputType is not None:
@@ -112,7 +112,64 @@ class InputSlot(object):
             self.container = SeqContainer(generator=armor.weakmethod(self, 'convertBulk'), useLazyEvaluation=self.useLazyEvaluation)
 
         
+class MultiInputSlot(InputSlot):
+    """Defines an input slot that can receive multiple connections"""
 
+    def __init__(self, name, senderSlot=None, acceptsType=None, bulk=False, useLazyEvaluation=armor.useLazyEvaluation):
+        self.name = name
+        
+        if acceptsType:
+            raise NotImplementedError, "Converting is not supported for MultiInputSlots"
+        self.acceptsType = None
+        
+        self.container = None
+        self.converters = None
+        self.bulk = bulk
+        self.useLazyEvaluation = useLazyEvaluation
+
+        # Temporary storage of senderSlot
+        self.senderSlot = None
+        
+        # We keep weakrefs for all connected inputs
+        self.senderSlots = weakref.WeakValueDictionary()
+
+        self.iterPool = []
+        
+        self.outputType = None
+        
+    def __iter__(self):
+        return self
+
+    def next(self):
+        # Get iterators if necessary
+        if len(self.iterPool) == 0:
+            for sender in self.senderSlots.itervalues():
+                self.iterPool.append(iter(sender))
+                
+        data = []
+        # Pool one item from every slot
+        for iterator in self.iterPool:
+            data.append(iterator.next())
+
+
+        # Return list of pooled elements
+        return data
+
+    
+    def registerInput(self, senderSlot):
+        """Register one input"""
+        # Call parent to handle all connecting of one single slot
+        super(MultiInputSlot, self).registerInput(senderSlot)
+
+        # All variables are now set, we now store them in the weakValueDict
+        # because the local variables will be overwritten when the next slot connects.
+        self.senderSlots[str(id(senderSlot))] = senderSlot
+
+        # Make sure noone uses those variables
+        self.senderSlot = None
+        self.container = None
+        self.outputType = None
+        self.converters = None
         
 class OutputSlot(object):
     """Defines an output slot which receives data, computes and sends data.
@@ -269,7 +326,7 @@ class BaseType(object):
         self.dataType = kwargs
         self.attributes = {}
         self.conversions = {}
-	
+        
     def __iter__(self):
         return iter(self.dataType)
 
@@ -277,25 +334,25 @@ class BaseType(object):
         return self.dataType[item]
 
     def __setitem__(self, item, value):
-	self.dataType[item] = value
-	
+        self.dataType[item] = value
+        
     def compatible(self, inputType):
-	"""Check if toType is compatible with my own type. If it is
-	not compatible, try find fitting conversion functions.
+        """Check if toType is compatible with my own type. If it is
+        not compatible, try find fitting conversion functions.
 
-	Output: False or (type, [conversionfuncs])"""
+        Output: False or (type, [conversionfuncs])"""
 
-	
-	if inputType.__class__ is not self.__class__:
+        
+        if inputType.__class__ is not self.__class__:
             return False
 
-	import copy
-	# Copy inputType
-	toType = copy.deepcopy(inputType)
+        import copy
+        # Copy inputType
+        toType = copy.deepcopy(inputType)
 
-	compatible = True
+        compatible = True
         convert = True
-	
+        
         for key in toType:
             # If key is not present, we assume compatibility
             if key not in self.dataType:
@@ -304,28 +361,28 @@ class BaseType(object):
             if toType[key] in self.dataType[key]:
                 continue # Compatible
 
-	    compatible = False
+            compatible = False
 
-	if compatible:
-	    return (toType, [])
+        if compatible:
+            return (toType, [])
 
-	# Can we convert?
+        # Can we convert?
         for conversion in self.conversions:
-	    for key in conversion:
-		if key == 'function':
-		    continue
-		for inType in self.dataType[key]:
-		    if toType[key] != inType:
-			if conversion[key][0] != toType[key] and conversion[key][1] != inType:
-			    convert = False
+            for key in conversion:
+                if key == 'function':
+                    continue
+                for inType in self.dataType[key]:
+                    if toType[key] != inType:
+                        if conversion[key][0] != toType[key] and conversion[key][1] != inType:
+                            convert = False
 
-		if convert:
-		    toType[key] = conversion[key][1]
-		    return (toType, [conversion['function']])
-		
+                if convert:
+                    toType[key] = conversion[key][1]
+                    return (toType, [conversion['function']])
+                
 
-	# No
-	return False
+        # No
+        return False
             
         
 class ImageType(BaseType):
@@ -340,28 +397,28 @@ class ImageType(BaseType):
                            }
 
         self.conversions = [{'format': ('PIL', 'PIL'),
-			     'color_space': ('RGB', 'gray'),
-			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_PIL_gray')},
-			    {'format': ('PIL', 'numpy'),
-			     'color_space': ('RGB', 'RGB'),
-			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_RGB')},
-			    {'format': ('PIL', 'numpy'),
-			     'color_space': ('RGB', 'gray'),
-			     'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_gray')}
-			    ]
-			    
+                             'color_space': ('RGB', 'gray'),
+                             'function': armor.weakmethod(self, 'convert_PIL_RGB_to_PIL_gray')},
+                            {'format': ('PIL', 'numpy'),
+                             'color_space': ('RGB', 'RGB'),
+                             'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_RGB')},
+                            {'format': ('PIL', 'numpy'),
+                             'color_space': ('RGB', 'gray'),
+                             'function': armor.weakmethod(self, 'convert_PIL_RGB_to_numpy_gray')}
+                            ]
+                            
     
     def convert_PIL_RGB_to_PIL_gray(self, image):
-	if armor.verbosity>0:
-	    print "Converting RGB image to gray color space"
+        if armor.verbosity>0:
+            print "Converting RGB image to gray color space"
         image = image.convert('L')
         return image
 
     def convert_PIL_RGB_to_numpy_RGB(self, image):
-	return array(image)
+        return array(image)
 
     def convert_PIL_RGB_to_numpy_gray(self, image):
-	return array(self.convert_PIL_RGB_to_PIL_gray(image))
+        return array(self.convert_PIL_RGB_to_PIL_gray(image))
 
 class VectorType(BaseType):
     def __init__(self, **kwargs):
@@ -372,15 +429,15 @@ class VectorType(BaseType):
                            }
 
         self.conversions = [{'shape': ('nestedlist', 'flatarray'),
-			     'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')},
-			    {'shape': ('nestedarray', 'flatarray'),
-			     'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')}
-			    ]
+                             'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')},
+                            {'shape': ('nestedarray', 'flatarray'),
+                             'function': armor.weakmethod(self, 'convert_nestedlist_to_flatarray')}
+                            ]
 
     def convert_nestedlist_to_flatarray(self, lst):
-	from numpy import concatenate
-	if armor.verbosity>0:
-	    print "Concatenating..."
-	x=concatenate(lst)
-	print x.shape
+        from numpy import concatenate
+        if armor.verbosity>0:
+            print "Concatenating..."
+        x=concatenate(lst)
+        print x.shape
         return x

@@ -19,15 +19,21 @@ import glob
 siftModule = Extension('_sift',
 		       language = 'c++',
 		       sources = glob.glob('src/vlfeat/vl/*.c') + ['src/vlfeat/python/sift.c'],
-		       extra_compile_args=['-g', '-pedantic', '-Wall', '-std=c89', '-O3' ,'-Wno-unused-function', '-Wno-long-long', '-D__LITTLE_ENDIAN__', '-std=c99'],
+		       extra_compile_args=['-pedantic', '-std=c89', '-O3' ,'-Wno-unused-function', '-Wno-long-long', '-D__LITTLE_ENDIAN__', '-std=c99'],
 		       include_dirs = [numpy.get_include(), 'src/vlfeat'],
 		       extra_link_args = ['-lm'])
 
 kmeansModule = Extension('libmpikmeans',
 		       language = 'c++',
 		       sources = ['src/mpi_kmeans/mpi_kmeans.cxx'],
-		       extra_compile_args=['-Wl,-soname=libmpikmeans.so','-Wall', '-O3'])
+		       extra_compile_args=['-Wl,-soname=libmpikmeans.so','-O3'])
 
+chi2Module = Extension('libchi2',
+                       language = 'c',
+                       sources = ['src/mpi-chi2/chi2float.c','src/mpi-chi2/chi2double.c'],
+                       include_dirs = ['src/mpi-chi2'],
+                       extra_compile_args=['-D__MAIN__','-ffast-math','-fomit-frame-pointer','-O3','-march=nocona'],
+                       extra_link_args = ['-shared','-O3', '-march=nocona', '-ffast-math', '-Wl,-soname=libchi2.so'])
 
 setup (name = 'armor',
        version = '0.1',
@@ -36,7 +42,7 @@ setup (name = 'armor',
        author_email = 'thomas.wiecki@gmail.com',
        url = 'http://www.python.org/doc/current/ext/building.html',
        long_description = '''...''',
-       ext_modules = [siftModule, kmeansModule],
+       ext_modules = [siftModule, kmeansModule], #, chi2Module], ToDo
        packages = ['armor', 'armor.orngWidgets', 'armor.tests'],
        package_dir={'': 'src'},
        include_package_data = True,
