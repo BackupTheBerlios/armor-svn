@@ -6,11 +6,11 @@ CFLAGS = -O3 -march=nocona -ffast-math -fomit-frame-pointer
 #CFLAGS = -xP -fast
 #OMPFLAGS = -openmp
 
-MATLABDIR=/agbs/share/sw/matlab
-INCLUDES=-I$(MATLABDIR)/extern/include
-LDIRS= -L$(MATLABDIR)/bin/glnx86
+#MATLABDIR=/agbs/share/sw/matlab
+#INCLUDES=-I$(MATLABDIR)/extern/include
+#LDIRS= -L$(MATLABDIR)/bin/glnx86
 
-EXE_TARGETS = chi2float chi2double chi2_mex.mexglx
+EXE_TARGETS = chi2float chi2double
 LIB_TARGETS = libchi2.so
 all:	$(EXE_TARGETS) $(LIB_TARGETS)
 
@@ -26,11 +26,11 @@ libchi2.so:	chi2double.c chi2double.h chi2float.c chi2float.h Makefile
 chi2double.o : chi2double.c chi2double.h Makefile
 	$(CC) -D__MAIN__  $(CFLAGS) -c $(OMPFLAGS) -o chi2double.o chi2double.c
 
-chi2_mex.o: chi2_mex.c
-	$(CC) $(CFLAGS) -c $(INCLUDES) -o chi2_mex.o chi2_mex.c
+#chi2_mex.o: chi2_mex.c
+#	$(CC) $(CFLAGS) -c $(INCLUDES) -o chi2_mex.o chi2_mex.c
 
-chi2_mex.mexglx: 	chi2_mex.c chi2_mex.o chi2double.o
-	$(CC) chi2_mex.o $(LDIRS) -lmex -shared -o chi2_mex.mexglx chi2double.o
+#chi2_mex.mexglx: 	chi2_mex.c chi2_mex.o chi2double.o
+#	$(CC) chi2_mex.o $(LDIRS) -lmex -shared -o chi2_mex.mexglx chi2double.o
 
 # default installation of libomp cannot be opened using dlopen() as would be required e.g. for Python
 
