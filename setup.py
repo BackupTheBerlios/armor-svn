@@ -40,7 +40,8 @@ setup (name = 'armor',
        packages = ['armor', 'armor.orngWidgets', 'armor.tests'],
        package_dir={'': 'src'},
        include_package_data = True,
-       #install_requires=['setuptools', 'numpy >= 1.0', 'scipy >= 0.5', 'PIL >= 1.1.6'],
+       dependency_links = ['http://www.pythonware.com/products/pil/'],
+       install_requires=['setuptools', 'numpy', 'scipy', 'PIL', 'arpack', 'em'],
        test_suite = "armor.tests.test_all",
        zip_safe = False
        )
