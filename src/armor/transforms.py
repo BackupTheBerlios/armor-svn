@@ -334,8 +334,8 @@ class Average(object):
         pylab.imshow(numpy.log(bgrnd_var))
         pylab.title('Background - Variance')
 
-        from IPython.Debugger import Tracer; debug_here = Tracer()
-        debug_here()
+        #from IPython.Debugger import Tracer; debug_here = Tracer()
+        #debug_here()
        
         mean_diff = numpy.abs(animal_mean - bgrnd_mean)
         var_diff = numpy.abs(animal_var - bgrnd_var)

@@ -3,7 +3,7 @@ import armor.transforms
 import armor.ImageDataset
 
 imgDataset = armor.ImageDataset.ImageDataset()
-imgDataset.loadFromXML('caltech_small.xml')
+imgDataset.loadFromXML('PNAS.xml')
 imgDataset.prepare()
 
 fft = armor.transforms.Fft2()
