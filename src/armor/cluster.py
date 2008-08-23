@@ -14,10 +14,11 @@ class Kmeans(object):
 
     Default is lazy, so the clustering will only be performed when the codebook
     gets accessed."""
-    def __init__(self, numClusters, maxiter=0, numruns=20, useLazyEvaluation=armor.useLazyEvaluation):
+    def __init__(self, numClusters, maxiter=0, numruns=20, sampleFromData=1., useLazyEvaluation=armor.useLazyEvaluation):
         self.numClusters = numClusters
         self.maxiter = maxiter
         self.numruns = numruns
+        self.sampleFromData = sampleFromData
 	self.useLazyEvaluation = useLazyEvaluation
 	
 	# Define some types
@@ -38,7 +39,10 @@ class Kmeans(object):
 	if armor.verbosity > 0:
 	    print "Performing kmeans clustering with k=%i..." % self.numClusters
 
-        data = numpy.random.permutation(data)
+        # Sample from data, randomly take self.sampleFromData percent of the vectors
+        samplePoints = numpy.random.permutation(range(len(data)))[0:int(round(len(data)*self.sampleFromData))]
+        data = data[samplePoints]
+        
 	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data, dtype=c_double), self.numClusters, self.maxiter, self.numruns)
 
 	return self.codebook
@@ -79,22 +83,3 @@ class Quantize(object):
                                                                                      len(features), len(features[0])))
             clusters = cluster.vq.vq(features, codebook)[0]
             yield clusters
-
-
-
-
-#    def quantize(self):
-#	self.dataClusters = []
-#	
-#	for vecs in self.data:
-#	    dataCluster = cluster.vq.vq(vecs[0], self.clusters)
-#	    self.dataClusters.append((dataCluster[0], vecs[1]))
-
-    #==============
-#    def Histogram(self):
-#    #==============
-#       self.dataHistogram = []
-
-#	for (dataCluster, classID) in self.dataClusters:
-#	    histo = npy.Histogram(dataCluster, bins = self.numClusters)
-#	    self.dataHistogram.append((histo[0], classID))

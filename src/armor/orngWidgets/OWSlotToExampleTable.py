@@ -9,6 +9,7 @@ import orngOrangeFoldersQt4
 from OWWidget import *
 import OWGUI
 from armor.slots import SeqContainer
+import armor.combine
 import weakref
 import orange
 
@@ -23,11 +24,14 @@ class OWSlotToExampleTable(OWWidget):
         self.inputs = [("SeqContainer", SeqContainer, self.setData), ("Labels", SeqContainer, self.setLabels)]
         self.outputs = [("Table", ExampleTable)]
 
+        self.combiner = None
+        
         # Settings
         self.name = name
+        self.useLazyEvaluation = True
+        
         self.loadSettings()
 
-        self.data = None                    # input data set
         self.labels = None
         #OWGUI.button(self.controlArea, self, "&Apply Settings", callback = self.apply, disabled=0)
 
@@ -35,20 +39,25 @@ class OWSlotToExampleTable(OWWidget):
 
 
     def setLabels(self, slot):
-	if slot is None:
+        if slot is None:
             return
         self.labels = weakref.ref(slot)
-        if self.data is not None and self.data() is not None:
+        if self.combiner is not None and self.combiner() is not None:
             self.createExampleTable()
             
     def setData(self, slot):
-	if slot is None:
+        if slot is None:
             return
-        self.data = weakref.ref(slot)
-	if self.labels is None or self.labels() is None:
-	    return
-	#self.data.registerGroup(armor.groupCounter)
-	#armor.groupCounter += 1
+
+        if self.combiner is None: # Create multi input combiner
+            self.combiner = armor.combine.Combiner(useLazyEvaluation=self.useLazyEvaluation)
+
+        # Register the sender slot (multiple inputs possible)
+        self.combiner.inputSlot.registerInput(slot)
+
+        if self.labels is None or self.labels() is None:
+            return
+
         if self.labels is not None and self.labels() is not None:
             self.createExampleTable()
             
@@ -56,7 +65,7 @@ class OWSlotToExampleTable(OWWidget):
         # Create orange.ExampleTable
         datalabels = []
 
-        data = list(self.data())
+        data = list(self.combiner.outputSlot)
         labels = list(self.labels())
         
         for vec,label in zip(data, labels):

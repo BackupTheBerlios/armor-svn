@@ -14,7 +14,7 @@ import armor.cluster
 from armor.slots import SeqContainer
 
 class OWKmeans(OWWidget):
-    settingsList = ["numClusters", "maxiter", "numruns", "useLazyEvaluation"]
+    settingsList = ["numClusters", "maxiter", "numruns", "sampleFromData", "useLazyEvaluation"]
     
     def __init__(self, parent=None, signalManager = None, name='kmeans'):
         OWWidget.__init__(self, parent, signalManager, name, wantMainArea = 0)
@@ -34,12 +34,14 @@ class OWKmeans(OWWidget):
         self.numClusters = 20
         self.maxiter = 0
         self.numruns = 1
+        self.sampleFromData = 1.0
         
         wbN = OWGUI.widgetBox(self.controlArea, "kMeans Settings")
         OWGUI.spin(wbN, self, "numClusters", 1, 100000, 100, None, "Number of clusters   ", orientation="horizontal")
         OWGUI.spin(wbN, self, "maxiter", 0, 100000, 1, None, "Maximum number of iterations", orientation="horizontal")
         OWGUI.spin(wbN, self, "numruns", 0, 100000, 1, None, "Number of runs ", orientation="horizontal")
-
+        OWGUI.widgetLabel(wbN, 'Use x% of the data')
+        OWGUI.lineEdit(wbN, self, 'sampleFromData', valueType=float)
         OWGUI.separator(self.controlArea)
 	wbS = OWGUI.widgetBox(self.controlArea, "Widget Settings")
         OWGUI.checkBox(wbS, self, "useLazyEvaluation", "Use lazy evaluation")
@@ -58,9 +60,10 @@ class OWKmeans(OWWidget):
             return
 	if self.kmeans is None:
 	    self.kmeans = armor.cluster.Kmeans(numClusters = self.numClusters,
-					      maxiter = self.maxiter,
-					      numruns = self.numruns,
-					      useLazyEvaluation=self.useLazyEvaluation)
+                                               maxiter = self.maxiter,
+                                               numruns = self.numruns,
+                                               sampleFromData = self.sampleFromData,
+                                               useLazyEvaluation=self.useLazyEvaluation)
 	
 	self.kmeans.inputSlot.registerInput(slot)
 
@@ -68,21 +71,6 @@ class OWKmeans(OWWidget):
 
     def sendData(self):
         self.send("Codebook", self.kmeans.outputSlot)
-
-        # Create orange.ExampleTable
-        #histoList = []
-        #histoContainer = self.kmeans.getData()
-        #for d in histoContainer:
-        #    histoList.append(list(d[0]) + [str(d[1])])
-            
-        #domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(self.kmeans.dataHistogram[0][0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in histoContainer.classes]))])
-        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        #from IPython.Debugger import Tracer; debug_here = Tracer()
-        #debug_here()
-
-        #self.Histograms = orange.ExampleTable(domain, histoList)
-        #self.send("Histograms", self.Histograms)
-        
 
 def main():
     a=QApplication(sys.argv)
