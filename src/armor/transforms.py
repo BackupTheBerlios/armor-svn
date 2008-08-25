@@ -1,4 +1,6 @@
+from __future__ import division
 import numpy
+import numpy as np
 from numpy import array,median,std,mean,log,concatenate,sum,reshape,sqrt,dot,exp,diag
 from ctypes import c_double
 import armor
@@ -277,7 +279,7 @@ class Fft2(object):
         
         if armor.verbosity > 0:
             print "Computing fft2 of image..."
-        img = img.resize((160,160), Image.ANTIALIAS)
+        img = img.resize((256,256), Image.ANTIALIAS)
         x = numpy.array(img)
         x = x-mean(x)
         fft = numpy.power(numpy.abs(scipy.fftpack.fft2(x)), 2)
@@ -286,6 +288,76 @@ class Fft2(object):
         (size_x, size_y) = fft_normalized.shape
         return fft_normalized[:size_x/2, :]
 
+class FFt2TransformToGauss(object):
+    def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
+        self.inputTypeData = armor.slots.VectorType(shape=['flatarray'])
+        self.inputTypeLabels = armor.slots.VectorType(name=['labels'], shape=['flatlist'])
+        
+        self.outputType = armor.slots.VectorType(shape='flatarray')
+
+        self.inputSlotData = armor.slots.InputSlot(name='untransformed',
+                                                   acceptsType=self.inputTypeData)
+
+        self.inputSlotLabels = armor.slots.InputSlot(name='labels',
+                                                     acceptsType=self.inputTypeLabels)
+
+        self.outputSlot = armor.slots.OutputSlot(name='transformed',
+                                                 outputType=self.outputType,
+                                                 useLazyEvaluation=useLazyEvaluation,
+						 slotType='sequential',
+                                                 iterator=armor.weakmethod(self, 'iterator'))
+
+	self.x, self.y = np.mgrid[-.5:.5:256j, -.5:.5:256j]
+	
+    def iterator(self):
+	pass
+
+    def createGabor(self, orients, size):
+	"""
+	% G = createGabor(numberOfOrientationsPerScale, n);
+	%
+	% Precomputes filter transfer functions. All computations are done on the
+	% Fourier domain. 
+	%
+	% If you call this function without output arguments it will show the
+	% tiling of the Fourier domain.
+	%
+	% Input
+	%     numberOfOrientationsPerScale = vector that contains the number of
+	%                                orientations at each scale (from HF to BF)
+	%     n = imagesize (square images)
+	%
+	% output
+	% G = transfer functions for a jet of gabor filters
+	"""
+	Nscales = len(orients)
+	Nfilters = np.sum(orients)
+
+	l=0
+	param = np.empty((Nfilters, 4))
+	for i in xrange(Nscales):
+	    for j in xrange(orients[i]):
+		param[l,:]=[.35, .3/(1.85**i), 16*orients[i]**2/32.**2, np.pi/(orients[i])*j]
+		l=l+1
+
+	# Frequencies:
+	fx, fy = np.mgrid[-size/2:size/2-1, -size/2:size/2-1]
+	fr = np.fft.fftshift(np.sqrt(np.power(fx,2)+np.power(fy,2)))
+	t = np.fft.fftshift(np.angle(fx + fy*np.complex(0,1)))
+
+
+	# Transfer functions:
+	G = np.zeros((size-1, size-1, Nfilters))
+	for i in xrange(Nfilters-1):
+	    tr=t+param[i,3]
+	    tr=tr + 2*np.pi*(tr< -(np.pi)) - 2*np.pi*(tr > np.pi)
+	    G[:,:,i]=np.exp(-10*param[i,0]*np.power((fr/size/param[i,1]-1),2)-2*param[i,2]*np.pi*np.power(tr,2))
+
+	return G
+
+    def G(self, f_x, f_y, f_0, sigma_x, sigma_y):
+	return np.exp( -np.power(f_y,2) / sigma_y**2 ) * (np.exp( -np.power(f_x-f_0,2)/sigma_x**2 ) + np.exp( np.power(f_x+f_0,2)/sigma_x**2) )
+    
 class Average(object):
     def __init__(self, useLazyEvaluation=armor.useLazyEvaluation):
         self.inputTypeData = armor.slots.VectorType(shape=['flatarray'])
