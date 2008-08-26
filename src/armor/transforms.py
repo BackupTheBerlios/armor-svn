@@ -312,6 +312,8 @@ class FFt2TransformToGauss(object):
     def iterator(self):
 	pass
 
+    # The following function was taken from the GIST code of (c) Antonia Torralba
+    # and converted from Matlab to Python by Thomas Wiecki.
     def createGabor(self, orients, size):
 	"""
 	% G = createGabor(numberOfOrientationsPerScale, n);
@@ -341,19 +343,91 @@ class FFt2TransformToGauss(object):
 		l=l+1
 
 	# Frequencies:
-	fx, fy = np.mgrid[-size/2:size/2-1, -size/2:size/2-1]
+	fx, fy = np.mgrid[-size/2:size/2, -size/2:size/2]
 	fr = np.fft.fftshift(np.sqrt(np.power(fx,2)+np.power(fy,2)))
 	t = np.fft.fftshift(np.angle(fx + fy*np.complex(0,1)))
 
 
 	# Transfer functions:
-	G = np.zeros((size-1, size-1, Nfilters))
+	G = np.zeros((size, size, Nfilters))
 	for i in xrange(Nfilters-1):
 	    tr=t+param[i,3]
 	    tr=tr + 2*np.pi*(tr< -(np.pi)) - 2*np.pi*(tr > np.pi)
-	    G[:,:,i]=np.exp(-10*param[i,0]*np.power((fr/size/param[i,1]-1),2)-2*param[i,2]*np.pi*np.power(tr,2))
+	    G[:,:,i]=np.exp( -10*param[i,0]*np.power((fr/size/param[i,1]-1),2) - 2*param[i,2]*np.pi*np.power(tr,2) )
 
 	return G
+
+    def gistGabor(self, img, w, G):
+	"""
+	% Input:
+	%   img = input image (it can be a block: [nrows, ncols, c, Nimages])
+	%   w = number of windows (w*w)
+	%   G = precomputed transfer functions
+	%
+	% Output:
+	%   g: are the global features = [Nfeatures Nimages], 
+	%                    Nfeatures = w*w*Nfilters*c
+	"""
+	if img.ndim==2:
+	    c = 1 
+	    N = 1
+
+	if img.ndim==3:
+	    (nrows, ncols, c) = img.shape
+	    N = c
+
+	if img.ndim==4:
+	    (nrows, ncols, c, N) = img.shape
+	    img = reshape(img, (nrows, ncols, c*N))
+	    N = c*N
+
+
+	(n, n, Nfilters) = G.shape
+	W = w**2
+	g = np.zeros((W*Nfilters, N))
+
+	img = np.fft.fft2(img)
+	k=0
+	for n in xrange(Nfilters):
+	    filt = G[:,:,n]
+	    print filt.shape
+	    filtered = img * filt.resize((filt.shape[0], filt.shape[1], N))
+	    ig = np.abs(np.fft.ifft2(filtered))
+	    #pl.imshow(ig)
+	    v = self.downN(ig, w)
+	    print filtered.shape
+	    print v.shape
+	    print W
+	    print N
+	    g[k:k+W-1,:] = v.reshape((W, N))
+	    k = k + W
+
+	if c == 3:
+	    # If the input was a color image, then reshape 'g' so that one column
+	    # is one images output:
+	    g = g.reshape((g.shape[0]*3, g.shape[1]/3))
+
+	return g
+
+    def downN(self, x, N):
+	"""
+	% 
+	% averaging over non-overlapping square image blocks
+	%
+	% Input
+	%   x = [nrows ncols nchanels]
+	% Output
+	%   y = [N N nchanels]
+	"""
+	nx = np.fix(np.linspace(0,x.shape[0],N))
+	ny = np.fix(np.linspace(0,x.shape[1],N))
+	y  = np.zeros((N, N, x.shape[2]))
+	for xx in xrange(N):
+	    for yy in xrange(N):
+		v = np.mean(x[nx[xx]:nx[xx], ny[yy]:ny[yy],:])
+		y[xx,yy,:] = v.flatten()
+
+	return y
 
     def G(self, f_x, f_y, f_0, sigma_x, sigma_y):
 	return np.exp( -np.power(f_y,2) / sigma_y**2 ) * (np.exp( -np.power(f_x-f_0,2)/sigma_x**2 ) + np.exp( np.power(f_x+f_0,2)/sigma_x**2) )
