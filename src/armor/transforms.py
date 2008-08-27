@@ -389,17 +389,13 @@ class FFt2TransformToGauss(object):
 	img = np.fft.fft2(img)
 	k=0
 	for n in xrange(Nfilters):
-	    filt = G[:,:,n]
-	    print filt.shape
-	    filtered = img * filt.resize((filt.shape[0], filt.shape[1], N))
+            filtered = np.array([img[:,:,i] * G[:,:,n] for i in xrange(N)])
+            filtered = filtered.reshape(G.shape[0],G.shape[1],N)
 	    ig = np.abs(np.fft.ifft2(filtered))
 	    #pl.imshow(ig)
 	    v = self.downN(ig, w)
-	    print filtered.shape
-	    print v.shape
-	    print W
-	    print N
-	    g[k:k+W-1,:] = v.reshape((W, N))
+	    print v
+	    g[k:k+W,:] = v.reshape(W, N)
 	    k = k + W
 
 	if c == 3:
