@@ -349,11 +349,11 @@ class FFt2TransformToGauss(object):
 
 
 	# Transfer functions:
-	G = np.zeros((size, size, Nfilters))
-	for i in xrange(Nfilters-1):
+	G = np.zeros((Nfilters, size, size))
+	for i in xrange(Nfilters):
 	    tr=t+param[i,3]
 	    tr=tr + 2*np.pi*(tr< -(np.pi)) - 2*np.pi*(tr > np.pi)
-	    G[:,:,i]=np.exp( -10*param[i,0]*np.power((fr/size/param[i,1]-1),2) - 2*param[i,2]*np.pi*np.power(tr,2) )
+	    G[i,:,:]=np.exp( -10*param[i,0]*np.power((fr/size/param[i,1]-1),2) - 2*param[i,2]*np.pi*np.power(tr,2) )
 
 	return G
 
@@ -368,40 +368,20 @@ class FFt2TransformToGauss(object):
 	%   g: are the global features = [Nfeatures Nimages], 
 	%                    Nfeatures = w*w*Nfilters*c
 	"""
-	if img.ndim==2:
-	    c = 1 
-	    N = 1
-
-	if img.ndim==3:
-	    (nrows, ncols, c) = img.shape
-	    N = c
-
-	if img.ndim==4:
-	    (nrows, ncols, c, N) = img.shape
-	    img = reshape(img, (nrows, ncols, c*N))
-	    N = c*N
-
-
-	(n, n, Nfilters) = G.shape
+	Nfilters = G.shape[0]
 	W = w**2
-	g = np.zeros((W*Nfilters, N))
+	g = np.zeros((W*Nfilters))
 
 	img = np.fft.fft2(img)
 	k=0
-	for n in xrange(Nfilters):
-            filtered = np.array([img[:,:,i] * G[:,:,n] for i in xrange(N)])
-            filtered = filtered.reshape(G.shape[0],G.shape[1],N)
+	for filt in G:
+	    filtered = img * filt
 	    ig = np.abs(np.fft.ifft2(filtered))
+
 	    #pl.imshow(ig)
 	    v = self.downN(ig, w)
-	    print v
-	    g[k:k+W,:] = v.reshape(W, N)
+	    g[k:k+W] = v.flatten()
 	    k = k + W
-
-	if c == 3:
-	    # If the input was a color image, then reshape 'g' so that one column
-	    # is one images output:
-	    g = g.reshape((g.shape[0]*3, g.shape[1]/3))
 
 	return g
 
@@ -415,13 +395,12 @@ class FFt2TransformToGauss(object):
 	% Output
 	%   y = [N N nchanels]
 	"""
-	nx = np.fix(np.linspace(0,x.shape[0],N))
-	ny = np.fix(np.linspace(0,x.shape[1],N))
-	y  = np.zeros((N, N, x.shape[2]))
+	nx = np.fix(np.linspace(0,x.shape[0],N+1))
+	ny = np.fix(np.linspace(0,x.shape[1],N+1))
+	y  = np.zeros((N, N))
 	for xx in xrange(N):
 	    for yy in xrange(N):
-		v = np.mean(x[nx[xx]:nx[xx], ny[yy]:ny[yy],:])
-		y[xx,yy,:] = v.flatten()
+		y[xx,yy] = np.mean(x[nx[xx]:nx[xx+1], ny[yy]:ny[yy+1]])
 
 	return y
 
