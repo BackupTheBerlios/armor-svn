@@ -149,9 +149,13 @@ class MultiInputSlot(InputSlot):
         data = []
         # Pool one item from every slot
         for iterator in self.iterPool:
-            data.append(iterator.next())
-
-
+            try:
+                data.append(iterator.next())
+            except StopIteration:
+                # Reset iterPool
+                self.iterPool = []
+                raise StopIteration
+        
         # Return list of pooled elements
         return data
 

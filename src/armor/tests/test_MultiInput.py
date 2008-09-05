@@ -66,7 +66,6 @@ class TestCombiner(TestMultiInput):
         for idx,output in enumerate(self.combiner.outputSlot):
             self.assertEqual(output, np.concatenate([i*idx for i in xrange(numSlots)]))
 
-            
         
 suite_multiinput = unittest.TestLoader().loadTestsFromTestCase(TestMultiInput)
 unittest.TextTestRunner(verbosity=3).run(suite_multiinput)

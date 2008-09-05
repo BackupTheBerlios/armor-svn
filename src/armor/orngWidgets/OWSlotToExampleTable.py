@@ -21,7 +21,7 @@ class OWSlotToExampleTable(OWWidget):
 
         self.callbackDeposit = []
 
-        self.inputs = [("SeqContainer", SeqContainer, self.setData), ("Labels", SeqContainer, self.setLabels)]
+        self.inputs = [("SeqContainer", SeqContainer, self.setData, Multiple), ("Labels", SeqContainer, self.setLabels)]
         self.outputs = [("Table", ExampleTable)]
 
         self.combiner = None
@@ -42,10 +42,10 @@ class OWSlotToExampleTable(OWWidget):
         if slot is None:
             return
         self.labels = weakref.ref(slot)
-        if self.combiner is not None and self.combiner() is not None:
+        if self.combiner is not None:
             self.createExampleTable()
             
-    def setData(self, slot):
+    def setData(self, slot, id):
         if slot is None:
             return
 
@@ -55,15 +55,18 @@ class OWSlotToExampleTable(OWWidget):
         # Register the sender slot (multiple inputs possible)
         self.combiner.inputSlot.registerInput(slot)
 
-        if self.labels is None or self.labels() is None:
+        if self.labels is None:
             return
 
-        if self.labels is not None and self.labels() is not None:
+        if self.labels is not None:
             self.createExampleTable()
             
     def createExampleTable(self):
         # Create orange.ExampleTable
         datalabels = []
+        from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
 
         data = list(self.combiner.outputSlot)
         labels = list(self.labels())
@@ -71,10 +74,8 @@ class OWSlotToExampleTable(OWWidget):
         for vec,label in zip(data, labels):
             datalabels.append(list(vec) + [str(label)])
             
+
         domain = orange.Domain([orange.FloatVariable('a%i'%x) for x in xrange(len(data[0]))] + [orange.EnumVariable("class", values = orange.StringList([str(x) for x in self.labels().container.classes]))])
-        #from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        #from IPython.Debugger import Tracer; debug_here = Tracer()
-        #debug_here()
         orngTable = orange.ExampleTable(domain, datalabels)
         self.send("Table", orngTable)
         

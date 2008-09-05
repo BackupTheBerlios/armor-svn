@@ -36,12 +36,18 @@ class Kmeans(object):
 	
     def process(self, data):
 	# Perform KMeans clustering
+#        from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
+#        from IPython.Debugger import Tracer; debug_here = Tracer()
+#        debug_here()
+
 	if armor.verbosity > 0:
 	    print "Performing kmeans clustering with k=%i..." % self.numClusters
 
         # Sample from data, randomly take self.sampleFromData percent of the vectors
         samplePoints = numpy.random.permutation(range(len(data)))[0:int(round(len(data)*self.sampleFromData))]
-        data = data[samplePoints]
+        data = numpy.array(data, dtype=c_double)
+        data = data[samplePoints,:]
+
         
 	self.codebook, self.dist, self.labels = mpi_kmeans.kmeans(numpy.array(data, dtype=c_double), self.numClusters, self.maxiter, self.numruns)
 
@@ -74,6 +80,7 @@ class Quantize(object):
 
     def quantize(self):
         # Get data from codebook slot
+
         codebook = numpy.array(list(self.inputSlotCodebook))
 
         # Sequentiall get data from vector slot
