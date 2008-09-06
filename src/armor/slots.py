@@ -97,9 +97,10 @@ class InputSlot(object):
 
         # Register the new slot
         self.senderSlot = weakref.ref(senderSlot)
+    
         # Callback to tell the senderSlot container to update its data
         # (if necessary)
-        senderSlot.container.recompute()
+        # senderSlot.container.recompute()
 
         if armor.useCaching:
             # Register us to the senderSlot
@@ -114,7 +115,6 @@ class InputSlot(object):
         
 class MultiInputSlot(InputSlot):
     """Defines an input slot that can receive multiple connections"""
-
     def __init__(self, name, senderSlot=None, acceptsType=None, bulk=False, useLazyEvaluation=armor.useLazyEvaluation):
         self.name = name
         
@@ -147,6 +147,7 @@ class MultiInputSlot(InputSlot):
                 self.iterPool.append(iter(sender))
                 
         data = []
+
         # Pool one item from every slot
         for iterator in self.iterPool:
             try:
@@ -160,14 +161,17 @@ class MultiInputSlot(InputSlot):
         return data
 
     
-    def registerInput(self, senderSlot):
+    def registerInput(self, senderSlot, senderID=None):
         """Register one input"""
         # Call parent to handle all connecting of one single slot
         super(MultiInputSlot, self).registerInput(senderSlot)
 
+        if not senderID:
+            senderID = id(senderSlot)
+            
         # All variables are now set, we now store them in the weakValueDict
         # because the local variables will be overwritten when the next slot connects.
-        self.senderSlots[str(id(senderSlot))] = senderSlot
+        self.senderSlots[senderID] = senderSlot
 
         # Make sure noone uses those variables
         self.senderSlot = None
@@ -280,6 +284,7 @@ class SeqContainer(object):
             # Input changed and we have to update our data, set
             # self.data to none so the next time getDataAsIter() gets
             # called the data will be recomputed
+            print "RECOMPUTE"
             self.data = None
             
     def getDataAsIter(self):

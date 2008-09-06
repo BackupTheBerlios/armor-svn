@@ -100,69 +100,29 @@ def transform(Xarray, proctype, num_examples, num_components, kernel='gaussian_k
 class Normalize(object):
     def __init__(self, normtype, useLazyEvaluation=armor.useLazyEvaluation):
         self.normtype = normtype
-        if self.normtype in ['bin', 'L1','L2']:
-            self.sequential = False
-        elif self.normtype in ['whiten', 'bias', 'crop', 'log', 'none']:
-            self.sequential = True
-        else:
-            raise ValueError, "No operation mode specified"
+        #if self.normtype in ['bin', 'L1','L2', 'whiten', 'bias', 'crop', 'log', 'none']:
+        #    raise ValueError, "No operation mode specified"
 
-        if self.sequential:
-            self.inputType = armor.slots.VectorType(shape=['flatarray'])
-        else:
-            self.inputType = armor.slots.VectorType(shape=['flatarray'], bulk=True)
+        self.inputType = armor.slots.VectorType(shape=['flatarray'], bulk=True)
 
         self.outputType = armor.slots.VectorType(shape='flatarray')
 
         self.inputSlot = armor.slots.InputSlot(name='unnormalized',
                                                acceptsType=self.inputType)
-        if self.sequential:
-            self.outputSlot = armor.slots.OutputSlot(name='normalized',
-                                                     inputSlot=self.inputSlot,
-                                                     slotType='sequential',
-                                                     processFunc=armor.weakmethod(self, 'normalize_seq'),
-                                                     outputType=self.outputType,
-                                                     useLazyEvaluation=useLazyEvaluation)
-        else:
-            self.outputSlot = armor.slots.OutputSlot(name='normalized',
-                                                     inputSlot=self.inputSlot,
-                                                     slotType='bulk',
-                                                     processFunc=armor.weakmethod(self, 'normalize_bulk'),
-                                                     outputType=self.outputType,
-                                                     useLazyEvaluation=useLazyEvaluation)
-                                                
-            
-        
 
+        self.outputSlot = armor.slots.OutputSlot(name='normalized',
+                                                 inputSlot=self.inputSlot,
+                                                 slotType='bulk',
+                                                 processFunc=armor.weakmethod(self, 'normalize'),
+                                                 outputType=self.outputType,
+                                                 useLazyEvaluation=useLazyEvaluation)
         
 
     # The following code was kindly provided by Christoph Lampert
     # (christoph.lampert@tuebingen.mpg.de) and comes under the
     # Apache-License.
 
-    def normalize_seq(self, data):
-        if self.normtype=='none':
-            return data
-
-        if armor.verbosity>0:
-            print "Normalizing %s..." % self.normtype
-        Xnorm = array(data)
-
-        if self.normtype=='whiten':
-            Xnorm = Xnorm-mean(Xnorm,axis=0)
-            Xscale = std(Xnorm,axis=0)
-            Xnorm[Xnorm==0.]=1.
-            Xnorm = Xnorm/Xscale
-        elif self.normtype=='bias':
-            Xnorm += 1  # pre-processing to normalization
-        elif self.normtype=='crop':
-            crop_thresh=0.1
-            Xnorm[Xnorm>crop_thresh] = crop_thresh # pre-processing to normalization
-        elif self.normtype=='log':
-            Xnorm = log(Xnorm+1.)
-        return Xnorm
-
-    def normalize_bulk(self, data):
+    def normalize(self, data):
         if armor.verbosity>0:
             print "Normalizing %s..." % self.normtype
 
@@ -180,6 +140,18 @@ class Normalize(object):
             Xscale = ascolumn( sqrt(sum(Xnorm**2,axis=1)) )
             Xscale[Xscale==0]=1.
             Xnorm = Xnorm/Xscale
+        elif self.normtype=='whiten':
+            Xnorm = Xnorm-mean(Xnorm,axis=0)
+            Xscale = std(Xnorm,axis=0)
+            Xnorm[Xnorm==0.]=1.
+            Xnorm = Xnorm/Xscale
+        elif self.normtype=='bias':
+            Xnorm += 1  # pre-processing to normalization
+        elif self.normtype=='crop':
+            crop_thresh=0.1
+            Xnorm[Xnorm>crop_thresh] = crop_thresh # pre-processing to normalization
+        elif self.normtype=='log':
+            Xnorm = log(Xnorm+1.)
         return Xnorm
 
 

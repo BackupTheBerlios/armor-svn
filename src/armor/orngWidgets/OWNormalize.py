@@ -47,15 +47,10 @@ class OWNormalize(OWWidget):
 
 
     def applySettings(self):
-	if self.normalize:
-	    # Because Normalize defines different input slots
-	    # depending on the normalization type we have to create a
-	    # new object here
-	    if self.normalize.normtype != self.normtypes[self.normtype]:
-		# Save old slot
-		backup_slot = self.normalize.inputSlot.senderSlot()
-		self.normalize = None
-		self.setData(backup_slot)
+        if self.normalize:
+            if armor.applySettings(self.settingsList, self, obj=self.normalize, outputSlot=self.normalize.outputSlot):
+                self.sendData()
+
         
     def sendData(self):
         self.send("Normalized Data", self.normalize.outputSlot)

@@ -47,13 +47,21 @@ class OWSlotToExampleTable(OWWidget):
             
     def setData(self, slot, id):
         if slot is None:
+            if self.combiner:
+                # Signal to remove the slot
+                if id in self.combiner.inputSlot.senderSlots.keys():
+                    del self.combiner.inputSlot.senderSlots[id]
             return
+        
+        from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
+        from IPython.Debugger import Tracer; debug_here = Tracer()
+        debug_here()
 
         if self.combiner is None: # Create multi input combiner
             self.combiner = armor.combine.Combiner(useLazyEvaluation=self.useLazyEvaluation)
 
         # Register the sender slot (multiple inputs possible)
-        self.combiner.inputSlot.registerInput(slot)
+        self.combiner.inputSlot.registerInput(slot, senderID=id)
 
         if self.labels is None:
             return
@@ -64,9 +72,6 @@ class OWSlotToExampleTable(OWWidget):
     def createExampleTable(self):
         # Create orange.ExampleTable
         datalabels = []
-        from PyQt4 import QtCore; QtCore.pyqtRemoveInputHook()
-        from IPython.Debugger import Tracer; debug_here = Tracer()
-        debug_here()
 
         data = list(self.combiner.outputSlot)
         labels = list(self.labels())
