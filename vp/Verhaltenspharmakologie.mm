@@ -1598,9 +1598,88 @@
 <node COLOR="#00b439" CREATED="1227012709174" ID="ID_654842991" MODIFIED="1227012711381" TEXT="Krankheiten">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
-<node COLOR="#990000" CREATED="1227012668696" ID="ID_264486318" MODIFIED="1227012713051" TEXT="Depression">
+<node COLOR="#990000" CREATED="1227012668696" ID="ID_264486318" MODIFIED="1227121691859" TEXT="Depression">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1227120253640" ID="ID_38104716" MODIFIED="1227122008343" TEXT="Causes">
+<node COLOR="#111111" CREATED="1227120258890" ID="ID_1977003914" MODIFIED="1227120269843" TEXT="Genetics"/>
+<node COLOR="#111111" CREATED="1227120270875" ID="ID_678907096" MODIFIED="1227120956500" TEXT="&quot;Learned Helplessnes&quot;">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Mehrere gescheiterte Versuche, einen unangenehmen Stimulus zu vermeiden, f&#252;hren dazu dass nicht einmal der Versuch unternommen wird
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227120339250" ID="ID_1269469503" MODIFIED="1227120340843" TEXT="Stress"/>
+<node COLOR="#111111" CREATED="1227122008343" ID="ID_485939028" MODIFIED="1227122386312" TEXT="c"/>
+<node COLOR="#111111" CREATED="1227122152312" ID="ID_1489180439" MODIFIED="1227122157437" TEXT="Neurochemie">
+<node COLOR="#111111" CREATED="1227120444968" ID="ID_1347268322" MODIFIED="1227120458390" TEXT="zu wenig 5HT"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227120889093" ID="ID_684446637" MODIFIED="1227121504687" TEXT="Modelle">
+<node COLOR="#111111" CREATED="1227121284250" ID="ID_520056731" MODIFIED="1227121495312" TEXT="Stress">
+<node COLOR="#111111" CREATED="1227121495703" ID="ID_1405874426" MODIFIED="1227121496968" TEXT="Learned H."/>
+<node COLOR="#111111" CREATED="1227121479828" ID="ID_1055037268" MODIFIED="1227121481515" TEXT="Novelty suppressed feeding"/>
+</node>
+<node COLOR="#111111" CREATED="1227121504687" ID="ID_1541085622" MODIFIED="1227121508843" TEXT="Separation"/>
+<node COLOR="#111111" CREATED="1227121552000" ID="ID_323945824" MODIFIED="1227121559296" TEXT="Pharamakologisch">
+<node COLOR="#111111" CREATED="1227121561312" ID="ID_80180640" MODIFIED="1227121631265" TEXT="5HT-Reduktion">
+<node COLOR="#111111" CREATED="1227121647609" ID="ID_1650507180" MODIFIED="1227121651531" TEXT="Resperpin"/>
+<node COLOR="#111111" CREATED="1227121652234" ID="ID_1523722539" MODIFIED="1227121655687" TEXT="MDMA"/>
+</node>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227121691859" ID="ID_705723296" MODIFIED="1227121693937" TEXT="Therapy">
+<node COLOR="#111111" CREATED="1227121697312" ID="ID_1204837159" MODIFIED="1227121966640" TEXT="Antidepressiva">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Ziel: Enhance monoamine activity
+    </p>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1227121894171" ID="ID_366251626" MODIFIED="1227121898328" TEXT="SSRI"/>
+<node COLOR="#111111" CREATED="1227121966640" ID="ID_990972311" MODIFIED="1227121968531" TEXT="NMDA-R- inhibition"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227013112060" ID="ID_1154226910" MODIFIED="1227122108375" TEXT="Symptoms">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Unipolar-depresion, bipolar depression
+    </p>
+  </body>
+</html>
+</richcontent>
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227122037140" ID="ID_750991119" MODIFIED="1227122075921" TEXT="Loss of mood">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Loss of mood
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227122077406" ID="ID_1460408887" MODIFIED="1227122091781" TEXT="Loss of inerest/pleasure"/>
+</node>
 </node>
 <node COLOR="#990000" CREATED="1227012675755" ID="ID_827953467" MODIFIED="1227012714745" TEXT="Stroke">
 <edge STYLE="bezier" WIDTH="thin"/>
