@@ -1598,7 +1598,7 @@
 <node COLOR="#00b439" CREATED="1227012709174" ID="ID_654842991" MODIFIED="1227012711381" TEXT="Krankheiten">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
-<node COLOR="#990000" CREATED="1227012668696" ID="ID_264486318" MODIFIED="1227121691859" TEXT="Depression">
+<node COLOR="#990000" CREATED="1227012668696" FOLDED="true" ID="ID_264486318" MODIFIED="1227524679292" TEXT="Depression">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227120253640" ID="ID_38104716" MODIFIED="1227515090223" TEXT="Causes/Factors">
@@ -1820,27 +1820,7 @@
 <node COLOR="#111111" CREATED="1227122077406" ID="ID_1460408887" MODIFIED="1227122091781" TEXT="Loss of inerest/pleasure"/>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227012675755" ID="ID_827953467" MODIFIED="1227012714745" TEXT="Stroke">
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="14"/>
-</node>
-<node COLOR="#990000" CREATED="1227012701907" ID="ID_1318611504" MODIFIED="1227012719237" TEXT="Addiction">
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="14"/>
-</node>
-<node COLOR="#990000" CREATED="1227012617393" ID="ID_1284304859" MODIFIED="1227012722792" TEXT="Schizophrenie">
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="14"/>
-</node>
-<node COLOR="#990000" CREATED="1227012622927" ID="ID_1907676903" MODIFIED="1227012736069" TEXT="Parkinson">
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="14"/>
-</node>
-<node COLOR="#990000" CREATED="1227012612763" ID="ID_758666367" MODIFIED="1227012729210" TEXT="ADHS">
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="14"/>
-</node>
-<node COLOR="#990000" CREATED="1227012993041" ID="ID_1370324898" MODIFIED="1227518760290" TEXT="Myasthenia gravis">
+<node COLOR="#990000" CREATED="1227012993041" FOLDED="true" ID="ID_1370324898" MODIFIED="1227524655948" TEXT="Myasthenia gravis">
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227013000854" ID="ID_1600776714" MODIFIED="1227013003217" TEXT="Symptoms">
 <node COLOR="#111111" CREATED="1227517305777" ID="ID_856358906" MODIFIED="1227517310163" TEXT="muscle weakness"/>
@@ -1866,7 +1846,7 @@
 <node COLOR="#111111" CREATED="1227517407126" ID="ID_1184435479" MODIFIED="1227517412971" TEXT="immunosuppressants"/>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227013017432" ID="ID_599016724" MODIFIED="1227518760333" TEXT="Alzheimers Disease">
+<node COLOR="#990000" CREATED="1227013017432" FOLDED="true" ID="ID_599016724" MODIFIED="1227524652423" TEXT="Alzheimers Disease">
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227517503092" ID="ID_1708952326" MODIFIED="1227517507993" TEXT="Famous People">
 <node COLOR="#111111" CREATED="1227517509569" ID="ID_974724580" MODIFIED="1227517529631" TEXT="Immanuel Kant"/>
@@ -2039,6 +2019,369 @@
 </node>
 </node>
 </node>
+</node>
+<node COLOR="#990000" CREATED="1227012612763" FOLDED="true" ID="ID_758666367" MODIFIED="1227531515428" TEXT="ADHS">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1227013112060" ID="ID_1536214099" MODIFIED="1227524675703" TEXT="Symptoms">
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227524749479" ID="ID_182564859" MODIFIED="1227524752196" TEXT="Hyperactivity"/>
+<node COLOR="#111111" CREATED="1227524752906" ID="ID_1548734556" MODIFIED="1227524755717" TEXT="Impulsivity"/>
+<node COLOR="#111111" CREATED="1227524766625" ID="ID_308077366" MODIFIED="1227524770659" TEXT="No insight into disease"/>
+</node>
+<node COLOR="#111111" CREATED="1227013121530" ID="ID_1204209146" MODIFIED="1227524675707" TEXT="Causes">
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227524779061" ID="ID_1088946574" MODIFIED="1227524781656" TEXT="Genetic component"/>
+<node COLOR="#111111" CREATED="1227524782468" ID="ID_773109702" MODIFIED="1227524791718" TEXT="Polymorphism of the D4 gene ???"/>
+<node COLOR="#111111" CREATED="1227524794552" ID="ID_1947995060" MODIFIED="1227524805860" TEXT="Polymorphism of the DA-Transporter Gene ???"/>
+</node>
+<node COLOR="#111111" CREATED="1227013114259" ID="ID_1622228569" MODIFIED="1227524675705" TEXT="Therapy">
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227524817184" ID="ID_1781585833" MODIFIED="1227524821214" TEXT="Pharamacologic">
+<node COLOR="#111111" CREATED="1227524822319" ID="ID_542363672" MODIFIED="1227524825473" TEXT="Amphetamines">
+<node COLOR="#111111" CREATED="1227524828558" ID="ID_1677008123" MODIFIED="1227524895895" TEXT="D-Amphetamine"/>
+<node COLOR="#111111" CREATED="1227524832474" ID="ID_1729145082" MODIFIED="1227524838611" TEXT="Methamphetamine"/>
+<node COLOR="#111111" CREATED="1227524838886" ID="ID_251285409" MODIFIED="1227524842782" TEXT="Methylphenidate"/>
+<node COLOR="#111111" CREATED="1227530697587" ID="ID_252085140" MODIFIED="1227530988873" TEXT="Rate dependency hypothesis">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Warum macht Amphetamin ADHS-Kinder ruhiger? Paradox!
+    </p>
+    <p>
+      Children with ADHD are high-rate responders and amphetamines reduce response rates. Adults are low rate responders and amphetamines enhance response rates.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227524844245" ID="ID_1998715438" MODIFIED="1227524848004" TEXT="Non-Amphetamines">
+<node COLOR="#111111" CREATED="1227524848962" ID="ID_181884023" MODIFIED="1227524852777" TEXT="Pemoline"/>
+<node COLOR="#111111" CREATED="1227524853349" ID="ID_487623198" MODIFIED="1227531109012" TEXT="Atomotexine">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        Selective noradrenaline reupate inhibitor (SNARI)
+      </li>
+      <li>
+        Some selectivity for the prefrontal cortex
+      </li>
+      <li>
+        Wirkstoff: Reboxetine
+      </li>
+      <li>
+        No psychostimulant high
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227524856988" ID="ID_1465606363" MODIFIED="1227531375894" TEXT="Modafinil">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        Stimulant, mood brightening
+      </li>
+      <li>
+        Enhances willingness to work
+      </li>
+      <li>
+        Memory enhancing
+      </li>
+      <li>
+        Minimal abuse potential
+      </li>
+      <li>
+        Insomnia
+      </li>
+    </ul>
+    <p>
+      Compared to Amphetamines:
+    </p>
+    <ul>
+      <li>
+        Less jitteriness
+      </li>
+      <li>
+        anxiety
+      </li>
+      <li>
+        agitation
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+</node>
+</node>
+</node>
+<node COLOR="#990000" CREATED="1227012617393" FOLDED="true" ID="ID_1284304859" MODIFIED="1227533600215" TEXT="Schizophrenie">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1227531526527" ID="ID_399246740" MODIFIED="1227531533649" TEXT="Famous people">
+<node COLOR="#111111" CREATED="1227531534643" ID="ID_971505582" MODIFIED="1227531539251" TEXT="Hoelderlin"/>
+<node COLOR="#111111" CREATED="1227531540503" ID="ID_1695832373" MODIFIED="1227531551411" TEXT="Walser"/>
+</node>
+<node COLOR="#111111" CREATED="1227531567393" ID="ID_1910521433" MODIFIED="1227531569593" TEXT="Symptoms">
+<node COLOR="#111111" CREATED="1227531570233" ID="ID_1019011400" MODIFIED="1227531571788" TEXT="positive">
+<node COLOR="#111111" CREATED="1227531575336" ID="ID_417765370" MODIFIED="1227531579701" TEXT="Disordered thoughts"/>
+<node COLOR="#111111" CREATED="1227531581166" ID="ID_1391488199" MODIFIED="1227531590957" TEXT="Delusions"/>
+<node COLOR="#111111" CREATED="1227531592870" ID="ID_1975876873" MODIFIED="1227531596675" TEXT="Hallucinations"/>
+</node>
+<node COLOR="#111111" CREATED="1227531572328" ID="ID_855535282" MODIFIED="1227531573496" TEXT="negative">
+<node COLOR="#111111" CREATED="1227531611624" ID="ID_1826091677" MODIFIED="1227531616863" TEXT="Incoherence of ideas"/>
+<node COLOR="#111111" CREATED="1227531618394" ID="ID_154446908" MODIFIED="1227531623829" TEXT="Poverty of speech"/>
+<node COLOR="#111111" CREATED="1227531624152" ID="ID_986051907" MODIFIED="1227531627725" TEXT="Social withdrawal"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227531660534" ID="ID_718373782" MODIFIED="1227531661653" TEXT="Causes">
+<node COLOR="#111111" CREATED="1227531662276" ID="ID_943714542" MODIFIED="1227531700970" TEXT="Two hit hypothesis">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      50% genetic, 50% second hit
+    </p>
+    <p>
+      second hit:
+    </p>
+    <ul>
+      <li>
+        Stress
+      </li>
+      <li>
+        Cannabis use
+      </li>
+      <li>
+        Psychostimulant use
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227531728017" ID="ID_1152721690" MODIFIED="1227531735874" TEXT="Neurochemical findings">
+<node COLOR="#111111" CREATED="1227531736428" ID="ID_65834413" MODIFIED="1227531741288" TEXT="Dopamine hypothesis">
+<node COLOR="#111111" CREATED="1227531753570" ID="ID_1647251060" MODIFIED="1227531786729" TEXT="DA hyperactivity">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        meso-accumbal/limbic system
+      </li>
+      <li>
+        prefrontal cortex
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227531741816" ID="ID_1686821046" MODIFIED="1227531748210" TEXT="Glutamate hypothesis"/>
+</node>
+<node COLOR="#111111" CREATED="1227531796035" ID="ID_1005206537" MODIFIED="1227531798092" TEXT="Animal models">
+<node COLOR="#111111" CREATED="1227531799357" ID="ID_1705372254" MODIFIED="1227531816617" TEXT="Pharmacoligical induction of">
+<node COLOR="#111111" CREATED="1227531817987" ID="ID_1987167100" MODIFIED="1227531819501" TEXT="DA"/>
+<node COLOR="#111111" CREATED="1227531819883" ID="ID_372391935" MODIFIED="1227531822237" TEXT="Glutamate"/>
+</node>
+<node COLOR="#111111" CREATED="1227531825766" ID="ID_977732970" MODIFIED="1227531829890" TEXT="Developmental models"/>
+<node COLOR="#111111" CREATED="1227531830120" ID="ID_919953021" MODIFIED="1227531832651" TEXT="Genetic models"/>
+</node>
+<node COLOR="#111111" CREATED="1227531838654" ID="ID_426952938" MODIFIED="1227531885348" TEXT="Therapy">
+<node COLOR="#111111" CREATED="1227531885907" ID="ID_1642522941" MODIFIED="1227531955429" TEXT="Typical antipsychotics">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        Block DA receptors
+      </li>
+      <li>
+        counteract mainly positive symptoms
+      </li>
+      <li>
+        Sideeffects: Parkinsonism
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1227531903285" ID="ID_104684763" MODIFIED="1227531908238" TEXT="Chlropromazine"/>
+<node COLOR="#111111" CREATED="1227531908507" ID="ID_654793069" MODIFIED="1227531910429" TEXT="Haloperidol"/>
+</node>
+<node COLOR="#111111" CREATED="1227531891728" ID="ID_628223113" MODIFIED="1227532157436" TEXT="Atypical antipsychotics">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        Most work on serotonin and DA receptors
+      </li>
+      <li>
+        Counteract positive and negative symptoms/depression
+      </li>
+      <li>
+        No parkinsonism
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1227531914265" ID="ID_347455838" MODIFIED="1227531917359" TEXT="Clozapine"/>
+<node COLOR="#111111" CREATED="1227531917813" ID="ID_1180204640" MODIFIED="1227531920261" TEXT="Olanzapine"/>
+</node>
+<node COLOR="#111111" CREATED="1227531899123" ID="ID_953964836" MODIFIED="1227531901873" TEXT="New generation">
+<node COLOR="#111111" CREATED="1227532158867" ID="ID_1887720411" MODIFIED="1227532523517" TEXT="Aripiprazol">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        Antagonist in NAcc
+      </li>
+      <li>
+        Agonist in Prefront. Cortex
+      </li>
+      <li>
+        Displays some partial dopamine agonism, 5-HT1A partial agonism and 5-HT2A antagonism
+      </li>
+      <li>
+        TW: Weird, DA agonist when there's too much DA?
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227532742404" ID="ID_1554181376" MODIFIED="1227532743677" TEXT="Model">
+<node COLOR="#111111" CREATED="1227532744600" ID="ID_862129749" MODIFIED="1227532754945" TEXT="Repeated administration of Amphetamines or Cocain"/>
+<node COLOR="#111111" CREATED="1227533045028" ID="ID_1821541212" MODIFIED="1227533106378" TEXT="Sensitization">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        DA/Gulatmate-ueberschuss zeigt alle Stimuli besonders an
+      </li>
+      <li>
+        Delusions um besondere Stimuli zu erklaeren
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+</node>
+<node COLOR="#990000" CREATED="1227012622927" ID="ID_1907676903" MODIFIED="1227012736069" TEXT="Parkinson">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1227533604232" ID="ID_1807235347" MODIFIED="1227533607660" TEXT="Famous People">
+<node COLOR="#111111" CREATED="1227533608407" ID="ID_1268035454" MODIFIED="1227533614454" TEXT="Muhammed Ali"/>
+<node COLOR="#111111" CREATED="1227533617087" ID="ID_1030222424" MODIFIED="1227533625527" TEXT="Franklin Roosevelt"/>
+<node COLOR="#111111" CREATED="1227533626122" ID="ID_1989841983" MODIFIED="1227533628487" TEXT="Adolf Hitler"/>
+<node COLOR="#111111" CREATED="1227533629276" ID="ID_1544310403" MODIFIED="1227533631632" TEXT="Michael J. Fox"/>
+</node>
+<node COLOR="#111111" CREATED="1227533658282" ID="ID_1600995814" MODIFIED="1227533660961" TEXT="Symptoms">
+<node COLOR="#111111" CREATED="1227533662869" ID="ID_508361934" MODIFIED="1227533666938" TEXT="Preliminary phase">
+<node COLOR="#111111" CREATED="1227533667691" ID="ID_1224505204" MODIFIED="1227533672320" TEXT="Fatigue"/>
+<node COLOR="#111111" CREATED="1227533672768" ID="ID_1336907041" MODIFIED="1227533678322" TEXT="feeling bound to the earth"/>
+<node COLOR="#111111" CREATED="1227533688256" ID="ID_1308935953" MODIFIED="1227533694362" TEXT="depressive tendencies"/>
+</node>
+<node COLOR="#111111" CREATED="1227533696778" ID="ID_1814412560" MODIFIED="1227533704419" TEXT="Motor symptoms">
+<node COLOR="#111111" CREATED="1227533705454" ID="ID_426142636" MODIFIED="1227533713472" TEXT="Bradykinesia"/>
+<node COLOR="#111111" CREATED="1227533714070" ID="ID_1394220763" MODIFIED="1227533715980" TEXT="Akinesia"/>
+<node COLOR="#111111" CREATED="1227533716460" ID="ID_1934726551" MODIFIED="1227533718125" TEXT="Rigidity"/>
+<node COLOR="#111111" CREATED="1227533719190" ID="ID_1566945600" MODIFIED="1227533721389" TEXT="Tremor"/>
+</node>
+<node COLOR="#111111" CREATED="1227533749649" ID="ID_1788192331" MODIFIED="1227533756297" TEXT="Cognitive symptoms">
+<node COLOR="#111111" CREATED="1227533757297" ID="ID_585538852" MODIFIED="1227533761707" TEXT="Switching deficit"/>
+<node COLOR="#111111" CREATED="1227533763770" ID="ID_1225545530" MODIFIED="1227533769069" TEXT="Learning deficits"/>
+<node COLOR="#111111" CREATED="1227533772617" ID="ID_272292121" MODIFIED="1227533775005" TEXT="Reward deficit"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227533799905" ID="ID_378995771" MODIFIED="1227533801983" TEXT="Causes">
+<node COLOR="#111111" CREATED="1227533803239" ID="ID_1315644148" MODIFIED="1227533810305" TEXT="Genetic 5-10%"/>
+<node COLOR="#111111" CREATED="1227533810631" ID="ID_1535728845" MODIFIED="1227533816451" TEXT="Sporadic: 90-95%"/>
+<node COLOR="#111111" CREATED="1227533828135" ID="ID_1197849933" MODIFIED="1227533833853" TEXT="Mitochondrial deficits"/>
+<node COLOR="#111111" CREATED="1227533834556" ID="ID_1229305681" MODIFIED="1227534082005" TEXT="Protein misfolding -&gt; Lewy bodies">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Lewy-Bodies are abnormal aggregates of protein that develop inside nerve cells.
+    </p>
+    <p>
+      SNc: Lewy-Bodies form in DAergic neurons -&gt; DAergic neurons die.
+    </p>
+    <p>
+      Extranigral: Lewy-Bodies form in NAergic neurons -&gt; NAergic neurons die.
+    </p>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1227533881317" ID="ID_1642405262" MODIFIED="1227533885394" TEXT="Ubiquitin"/>
+<node COLOR="#111111" CREATED="1227533885691" ID="ID_76594061" MODIFIED="1227533900373" TEXT="Alpha-synuclein">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      but, no mutations
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227533843242" ID="ID_1554091758" MODIFIED="1227533854839" TEXT="DA as an endogenous toxin, ROS formation">
+<icon BUILTIN="help"/>
+</node>
+<node COLOR="#111111" CREATED="1227533856295" ID="ID_69280469" MODIFIED="1227533865475" TEXT="Gluatamate excitoxicity"/>
+</node>
+</node>
+<node COLOR="#990000" CREATED="1227012675755" ID="ID_827953467" MODIFIED="1227012714745" TEXT="Stroke">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+</node>
+<node COLOR="#990000" CREATED="1227012701907" ID="ID_1318611504" MODIFIED="1227012719237" TEXT="Addiction">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
 </node>
 </node>
 <node COLOR="#00b439" CREATED="1227012741601" ID="ID_1181664014" MODIFIED="1227119542468" TEXT="Transmitter">
@@ -2283,7 +2626,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227012610198" ID="ID_675601287" MODIFIED="1227012753387" TEXT="Dopamine">
+<node COLOR="#990000" CREATED="1227012610198" FOLDED="true" ID="ID_675601287" MODIFIED="1227533744310" TEXT="Dopamine">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227012832554" ID="ID_96918293" LINK="gfx/Adrenaline-aufbau.png" MODIFIED="1227521545823" TEXT="Aufbau">
