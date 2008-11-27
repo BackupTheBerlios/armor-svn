@@ -1,0 +1,315 @@
+\documentclass{article}
+\usepackage{techreport_onecol}
+\usepackage{lgrind}
+
+%\input{/kyb/agbs/ule/latex/ules_stuff/ules_latex_defaults.tex} %you don't need this for 
+\newtheorem{code}{Code}
+\renewcommand{\labelitemi}{--}
+\usepackage[round]{natbib}
+\bibliographystyle{plainnat}
+
+%Paths to our logos and your cool pictures:
+%\def\trnumber{TR-101}
+\def\trdate{Oktober 2008}
+\def\trfilename{TRcompression02}
+
+
+\def\title {Karl-Steinbuch-Stipendium 2007/2008\\
+``ARMOR'' -- Automatic and Userfriendly Machine Object Recognition} 
+
+\def\titleauthor {Thomas Wiecki, Andreas Dietzel}
+
+
+% \documentclass[a4paper]{scrreprt}
+
+% %\usepackage{ngerman}
+% \usepackage[ansinew]{inputenc}
+% \usepackage[T1]{fontenc}
+% \usepackage{lmodern}
+
+% \usepackage{fancyhdr}
+% \pagestyle{fancy}
+% \fancyhf{}
+
+
+% \title{Karl-Steinbuch-Stipendium 2007/2008\\ Abschlussbericht\\
+%   Projekt ``ARMOR''} 
+
+% \author{Thomas Wiecki, Andreas Dietzel}
+
+\begin{document}
+\techreport
+
+\section*{Einführung}
+Das Projekt ``Automatic and Userfriendly Machine Object Recognition''
+(ARMOR) wurde im Zeitraum Oktober 2007 bis Oktober 2008 durch das
+Karl-Steinbuch-Stipendium gefördert und von Prof. Dr.  Bernhard
+Schölkopf sowie der Computer-Vision-Gruppe am Max-Planck-Institut für
+biologische Kybernetik Tübingen betreut. In diesem Abschlussbericht
+soll die Zielsetzung und Umsetzung des Projektes beschrieben sowie das
+Endergebnis präsentiert werden.
+
+\section*{Zielsetzung}
+Ziel des Projektes war es, ein Computerprogramm zu entwickeln, welches es
+unversierten Nutzern erleichtert, rechnergestützt Bilddaten auf das vorkommen 
+eines beliebigen  Objekten zu überprüfen (``Object Recognition'').
+Dabei sollten moderne Verfahren aus der Computer-Vision zum Einsatz kommen
+und interne Abläufe möglichst klar nachvollziehbar sein.
+
+Das Projekt wurde durch die Beobachtung motiviert, dass es selbst für
+versierte Computernutzer keinen unerheblichen Aufwand darstellt,
+Objekte auf Bildern per Computer automatisch erkennen zu lassen.
+Andererseits findet die Objekterkennung z.B. bei der Arbeit mit
+Fotografien oder der Auswertung Bildgebender Verfahren in der Medizin
+immer mehr Verwendung. Durch die erhöhte Relevanz in diesen Bereichen
+hat die Objekterkennung auch in der Lehre an Bedeutung gewonnen.
+Daher war es unser Vorhaben, Anwendern den Einstieg in die
+Objekterkennung zu erleichtern.
+
+Im Einzelnen stellten wir folgende Anforderungen an unser Programm:\\
+Es sollte
+\begin{itemize}
+\item aus einem klar strukturierten, zugrundeliegenden Rahmenwerk
+  (Framework) bestehen
+\item über eine benutzerfreundliche, graphische Oberfläche verfügen (GUI),
+\item leicht erweiterbar sein, da die technischen und wisschenschafltichen
+  Entwicklungen schnell voranschreiten (Modularität),
+\item transparent sein, so dass die einzelnen Verarbeitungsschritte nachvollziehbar sind, 
+  damit das Framework auch in der Lehre eingesetzt werden kann,
+\item speichereffizient sein, damit das Framework auch auf normalen
+  Heim-PCs eingesetzt werden kann sowie
+\item quelloffen und somit auch kostenlos verfügbar sein (Open
+  Source).
+\end{itemize}
+
+\section*{Umsetzung}
+Während der Planungsphase sind einige der obigen Punkte besonders in
+den Vordergrund getreten:
+
+\subsection*{Open Source}
+Da wir als Lizenzgrundlage für unsere Software Open-Source vorgesehen
+hatten, haben wir uns für die GNU General Public License (GPL) Version 3
+entschieden. Diese Lizenz ist sehr weit verbreitet und schreibt vor,
+dass auch Änderungen am Quellcode von Dritten offen bleiben müssen und
+somit in das Projekt eingefügt werden können.
+
+Das entstandene Programm trägt den Namen ``Pynopticon'' und kann unter
+\textit{http://code.google.com/p/pynopticon} von jedermann kostenlos
+herunter geladen, verwendet sowie unter den oben beschriebenen
+Bedingungen modifiziert werden.
+
+\subsection*{Dokumentation}
+Um das Programm für alle interessierten Benutzergruppen zugänglich zu
+machen, haben wir einige Tutorials geschrieben und diese in
+verschiedene Teile für Anfänger, Fortgeschrittene und Entwickler
+unterteilt. Diese Tutorials stehen auf der Projekt-Website öffentlich
+zur Verfügung.
+
+\subsection*{Graphische Benutzeroberfläche (GUI)}
+Unsere Recherchen ergaben, dass ein bereits existierendes Projekt
+viele der von uns gestellten Anforderungen an eine graphische
+Benutzeroberfläche erfüllt. Dabei handelt es sich um ein Programm
+names ``Orange'', welches seit einigen Jahren an der Universität
+Ljubljana entwickelt wird und ebenfalls unter der GPL veröffentlich
+ist.  Die Software ist angelegt, um Machine-Learning-Probleme zu
+lösen. Implementiert sind Module, um Daten zu laden und
+Klassifikatoren zu trainieren. Diese können über ein graphische
+Benutzeroberfläche intuitiv miteinandern kombiniert werden und Daten
+miteinander austauschen.  Weiterhin sind einige
+Klassifizierungsalgorithmen implementiert, die für unser Projekt von
+Nutzen sind. ``Orange'' gibt es für Microsoft\textregistered Windows,
+Mac OS X und Linux. Es wurde in der Programmiersprache \textit{Python}
+geschrieben, die wir auch für unser Projekt einsetzen.
+
+All diese Eigenschaften machten ``Orange'' zu einem attraktiven
+Ausgangspunkt für das ARMOR-Projekt.  Einige unserer Anforderungen
+konnte es jedoch nicht erfüllen. Speziell der
+Speicherverbrauch war für unsere Zwecke nicht akzeptabel. Daher bot es
+sich an, einen eigenen Unterbau zu entwickeln und nur die graphische
+Benutzeroberfläche zu verwenden. Dies ermöglicht es außerdem, unser
+Framework auch ohne graphische Oberfläche zu benutzen, was die
+Einbindung in andere Programme stark vereinfacht (hierzu haben wir ein
+Codebeispiel am Ende eingeführt).
+
+\subsection*{``Bag of Features''} 
+In den letzten Jahren hat sich in der Objekterkennungsforschung eine
+Technik namens ``Bag of Features'' (\textit{BoF}) als eines der
+Standardverfahren etabliert. Diese Technik hat folgende Vorteile
+gegenüber anderen Verfahren:
+\begin{itemize}
+\item Sie ist auf die unterschiedlichsten Datensätze anwendbar.
+\item Einzelne Komponenten sind beliebig austauschbar und
+  kombinierbar, somit ist es also möglich, diese Technik genau an die
+  Problemstellung anzupassen.
+\item Das Verfahren wird von den meisten Forschern verwendet und aktiv
+weiter entwickelt.
+\end{itemize} Diese Eigenschaften machen \textit{BoF} zu einem
+geeigneten Kandidaten für unser Projekt. Das genauere Funktionsprinzip
+von \textit{BoF} soll an dieser Stelle kurz erläutert werden.
+
+Ein großes Problem bei der Objekterkennung ist die Repräsentation des
+Bildinhalts. Auf einem Computer wird ein Bild als Ansammlung vieler
+kleiner (Farb-)Punkte (Pixel) repräsentiert. Dies ist zwar für die
+Darstellung am Bildschirm gut geeignet - um aber zu analysieren,
+\textit{was} sich auf dem Bild befindet ist diese Darstellung
+problematisch. Das wird leicht klar, wenn man ein ausreichend großes
+Bild um nur einen Pixel nach rechts verschiebt: Für den Menschen
+ändert sich der Inhalt nicht merklich, die Pixelverteilung verändert
+sich aber völlig. Dieses Beispiel legt nahe, dass andere Arten,
+Bildinhalte zu kodieren, vonnöten sind.
+
+Eine Repräsentation, die für Objekterkennung besser geeignet ist,
+muss folgenden Anforderungen gerecht werden. Zuersteinmal gibt es das
+Problem der \textit{Translation}, welches sich an folgendem Beispiel
+erläutern lässt: Ein Bild mit einem Pferd in der linken, oberen Ecke
+entspricht einer komplett anderen Pixelverteilung als ein Bild mit
+einem Pferd in der rechten, unteren Ecke. Bei der Objekterkenung
+interessiert allerdings nur die Frage, ob \textit{irgendwo} auf dem
+Bild ein Pferd enthalten ist. Um diesem Problem zu begegnen, ist der
+erste Schritt bei \textit{BoF}, das Bild nicht mehr als Ganzes zu
+betrachten, sondern in kleine Regionen zu unterteilen. Dieser Schritt
+wird auch als ``Region of Interest Extraction'' bezeichnet. Es wird
+also nicht mehr nur \textit{ein} großes Bild, sondern \textit{viele
+  kleine} Ausschnitte bestimmter Regionen betrachtet. Dabei existieren
+für die Auswahl der Regionen viele verschiedene Verfahren wie
+z.B. Kanten- oder Punktdetektoren. An dieser Stelle soll angemerkt
+werden, dass bei diesem Schritt auch wichtige Information verloren
+geht, nämlich die räumliche Beziehung der Regionen untereinander.
+
+Der nächste Schritt nennt sich ``Feature Extraction''. Dabei werden
+auf den ausgewählten Bildregionen bestimmte Eigenschaften
+extrahiert. Eine solche Eigenschaft ist beispielsweise, welche Farben
+in einer Region vorkommen oder wie stark sich die Pixel der Region
+voneinander unterscheiden. Für jeden Bildausschnitt erhalten wir einen
+Eigenschaftsvektor der auch ``Deskriptor'' genannt wird.
+
+Nach diesen zwei Schritten haben wir nun statt der Repräsentation des
+Bildes als Pixelmenge eine Ansammlung von \textit{Deskriptoren}. Diese
+\textit{Deskriptoren} können nun benutzt werden, um einen sogenannten
+Klassifikator auf die Erkennung des urspünglichen Bildinhaltes zu
+trainieren. Ein solcher Klassifikator versucht zu identifizieren,
+welche \textit{Deskriptoren} dafür sprechen, dass ein bestimmtes
+Objekt auf einem Bild enthalten ist, und welche dagegen
+sprechen. Um nach diesem Training ein unbekanntes Bild zu
+klassifizieren, müssen zuerst wieder \textit{Deskriptoren} extrahiert
+werden, anhand derer der trainierte Klassifikator bestimmen kann,
+ob das gesuchte Objekt auf dem Bild vorkommt oder nicht.
+
+\subsection*{Modularität} 
+Um das Framework möglichst vielseitig verwendbar zu gestalten und
+zukünftige Erweiterung zu erleichtern, haben wir ein besonderes
+Augenmerk auf einen modularen Aufbau gelegt. Durch den konsequenten
+Einsatz von objektorientierter Programmierung in Kombination mit dem
+modularen \textit{BoF}-Ansatz ist das Framework sehr flexibel. So
+können Benutzer die einzelnen Komponenten der Objekterkennung beliebig
+kombinieren, soweit dies logisch sinnvoll ist, und einzelne Komponenten
+austauschen.
+
+Für Programmierer gilt, dass sie ein neues Modul schreiben und dieses
+mit wenig Aufwand in ``Pynopticon'' integrieren können.
+
+\subsection*{Interoperabilität} 
+
+Da verschiedene Module unterschiedliche Ein- und Ausgabeformate
+erfordern, bzw. erzeugen, sind nicht alle Modulkombinationen
+möglich. Um zu verhindern, dass der Nutzer versehentlich
+inkompatible Module miteinander verbindet, haben wir Tests eingeführt,
+die nur sinnvolle Kombinationen zulassen. Wir haben die Schnittstellen
+zwischen den Modulen so entworfen, dass
+Daten automatisch konvertiert werden, wenn dies nötig (und möglich) ist.
+
+Soll z.B. ein Modul, welches als Ausgabe farbige Bilder liefert, mit
+einem Modul verknüpft werden, welches als Eingabe nur Bilder in
+schwarzweiß verarbeiten kann, geschieht folgendes: Zuerst prüft das
+Framework, ob die beiden Datenformate kompatibel sind, was in unserem
+Beispiel nicht der Fall ist. In einem zweiten Schritt wird versucht,
+die Daten zu konvertieren. Da es möglich ist, ein Farbbild in ein
+Schwarz-Weiss-Bild umzuwandeln, wird bei der späteren Berechnung diese
+Konvertierung automatisch und für den Benutzer transparent
+vorgenommen.
+
+\subsection*{Speichereffizienz}
+Eine der größten Herausforderungen bei der Umsetzung des Projektes war
+die Speichereffizienz.
+
+Beim Training eines Klassifikators ist es nicht ungewöhnlich,
+Datensätze mit mehreren tausend Bildern zu benutzen.  Würde man sie
+alle zugleich in den Speicher laden, so würden einige Gigabyte RAM
+benötigt. Dies stellt Anforderungen an den Rechner, die vielleicht von
+großen Clustern, aber nicht von normalen Heim-PCs erfüllt werden.
+
+Um dieses Problem zu lösen, haben wir in das Framework Ideen aus der
+funktionalen Programmierung einfließen lassen. Ein zentrales Paradigma
+der funktionalen Programmierung nennt sich \textit{``Lazy
+  Evaluation''}. Es legt zugrunde, dass Berechnungen nicht sofort
+durchgeführt werden, sondern erst dann, wenn das Ergebnis wirklich
+benötigt wird. Angewandt auf unser Framework heißt das, dass die
+Bilder nicht direkt geladen werden, wenn man ein Datensatz definiert,
+sondern erst dann, wenn tatsächlich ein Klassifikator trainiert
+wird. Außerdem werden die Daten immer nur so lange im Speicher
+gehalten wie unbedingt nötig. Dadurch können wir garantieren, dass zu
+jedem Zeitpunkt niemals mehr als ein Bild im Speicher geladen ist, was
+zu einer drastischen Reduktion der erforderlichen Speichermenge führt.\\
+
+Einige Berechnungen sind allerdings sehr aufwändig, z.B. der Schritt
+der \textit{Feature Extraction}. Nach dem beschriebenen Algorithmus
+zur Speichereffizienz müssten die Features, falls sie mehrmals
+benötigt werden, auch mehrmals berechnet werden. Sinnvoll wäre in diesem 
+Fall ein Mechanismus, um den betreffenden Wert bei Bedarf verfügbar zu halten.
+Daher ermöglichen wir
+es dem Benutzer, selbständig die sofortige Speicherleerung für
+einzelne Module an- und auszuschalten um eventuelle Neuberechnungen zu
+verhindern.
+
+Dadurch kann der Benutzer selbst entscheiden,
+wieviel Wert er auf Speichereffizienz und wieviel Wert er auf
+Recheneffizienz legt.
+
+\section*{Ergebnisse} 
+Unser fertiges Framework erfüllt die Anforderungen, die wir zu
+Projektbeginn stellten. Durch die Verwendung einer Open-Source-Lizenz
+kann sich jeder Interessierte das Programm herunterladen,
+installieren, ausprobieren und ggf. weiterentwickeln.  Die Modularität
+ermöglicht neben guter Erweiterbarkeit auch, dass das Programm an die
+Bedürfnisse des Benutzers angepasst werden kann, es ist also in den
+unterschiedlichsten Bereichen einsetzbar. Die Speichereffizienz
+ermöglicht Objekterkennung auch auf handelsüblichen PCs.
+
+\subsection*{Codebeispiel}
+Wie bereits erwähnt, verfügt ``Pynopticon'' über eine graphische Benutzeroberfläche.
+Die eigentliche Funktionalität ist jedoch auch ohne GUI zugänglich.
+Der folgende Python-Code demonstriert dies, indem ein Satz von 
+Bilder geladen und die zugehörigen Features extrahiert bzw. quantisiert werden:\\
+
+\begin{lgrind}
+\input{examplecode.tex}
+\end{lgrind}
+
+Im Anschluss daran kann auf ähnliche Art und Weise ein Klassifikator trainiert werden.
+
+\subsection*{Die Graphische Benutzeroberfläche}
+Für die meisten Endnutzer ist der Umgang mit der GUI bequemer. Anhand eines Screenshots
+soll an dieser Stelle ein Einblick darin gegeben werden, wie man ``Pynopticon'' ohne
+Programmierkenntnisse per Mausklick bedienen kann.
+Abgebildet ist die graphische Benutzeroberfläche von ``Orange''.
+Auf der linken Seite befinden sich unsere Pynopticon-Module. Auf der rechten
+Seite im Hintergrund ist eine eine Standardabfolge von miteinander verknüpften
+Modulen (``Schema 1'') zu sehen. Module sind durch ein beschriftetes Kästchen mit einem passenden Symbol dargestellt, 
+Verbindungen durch grüne Linien, die ebenfalls mit der jeweils weitergeleiteten Information 
+beschriftet sind.
+Das erste Modul namens ``ImageLoader'' dient dazu, Datensätze zu erstellen. 
+In dem zugehörigen Fenster mit dem Titel ``ImageLoader'' können 
+Bildkategorien, sog. Labels, angelegt und im Fenster ``Category garfield'' die zugehörigen
+ Bilddateien ausgewählt werden.
+In diesem Beispiel, das dem Online-Tutorial entnommen ist, handelt es sich um die beiden
+Kategorien Comic-Figur (``garfield'') und Fass (``barrel'').
+Vier weitere Module, ``ExtractFeature'', ``KMeans'', ``Quantize'' und ``Histogram'' sorgen
+für Extraktion und Quantisierung der Features aus den Bildern. ``SlotToExampleTable'' ordnet den
+gewonnenen Features die ursprünglichen Labels zu und leitet diese Information an den Klassifikator 
+``Classification Tree'' weiter der dann trainiert wird. Mit dem Modul 
+``Test Learners'' kann schließlich überprüft werden, wie erfolgreich die Klassifikation verlief, 
+bzw. wie viele Bilder vom Klassifikator falsch erkannt wurden.
+ 
+\includegraphics[scale=0.5]{screenshot.png}
+
+\end{document}
