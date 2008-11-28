@@ -1375,7 +1375,7 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 </node>
-<node COLOR="#990000" CREATED="1222934656883" ID="ID_865386695" MODIFIED="1222936895166" TEXT="MDMA">
+<node COLOR="#990000" CREATED="1222934656883" ID="ID_865386695" MODIFIED="1227875784218" TEXT="MDMA">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1596,7 +1596,7 @@
 <node COLOR="#00b439" CREATED="1227012709174" ID="ID_654842991" MODIFIED="1227012711381" TEXT="Krankheiten">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
-<node COLOR="#990000" CREATED="1227012668696" FOLDED="true" ID="ID_942946091" MODIFIED="1227866977281" TEXT="Depression">
+<node COLOR="#990000" CREATED="1227012668696" FOLDED="true" ID="ID_942946091" MODIFIED="1227877740500" TEXT="Depression">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227120253640" ID="ID_1030392986" MODIFIED="1227515090223" TEXT="Causes/Factors">
@@ -1625,7 +1625,7 @@
   </body>
 </html></richcontent>
 </node>
-<node COLOR="#111111" CREATED="1227120270875" ID="ID_331998559" MODIFIED="1227120956500" TEXT="&quot;Learned Helplessnes&quot;">
+<node COLOR="#111111" CREATED="1227120270875" ID="ID_331998559" MODIFIED="1227877525093" TEXT="&quot;Learned Helplessnes&quot;">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1640,7 +1640,7 @@
 </node>
 <node COLOR="#111111" CREATED="1227122152312" ID="ID_459778006" MODIFIED="1227122157437" TEXT="Neurochemie">
 <node COLOR="#111111" CREATED="1227516206960" ID="ID_717976556" MODIFIED="1227516211258" TEXT="Monoamine-Theory">
-<node COLOR="#111111" CREATED="1227120444968" ID="ID_1233579151" MODIFIED="1227514222817" TEXT="zu wenig 5HT">
+<node COLOR="#111111" CREATED="1227120444968" ID="ID_1233579151" MODIFIED="1227877537437" TEXT="zu wenig 5HT">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1651,6 +1651,7 @@
     </p>
   </body>
 </html></richcontent>
+<font NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
 </node>
@@ -2183,7 +2184,7 @@
 <node COLOR="#111111" CREATED="1227533856295" ID="ID_69280469" MODIFIED="1227533865475" TEXT="Gluatamate excitoxicity"/>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227013247695" ID="ID_601116458" MODIFIED="1227865609483" STYLE="fork" TEXT="Schizophrenie">
+<node COLOR="#990000" CREATED="1227013247695" FOLDED="true" ID="ID_601116458" MODIFIED="1227873139671" STYLE="fork" TEXT="Schizophrenie">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -2485,7 +2486,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227012617393" FOLDED="true" ID="ID_1284304859" MODIFIED="1227864718286" TEXT="Schizophrenie2">
+<node COLOR="#990000" CREATED="1227012617393" FOLDED="true" ID="ID_1284304859" MODIFIED="1227873017546" TEXT="Schizophrenie2">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227531526527" ID="ID_399246740" MODIFIED="1227531533649" TEXT="Famous people">
@@ -2663,7 +2664,7 @@
 <font NAME="SansSerif" SIZE="14"/>
 </node>
 </node>
-<node COLOR="#00b439" CREATED="1227012741601" ID="ID_1181664014" MODIFIED="1227633337328" TEXT="Transmitter">
+<node COLOR="#00b439" CREATED="1227012741601" ID="ID_1181664014" MODIFIED="1227875740218" TEXT="Transmitter">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <node COLOR="#990000" CREATED="1227012576927" FOLDED="true" ID="ID_97603357" MODIFIED="1227865793358" TEXT="ACh">
@@ -2779,7 +2780,7 @@
 <node COLOR="#111111" CREATED="1227013017432" ID="ID_712837016" LINK="#ID_599016724" MODIFIED="1227518796794" TEXT="Alzheimers Disease"/>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227012607075" FOLDED="true" ID="ID_888915894" MODIFIED="1227865605512" TEXT="Adrenalin/Noradrenaline">
+<node COLOR="#990000" CREATED="1227012607075" FOLDED="true" ID="ID_888915894" MODIFIED="1227879032390" TEXT="Adrenalin/Noradrenaline">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227012832554" ID="ID_118285430" LINK="gfx/Adrenaline-aufbau.png" MODIFIED="1227520297471" TEXT="Aufbau">
@@ -2904,7 +2905,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227012610198" FOLDED="true" ID="ID_389428138" MODIFIED="1227865797115" TEXT="Dopamine">
+<node COLOR="#990000" CREATED="1227012610198" FOLDED="true" ID="ID_389428138" MODIFIED="1227879045593" TEXT="Dopamine">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227012832554" ID="ID_1477600457" LINK="gfx/Adrenaline-aufbau.png" MODIFIED="1227521545823" TEXT="Aufbau">
@@ -3157,10 +3158,10 @@
 </node>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227012628496" ID="ID_259421122" MODIFIED="1227012753387" TEXT="5-HT">
+<node COLOR="#990000" CREATED="1227012628496" FOLDED="true" ID="ID_259421122" MODIFIED="1227879103031" TEXT="5-HT">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
-<node COLOR="#111111" CREATED="1227012832554" ID="ID_1268853667" MODIFIED="1227866004300" TEXT="Aufbau">
+<node COLOR="#111111" CREATED="1227012832554" ID="ID_1268853667" LINK="gfx/Serotonin_Biosynthese.png" MODIFIED="1227873932062" TEXT="Aufbau">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -3183,10 +3184,51 @@
 <node COLOR="#111111" CREATED="1227866782776" ID="ID_894267540" MODIFIED="1227866784941" TEXT="VMAT"/>
 </node>
 </node>
-<node COLOR="#111111" CREATED="1227012874099" ID="ID_1545006341" MODIFIED="1227865791712" TEXT="Rezeptoren">
+<node COLOR="#111111" CREATED="1227012874099" ID="ID_1545006341" MODIFIED="1227874483906" TEXT="Rezeptoren">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      vorlesung: 14 st&#252;ck, wiki: 19
+    </p>
+    <p>
+      5-HT<sub>1</sub> bis 5-HT<sub>7 </sub>
+    </p>
+    <p>
+      <sub>alle metabotrop bis auf 5-HT3</sub>
+    </p>
+  </body>
+</html>
+</richcontent>
 <font NAME="SansSerif" SIZE="12"/>
-<node COLOR="#111111" CREATED="1227012885141" ID="ID_1835912251" MODIFIED="1227521920378" TEXT="Ionotropic"/>
-<node COLOR="#111111" CREATED="1227012905585" ID="ID_956527961" MODIFIED="1227521926298" TEXT="Metabotropic"/>
+<node COLOR="#111111" CREATED="1227012905585" ID="ID_956527961" MODIFIED="1227874495656" TEXT="Metabotropic">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      alle bis auf 5HT3
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227012885141" ID="ID_1835912251" MODIFIED="1227874503984" TEXT="Ionotropic">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      nur 5-HT3
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
 </node>
 <node COLOR="#111111" CREATED="1227522429928" ID="ID_643114194" MODIFIED="1227865791721" TEXT="Pharmacology">
 <font NAME="SansSerif" SIZE="12"/>
@@ -3223,10 +3265,9 @@
       transport inhibition
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
-<node COLOR="#111111" CREATED="1227865931470" ID="ID_1026588601" MODIFIED="1227867073115" TEXT="MDMA">
+<node COLOR="#111111" CREATED="1227865931470" ID="ID_1026588601" MODIFIED="1227875784218" TEXT="MDMA">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -3244,8 +3285,7 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 </node>
@@ -3266,15 +3306,81 @@
 </node>
 <node COLOR="#111111" CREATED="1227012949637" ID="ID_279610444" MODIFIED="1227522437682" TEXT="Toxins">
 <font NAME="SansSerif" SIZE="12"/>
-<node COLOR="#111111" CREATED="1227866810809" ID="ID_390566252" MODIFIED="1227866814801" TEXT="5,7-DHT"/>
-<node COLOR="#111111" CREATED="1227866816630" ID="ID_1020255696" MODIFIED="1227866818607" TEXT="PCPA"/>
-<node COLOR="#111111" CREATED="1227866821303" ID="ID_1644411727" MODIFIED="1227866822641" TEXT="MDMA"/>
+<node COLOR="#111111" CREATED="1227866810809" ID="ID_390566252" MODIFIED="1227875496640" TEXT="5,7-DHT">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Taken up by 5-HT-Transporter, formation of ROS
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227866816630" ID="ID_1020255696" MODIFIED="1227875505000" TEXT="PCPA">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Inhibits tryptophan-hydroxylase
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227866821303" ID="ID_1644411727" MODIFIED="1227875516250" TEXT="MDMA">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Stresses 5-HTergic termials
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227012956245" ID="ID_44967306" MODIFIED="1227865791735" TEXT="Anatomy">
 <font NAME="SansSerif" SIZE="12"/>
-<node COLOR="#111111" CREATED="1227866832449" ID="ID_1047701052" MODIFIED="1227866838178" TEXT="Raphe Nuclei">
-<node COLOR="#111111" CREATED="1227866840156" ID="ID_1330943667" MODIFIED="1227866845242" TEXT="all areas of the brain">
+<node COLOR="#111111" CREATED="1227866832449" ID="ID_1047701052" MODIFIED="1227877375140" TEXT="Raphe Nuclei">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        serotonerge neuronen sitzen hier
+      </li>
+      <li>
+        liegen im mittelhirn
+      </li>
+      <li>
+        auch verantwortlich f&#252;r schlaf -&gt; zus.hang mit 5ht!
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1227866840156" ID="ID_1330943667" MODIFIED="1227875901562" TEXT="all areas of the brain">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      diffuse erh&#246;hung des serotonin-spiegels
+    </p>
+  </body>
+</html>
+</richcontent>
 <node COLOR="#111111" CREATED="1227866854304" ID="ID_1258584443" MODIFIED="1227866855197" TEXT="STN"/>
 <node COLOR="#111111" CREATED="1227866872638" ID="ID_1842547481" MODIFIED="1227866874049" TEXT="Striatum"/>
 </node>
@@ -3282,11 +3388,36 @@
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227866898046" ID="ID_1094074393" MODIFIED="1227866900652" TEXT="Physiology">
-<node COLOR="#111111" CREATED="1227866937686" ID="ID_1067964902" MODIFIED="1227866940945" TEXT="Plays role in">
-<node COLOR="#111111" CREATED="1227866903794" ID="ID_1158992424" MODIFIED="1227866913843" TEXT="Mood stabilisation"/>
-<node COLOR="#111111" CREATED="1227866915263" ID="ID_623389498" MODIFIED="1227866918698" TEXT="Agression inhibition"/>
-<node COLOR="#111111" CREATED="1227866918946" ID="ID_889370972" MODIFIED="1227866921104" TEXT="Sleep regulation"/>
+<node COLOR="#111111" CREATED="1227866937686" ID="ID_1067964902" MODIFIED="1227872616828" TEXT="Plays role in">
+<node COLOR="#111111" CREATED="1227875136406" ID="ID_221940451" MODIFIED="1227875138390" TEXT="CNS">
+<node COLOR="#111111" CREATED="1227866918946" ID="ID_889370972" MODIFIED="1227877375140" TEXT="Sleep regulation">
+<arrowlink DESTINATION="ID_1047701052" ENDARROW="Default" ENDINCLINATION="170;0;" ID="Arrow_ID_281550257" STARTARROW="None" STARTINCLINATION="170;0;"/>
 </node>
+<node COLOR="#111111" CREATED="1227866915263" ID="ID_623389498" MODIFIED="1227866918698" TEXT="Agression inhibition"/>
+<node COLOR="#111111" CREATED="1227866903794" ID="ID_1158992424" MODIFIED="1227875128625" TEXT="Mood stabilisation">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      (wiki)&quot;..., wird gelegentlich die Rolle von S&#252;&#223;igkeiten ins Gespr&#228;ch gebracht. Dem liegt der Zusammenhang zugrunde, dass durch die Aufnahme von Zucker das <a href="http://de.wikipedia.org/wiki/Hormon" title="Hormon">Hormon</a> <a href="http://de.wikipedia.org/wiki/Insulin" title="Insulin">Insulin</a> ins Blut ausgesch&#252;ttet wird. Es bewirkt nicht nur die Aufnahme des Zuckers in Muskulatur und Leber, sondern erm&#246;glicht auch den &#220;bertritt von Tryptophan an der Blut-Hirn-Schranke.&quot; (ausgangsstoff f&#252;r 5ht. aber:)
+    </p>
+    <p>
+      &quot;Bei normaler Verf&#252;gbarkeit von Tryptophan steuert das Gehirn die Synthese von Serotonin, entsprechend der Aktivit&#228;t der Raphe-Neuronen, selbst. Deshalb f&#252;hrt ein (z.&#160;B. durch S&#252;&#223;igkeiten) erh&#246;hter Tryptophan-Spiegel im Gehirn keineswegs automatisch zu mehr Serotonin.&quot;
+    </p>
+    <p>
+      
+    </p>
+  </body>
+</html></richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227875138781" ID="ID_1472553658" MODIFIED="1227875139890" TEXT="PNS">
+<node COLOR="#111111" CREATED="1227872775187" ID="ID_1378475935" MODIFIED="1227872780687" TEXT="Blood pressure"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227872783703" ID="ID_1538951572" MODIFIED="1227872792000" TEXT="Pathophysiology">
 <node COLOR="#111111" CREATED="1227866945203" ID="ID_835471247" MODIFIED="1227866948496" TEXT="Reduced 5HT">
 <node COLOR="#111111" CREATED="1227866949694" ID="ID_1316400157" MODIFIED="1227866955114" TEXT="Mood instability"/>
 <node COLOR="#111111" CREATED="1227866955711" ID="ID_1888606809" LINK="#ID_942946091" MODIFIED="1227866977281" TEXT="Depression"/>
@@ -3307,6 +3438,7 @@
 </node>
 </node>
 </node>
+</node>
 <node COLOR="#990000" CREATED="1227012672230" ID="ID_1503120457" MODIFIED="1227012758957" TEXT="Glutamate">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
@@ -3319,9 +3451,206 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 </node>
-<node COLOR="#990000" CREATED="1227012687215" ID="ID_63780026" MODIFIED="1227012746697" TEXT="Cannabinoids">
+<node COLOR="#990000" CREATED="1227012687215" ID="ID_63780026" MODIFIED="1227881562718" TEXT="Cannabinoids">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1227522429928" ID="ID_295046359" MODIFIED="1227878505015" TEXT="Pharmacology">
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227012925818" ID="ID_226199166" MODIFIED="1227522433517" TEXT="Agonisten">
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227521903966" ID="ID_1915009639" MODIFIED="1227521905252" TEXT="Direct">
+<node COLOR="#111111" CREATED="1227878521796" ID="ID_851166022" MODIFIED="1227880805703" TEXT="anandamide">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      endogenous!
+    </p>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1227880168062" ID="ID_705509896" LINK="gfx/anandamide.PNG" MODIFIED="1227880183812" TEXT="biosynthese"/>
+</node>
+<node COLOR="#111111" CREATED="1227880477453" ID="ID_1060443421" MODIFIED="1227880575796" TEXT="THC">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      bindet an CB1 und CB2 als partieller Agonist
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227521905508" ID="ID_863056128" MODIFIED="1227521906916" TEXT="Indirect"/>
+</node>
+<node COLOR="#111111" CREATED="1227012928529" ID="ID_500894458" MODIFIED="1227522434712" TEXT="Antagonisten">
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227521907837" ID="ID_1469805678" MODIFIED="1227880917718" TEXT="Direct">
+<node COLOR="#111111" CREATED="1227880917718" ID="ID_47163698" MODIFIED="1227881065171" TEXT="Rimonabant ">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      <a href="http://en.wikipedia.org/wiki/Inverse_agonist" title="Inverse agonist">inverse agonist</a> for the <a title="Cannabinoid receptor CB1" class="mw-redirect" href="http://en.wikipedia.org/wiki/Cannabinoid_receptor_CB1">cannabinoid receptor CB1</a>
+    </p>
+    <p>
+      main effect: reduction in <a title="Appetite" href="http://en.wikipedia.org/wiki/Appetite">appetite </a>
+    </p>
+    <p>
+      -&gt;Anti-Obesity-Drug
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227881149812" ID="ID_1863428960" MODIFIED="1227881162531" TEXT="(diverse opioid blockers)"/>
+</node>
+<node COLOR="#111111" CREATED="1227521909408" ID="ID_858244203" MODIFIED="1227521910882" TEXT="Indirect"/>
+</node>
+<node COLOR="#111111" CREATED="1227012949637" ID="ID_257324522" MODIFIED="1227522437682" TEXT="Toxins">
+<font NAME="SansSerif" SIZE="12"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227012874099" ID="ID_1891641500" MODIFIED="1227879256453" TEXT="Rezeptoren">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      discovery of the first cannabinoid receptor in 1988
+    </p>
+  </body>
+</html>
+</richcontent>
+<font NAME="SansSerif" SIZE="12"/>
+<node COLOR="#111111" CREATED="1227012905585" ID="ID_1818139268" MODIFIED="1227521926298" TEXT="Metabotropic">
+<node COLOR="#111111" CREATED="1227878740937" ID="ID_1112026390" MODIFIED="1227881648359" TEXT="CB 1">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      brain, striatum
+    </p>
+    <p>
+      spinal cord, peripheral nerves
+    </p>
+    <p>
+      <b>inhibits c-AMP formation </b>
+    </p>
+    <p>
+      <b>inhibitory on Ca2+ channels</b>
+    </p>
+    <p>
+      interacts with the &#181;-opiate receptor
+    </p>
+    <p>
+      wiki: is the most abundant G protein-coupled receptor in the brain
+    </p>
+    <p>
+      -&gt; deswegen hat man nach *endogenen* cannabinoiden geforscht
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227878743078" ID="ID_896667740" MODIFIED="1227878886828" TEXT="(CB 2)">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      <b>peripherally</b>
+    </p>
+    <p>
+      mainly on immune cells
+    </p>
+    <p>
+      involved in inflammatory responses
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227879513625" ID="ID_269531248" MODIFIED="1227881348921" TEXT="&quot;retrograde signaling&quot;">
+<node COLOR="#111111" CREATED="1227879551671" ID="ID_1121021874" MODIFIED="1227879565484" TEXT="postsynaptische Zelle setzt C. frei"/>
+<node COLOR="#111111" CREATED="1227879567421" ID="ID_1624336988" MODIFIED="1227879617796" TEXT="Kontrolle des eingehendes &quot;synapt. Verkehrs&quot;"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227879642109" ID="ID_324794620" MODIFIED="1227879644203" TEXT="allgemein">
+<node COLOR="#111111" CREATED="1227879645250" ID="ID_898191199" MODIFIED="1227881458718" TEXT="lipohpilic">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      k&#246;nnen also nur lokal wirken
+    </p>
+    <p>
+      werden nicht in vesikeln gespeichert
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1227879836828" ID="ID_1625773710" MODIFIED="1227881229750" TEXT="thought to be &quot;produced on demand&quot;"/>
+<node COLOR="#111111" CREATED="1227881312875" ID="ID_634634169" MODIFIED="1227881348921" TEXT="modulation of neurotransmission">
+<arrowlink DESTINATION="ID_269531248" ENDARROW="Default" ENDINCLINATION="88;0;" ID="Arrow_ID_1934530610" STARTARROW="None" STARTINCLINATION="88;0;"/>
+</node>
+<node COLOR="#111111" CREATED="1227881356718" ID="ID_1493546343" MODIFIED="1227881503796" TEXT="mechanism not fully understood">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The mechanism of endocannabinoid synaptic transmission is believed to occur as follows: first, transmission of the excitatory neurotransmitter <a title="Glutamate" class="mw-redirect" href="http://en.wikipedia.org/wiki/Glutamate">glutamate</a> causes an influx of <a title="Calcium" href="http://en.wikipedia.org/wiki/Calcium">calcium</a> ions into the <a title="Post-synaptic" class="mw-redirect" href="http://en.wikipedia.org/wiki/Post-synaptic">post-synaptic</a> neuron. Through a mechanism not yet fully understood, the presence of calcium post-synaptically induces the production of endocannabinoids in the post-synaptic neuron.
+    </p>
+    <p>
+      (These endocannabinoids (such as anandamide) are released into the synaptic cleft, where binding occurs at cannabinoid receptors present on pre-synaptic neurons, where they modulate neurotransmission. Thus, this form of neurotransmission is termed <a title="Retrograde signaling" href="http://en.wikipedia.org/wiki/Retrograde_signaling">retrograde transmission</a>, as the signal is carried in the opposite direction of orthodox propagation, which previously was thought to be exclusively one way.)
+    </p>
+    <p>
+      
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227879691625" ID="ID_563218366" MODIFIED="1227879696359" TEXT="Effekte">
+<node COLOR="#111111" CREATED="1227879709328" ID="ID_401336742" MODIFIED="1227879714390" TEXT="Stimmungsaufhellung"/>
+<node COLOR="#111111" CREATED="1227879715031" ID="ID_964645635" MODIFIED="1227879723546" TEXT="Appetitsteigerung"/>
+<node COLOR="#111111" CREATED="1227879727140" ID="ID_421202004" MODIFIED="1227879735250" TEXT="Antiemetisch"/>
+</node>
+<node COLOR="#111111" CREATED="1227879750281" ID="ID_1047164540" MODIFIED="1227879783140" TEXT="Einsatzgebiete">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      zur Steigerung der Lebensqualit&#228;t
+    </p>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1227879754296" ID="ID_1673888929" MODIFIED="1227879757343" TEXT="Chemo-Patienten"/>
+<node COLOR="#111111" CREATED="1227879758281" ID="ID_1620477680" MODIFIED="1227879761359" TEXT="AIDS-Patienten"/>
+<node COLOR="#111111" CREATED="1227879766140" ID="ID_868657038" MODIFIED="1227879768953" TEXT="MS-Patienten"/>
+</node>
 </node>
 <node COLOR="#990000" CREATED="1227012690268" ID="ID_116006092" MODIFIED="1227012748893" TEXT="Peptides">
 <edge STYLE="bezier" WIDTH="thin"/>
@@ -3338,7 +3667,7 @@
 <node COLOR="#0033ff" CREATED="1227013240214" ID="ID_1273083058" MODIFIED="1227865778557" POSITION="left" TEXT="Templates">
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
-<node COLOR="#00b439" CREATED="1227013243306" FOLDED="true" ID="ID_149521833" MODIFIED="1227865789445" TEXT="Transmitter">
+<node COLOR="#00b439" CREATED="1227013243306" ID="ID_149521833" MODIFIED="1227878485921" TEXT="Transmitter">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <node COLOR="#990000" CREATED="1227012832554" ID="ID_932556270" MODIFIED="1227013261747" TEXT="Aufbau">
