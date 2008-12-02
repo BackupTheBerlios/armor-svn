@@ -1596,7 +1596,7 @@
 <node COLOR="#00b439" CREATED="1227012709174" ID="ID_654842991" MODIFIED="1227012711381" TEXT="Krankheiten">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
-<node COLOR="#990000" CREATED="1227012668696" FOLDED="true" ID="ID_942946091" MODIFIED="1227877740500" TEXT="Depression">
+<node COLOR="#990000" CREATED="1227012668696" ID="ID_942946091" MODIFIED="1228177962296" TEXT="Depression">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227120253640" ID="ID_1030392986" MODIFIED="1227515090223" TEXT="Causes/Factors">
@@ -1640,7 +1640,7 @@
 </node>
 <node COLOR="#111111" CREATED="1227122152312" ID="ID_459778006" MODIFIED="1227122157437" TEXT="Neurochemie">
 <node COLOR="#111111" CREATED="1227516206960" ID="ID_717976556" MODIFIED="1227516211258" TEXT="Monoamine-Theory">
-<node COLOR="#111111" CREATED="1227120444968" ID="ID_1233579151" MODIFIED="1227877537437" TEXT="zu wenig 5HT">
+<node COLOR="#111111" CREATED="1227120444968" ID="ID_1233579151" MODIFIED="1228178246593" TEXT="zu wenig 5HT">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1650,7 +1650,8 @@
       -&gt; zu wenig norepinephrine
     </p>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 <font NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
@@ -1686,6 +1687,19 @@
 <node COLOR="#111111" CREATED="1227515041788" ID="ID_1681647375" MODIFIED="1227515046035" TEXT="Psychological">
 <node COLOR="#111111" CREATED="1227515046820" ID="ID_1539452677" MODIFIED="1227515050975" TEXT="low self-esteem"/>
 <node COLOR="#111111" CREATED="1227515068925" ID="ID_1268164839" MODIFIED="1227515077527" TEXT="less likely in religious people"/>
+</node>
+<node COLOR="#111111" CREATED="1228183323406" ID="ID_233815335" MODIFIED="1228183371859" TEXT="zu hoher kortisol-spiegel">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      zusammenhang mit 5-ht (regelt aussch&#252;ttung von kort. &#252;ber die hypophyse)
+    </p>
+  </body>
+</html>
+</richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227120889093" ID="ID_1622563424" MODIFIED="1227121504687" TEXT="Modelle">
@@ -1771,14 +1785,119 @@
     </ul>
   </body>
 </html></richcontent>
-<node COLOR="#111111" CREATED="1227121894171" ID="ID_562977166" MODIFIED="1227121898328" TEXT="SSRI"/>
+<node COLOR="#111111" CREATED="1227121894171" ID="ID_562977166" MODIFIED="1228183015531" TEXT="SSRI">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      meist mittel der wahl
+    </p>
+  </body>
+</html>
+</richcontent>
 </node>
-<node COLOR="#111111" CREATED="1227514269330" ID="ID_81605923" MODIFIED="1227514278674" TEXT="Increase levels of norepinephrine">
+<node COLOR="#111111" CREATED="1228180147875" ID="ID_198307872" MODIFIED="1228180346812" TEXT="Trizyklische Antidepressiva">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      name kommt von einem 3er-ring in der strukturformel
+    </p>
+  </body>
+</html></richcontent>
+<node COLOR="#111111" CREATED="1228180188656" ID="ID_193032092" MODIFIED="1228180198375" TEXT="nur noch bei starken Depr. eingesetzt"/>
+<node COLOR="#111111" CREATED="1228180199046" ID="ID_1280109797" MODIFIED="1228180222859" TEXT="nicht selektiv f&#xfc;r 5ht"/>
+<node COLOR="#111111" CREATED="1228180269859" ID="ID_513164423" MODIFIED="1228180312250" TEXT="hemmen auch wiederaufnahme von dopamin und noradrenalin">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      daher deutlich mehr nebenwirkungen
+    </p>
+  </body>
+</html></richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1228180591125" ID="ID_306592054" MODIFIED="1228181168953" TEXT="MAO-Hemmer">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        hemmen den Abbau von Mono-Aminen wie Serotonin, Dopamin und Noradrenalin
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1228182679078" ID="ID_799457480" MODIFIED="1228182684750" TEXT="selektive">
+<node COLOR="#111111" CREATED="1228180898468" ID="ID_1510705537" MODIFIED="1228182717187" TEXT="MAO-A">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      vorwiegend im PNS
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1228180901968" ID="ID_1294124631" MODIFIED="1228182708687" TEXT="MAO-B">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <ul>
+      <li>
+        vorwiegend im ZNS und dort v.a. DA
+      </li>
+      <li>
+        Einsatz haupts&#228;chl. bei Parkinson
+      </li>
+    </ul>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1228182685218" ID="ID_1098930298" MODIFIED="1228182688250" TEXT="nicht selektive">
+<node COLOR="#111111" CREATED="1228181129015" ID="ID_1303368412" MODIFIED="1228181138562" TEXT="Vorsicht bei K&#xe4;se!">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Da <a href="http://de.wikipedia.org/wiki/Monoaminooxidase" title="Monoaminooxidase">MAO</a> auch andere <a href="http://de.wikipedia.org/wiki/Amine" title="Amine">Amine</a> wie z.B. <a href="http://de.wikipedia.org/wiki/Tyramin" title="Tyramin">Tyramin</a> abbauen, f&#252;hren MAO-Hemmer bei vielen Patienten nach Einnahme bestimmter Lebensmittel zu sogenannten Tyramin-Reaktionen. Durch dessen sympathomimetischen Eigenschaften kommt es dabei u. a. zu einem Anstieg des Blutdrucks, der kritisch werden kann. Au&#223;erdem sind Lebensmittel, die <a href="http://de.wikipedia.org/wiki/Tyrosin" title="Tyrosin">Tyrosin</a>, <a href="http://de.wikipedia.org/wiki/Koffein" title="Koffein" class="mw-redirect">Koffein</a> und <a href="http://de.wikipedia.org/wiki/Histamin" title="Histamin">Histamin</a> in den K&#246;rper bringen, gef&#228;hrlich. Aus diesem Grunde m&#252;ssen bei irreversiblen MAO-Hemmern unbedingt Di&#228;trichtlinien eingehalten werden.
+    </p>
+  </body>
+</html></richcontent>
+</node>
+</node>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1227514269330" ID="ID_81605923" MODIFIED="1228183285390" TEXT="Increase levels of norepinephrine">
+<icon BUILTIN="help"/>
 <node COLOR="#111111" CREATED="1227515639780" ID="ID_792547131" MODIFIED="1227515649503" TEXT="SNRI"/>
+<node COLOR="#111111" CREATED="1228180565921" ID="ID_1496432225" MODIFIED="1228180575765" TEXT="trizykl."/>
 </node>
-<node COLOR="#111111" CREATED="1227514294252" ID="ID_1343880592" MODIFIED="1227514301542" TEXT="Increase levels of DA"/>
+<node COLOR="#111111" CREATED="1227514294252" ID="ID_1343880592" MODIFIED="1228183287640" TEXT="Increase levels of DA">
+<icon BUILTIN="help"/>
+<node COLOR="#111111" CREATED="1228180577968" ID="ID_1455211830" MODIFIED="1228180582906" TEXT="trizykl."/>
 </node>
-<node COLOR="#111111" CREATED="1227121966640" ID="ID_731851770" MODIFIED="1227516421075" TEXT="NMDA-R- inhibition">
+</node>
+<node COLOR="#111111" CREATED="1227121966640" ID="ID_731851770" MODIFIED="1228180553562" TEXT="NMDA-R- inhibition">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1788,10 +1907,52 @@
       TW: hab ich noch nix zu gefunden...
     </p>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 <icon BUILTIN="help"/>
 </node>
+<node COLOR="#111111" CREATED="1228182855656" ID="ID_948573214" MODIFIED="1228182863609" TEXT="Litihium">
+<node COLOR="#111111" CREATED="1228183040078" ID="ID_774752265" MODIFIED="1228183058265" TEXT="Augmentation">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Steigerung der Wirksamkeit anderer Antidepressiva
+    </p>
+  </body>
+</html></richcontent>
 </node>
+<node COLOR="#111111" CREATED="1228182881343" ID="ID_1831234533" MODIFIED="1228182920703" TEXT="Phasenprophylaxe">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      bei bipolarer Depr.
+    </p>
+  </body>
+</html></richcontent>
+</node>
+<node COLOR="#111111" CREATED="1228182865421" ID="ID_432170376" MODIFIED="1228182955484" TEXT="Wirkmechanismus unbekannt">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      , da es auf zahllose Prozesse im menschlichen K&#246;rper einwirkt. So wird vermutet, dass <a href="http://de.wikipedia.org/wiki/Lithium" title="Lithium">Lithium</a> die Wahrscheinlichkeit einer weiteren affektiven Episode vermindert, indem es bei manischen Episoden einen Noradrenalin&#252;berschuss senkt und bei depressiven Episoden die Serotoninproduktion aktiviert.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1228183202171" ID="ID_1142763294" MODIFIED="1228183209390" TEXT="Elektrokrampftherapie u.&#xe4;."/>
+<node COLOR="#111111" CREATED="1228183231421" ID="ID_1904140050" MODIFIED="1228183237078" TEXT="(Psychotherapie)"/>
 </node>
 <node COLOR="#111111" CREATED="1227013112060" ID="ID_1264270676" MODIFIED="1227122108375" TEXT="Symptoms">
 <richcontent TYPE="NOTE"><html>
@@ -3171,8 +3332,7 @@
       Tryptophan --(Try Hydroxylase)--&gt; 5-Hydroxytryptophan --(AA decaroxylase)--&gt; Serotonin
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <font NAME="SansSerif" SIZE="12"/>
 </node>
 <node COLOR="#111111" CREATED="1227012854253" ID="ID_1440781033" MODIFIED="1227865791707" TEXT="Abbau">
@@ -3200,8 +3360,7 @@
       <sub>alle metabotrop bis auf 5-HT3</sub>
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <font NAME="SansSerif" SIZE="12"/>
 <node COLOR="#111111" CREATED="1227012905585" ID="ID_956527961" MODIFIED="1227874495656" TEXT="Metabotropic">
 <richcontent TYPE="NOTE"><html>
@@ -3213,8 +3372,7 @@
       alle bis auf 5HT3
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1227012885141" ID="ID_1835912251" MODIFIED="1227874503984" TEXT="Ionotropic">
 <richcontent TYPE="NOTE"><html>
@@ -3226,8 +3384,7 @@
       nur 5-HT3
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227522429928" ID="ID_643114194" MODIFIED="1227865791721" TEXT="Pharmacology">
@@ -3316,8 +3473,7 @@
       Taken up by 5-HT-Transporter, formation of ROS
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1227866816630" ID="ID_1020255696" MODIFIED="1227875505000" TEXT="PCPA">
 <richcontent TYPE="NOTE"><html>
@@ -3329,8 +3485,7 @@
       Inhibits tryptophan-hydroxylase
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1227866821303" ID="ID_1644411727" MODIFIED="1227875516250" TEXT="MDMA">
 <richcontent TYPE="NOTE"><html>
@@ -3342,8 +3497,7 @@
       Stresses 5-HTergic termials
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 </node>
@@ -3367,8 +3521,7 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node COLOR="#111111" CREATED="1227866840156" ID="ID_1330943667" MODIFIED="1227875901562" TEXT="all areas of the brain">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -3379,8 +3532,7 @@
       diffuse erh&#246;hung des serotonin-spiegels
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node COLOR="#111111" CREATED="1227866854304" ID="ID_1258584443" MODIFIED="1227866855197" TEXT="STN"/>
 <node COLOR="#111111" CREATED="1227866872638" ID="ID_1842547481" MODIFIED="1227866874049" TEXT="Striatum"/>
 </node>
@@ -3451,7 +3603,7 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 </node>
-<node COLOR="#990000" CREATED="1227012687215" ID="ID_63780026" MODIFIED="1227881562718" TEXT="Cannabinoids">
+<node COLOR="#990000" CREATED="1227012687215" FOLDED="true" ID="ID_63780026" MODIFIED="1228177839390" TEXT="Cannabinoids">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227522429928" ID="ID_295046359" MODIFIED="1227878505015" TEXT="Pharmacology">
@@ -3469,8 +3621,7 @@
       endogenous!
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node COLOR="#111111" CREATED="1227880168062" ID="ID_705509896" LINK="gfx/anandamide.PNG" MODIFIED="1227880183812" TEXT="biosynthese"/>
 </node>
 <node COLOR="#111111" CREATED="1227880477453" ID="ID_1060443421" MODIFIED="1227880575796" TEXT="THC">
@@ -3483,8 +3634,7 @@
       bindet an CB1 und CB2 als partieller Agonist
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227521905508" ID="ID_863056128" MODIFIED="1227521906916" TEXT="Indirect"/>
@@ -3508,8 +3658,7 @@
       -&gt;Anti-Obesity-Drug
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1227881149812" ID="ID_1863428960" MODIFIED="1227881162531" TEXT="(diverse opioid blockers)"/>
 </node>
@@ -3529,8 +3678,7 @@
       discovery of the first cannabinoid receptor in 1988
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <font NAME="SansSerif" SIZE="12"/>
 <node COLOR="#111111" CREATED="1227012905585" ID="ID_1818139268" MODIFIED="1227521926298" TEXT="Metabotropic">
 <node COLOR="#111111" CREATED="1227878740937" ID="ID_1112026390" MODIFIED="1227881648359" TEXT="CB 1">
@@ -3561,8 +3709,7 @@
       -&gt; deswegen hat man nach *endogenen* cannabinoiden geforscht
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1227878743078" ID="ID_896667740" MODIFIED="1227878886828" TEXT="(CB 2)">
 <richcontent TYPE="NOTE"><html>
@@ -3580,8 +3727,7 @@
       involved in inflammatory responses
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227879513625" ID="ID_269531248" MODIFIED="1227881348921" TEXT="&quot;retrograde signaling&quot;">
@@ -3603,8 +3749,7 @@
       werden nicht in vesikeln gespeichert
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1227879836828" ID="ID_1625773710" MODIFIED="1227881229750" TEXT="thought to be &quot;produced on demand&quot;"/>
 <node COLOR="#111111" CREATED="1227881312875" ID="ID_634634169" MODIFIED="1227881348921" TEXT="modulation of neurotransmission">
@@ -3626,8 +3771,7 @@
       
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227879691625" ID="ID_563218366" MODIFIED="1227879696359" TEXT="Effekte">
@@ -3645,8 +3789,7 @@
       zur Steigerung der Lebensqualit&#228;t
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node COLOR="#111111" CREATED="1227879754296" ID="ID_1673888929" MODIFIED="1227879757343" TEXT="Chemo-Patienten"/>
 <node COLOR="#111111" CREATED="1227879758281" ID="ID_1620477680" MODIFIED="1227879761359" TEXT="AIDS-Patienten"/>
 <node COLOR="#111111" CREATED="1227879766140" ID="ID_868657038" MODIFIED="1227879768953" TEXT="MS-Patienten"/>
@@ -3664,7 +3807,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#0033ff" CREATED="1227013240214" ID="ID_1273083058" MODIFIED="1227865778557" POSITION="left" TEXT="Templates">
+<node COLOR="#0033ff" CREATED="1227013240214" FOLDED="true" ID="ID_1273083058" MODIFIED="1228177844265" POSITION="left" TEXT="Templates">
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <node COLOR="#00b439" CREATED="1227013243306" ID="ID_149521833" MODIFIED="1227878485921" TEXT="Transmitter">
