@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node COLOR="#000000" CREATED="1222759308399" ID="ID_888323751" MODIFIED="1227012569892" TEXT="Verhaltenspharmakologie">
+<node COLOR="#000000" CREATED="1222759308399" ID="ID_888323751" MODIFIED="1228226510109" TEXT="Verhaltenspharmakologie">
 <font NAME="SansSerif" SIZE="20"/>
 <hook NAME="accessories/plugins/AutomaticLayout.properties"/>
 <node COLOR="#0033ff" CREATED="1222759346042" ID="ID_958294847" MODIFIED="1227867972691" POSITION="right" TEXT="Anatomie">
@@ -1342,7 +1342,7 @@
 <node COLOR="#111111" CREATED="1222937520466" ID="ID_1708846785" MODIFIED="1222937540825" TEXT="DOM/DOB">
 <font NAME="SansSerif" SIZE="12"/>
 </node>
-<node COLOR="#111111" CREATED="1222937761681" ID="ID_199845074" MODIFIED="1222937765508" TEXT="Bromo-Dragonfly"/>
+<node COLOR="#111111" CREATED="1222937761681" ID="ID_199845074" MODIFIED="1228226616546" TEXT="Bromo-Dragonfly"/>
 </node>
 <node COLOR="#990000" CREATED="1222932848951" ID="ID_710250209" MODIFIED="1222937536736" TEXT="Selegilin">
 <richcontent TYPE="NOTE"><html>
@@ -1596,7 +1596,7 @@
 <node COLOR="#00b439" CREATED="1227012709174" ID="ID_654842991" MODIFIED="1227012711381" TEXT="Krankheiten">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
-<node COLOR="#990000" CREATED="1227012668696" ID="ID_942946091" MODIFIED="1228177962296" TEXT="Depression">
+<node COLOR="#990000" CREATED="1227012668696" FOLDED="true" ID="ID_942946091" MODIFIED="1228228393968" TEXT="Depression">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227120253640" ID="ID_1030392986" MODIFIED="1227515090223" TEXT="Causes/Factors">
@@ -1650,14 +1650,13 @@
       -&gt; zu wenig norepinephrine
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <font NAME="SansSerif" SIZE="12"/>
 </node>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227514668827" ID="ID_1248414691" MODIFIED="1227514672976" TEXT="Neuroanatomy">
-<node COLOR="#111111" CREATED="1227514673966" ID="ID_702432539" MODIFIED="1227514790406" TEXT="smaller hippocampal volumes">
+<node COLOR="#111111" CREATED="1227514673966" ID="ID_702432539" MODIFIED="1228226657500" TEXT="smaller hippocampal volumes">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1665,11 +1664,25 @@
   <body>
     <ul>
       <li>
-        Loss of hippocampal neurons is found in some depressed individuals and correlates with impaired memory and dysthymic mood.
+        Loss of hippocampal neurons is found in some depressed individuals and correlates with impaired memory and dysthymic mood
       </li>
     </ul>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1228226680890" ID="ID_1015563382" MODIFIED="1228226756843" TEXT="Neurogenese im Hippocampus gest&#xf6;rt">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      The level of BDNF in the blood plasma of depressed subjects is drastically reduced
+    </p>
+  </body>
+</html>
+</richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227514815214" ID="ID_1741915851" MODIFIED="1227514905953" TEXT="Neurotrophins">
@@ -1698,8 +1711,7 @@
       zusammenhang mit 5-ht (regelt aussch&#252;ttung von kort. &#252;ber die hypophyse)
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1227120889093" ID="ID_1622563424" MODIFIED="1227121504687" TEXT="Modelle">
@@ -1752,7 +1764,7 @@
   </body>
 </html></richcontent>
 <arrowlink DESTINATION="ID_1741915851" ENDARROW="Default" ENDINCLINATION="168;0;" ID="Arrow_ID_86050647" STARTARROW="None" STARTINCLINATION="168;0;"/>
-<node COLOR="#111111" CREATED="1227514464592" ID="ID_1399046306" MODIFIED="1227516383777" TEXT="Monoamine-theory">
+<node COLOR="#111111" CREATED="1227514464592" ID="ID_1399046306" MODIFIED="1228226816890" TEXT="Monoamine-theory">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -1763,14 +1775,18 @@
     </p>
     <ul>
       <li>
+        no convincing evidence of a primary dysfunction of a specific monoamine system in patients with Depr.
+      </li>
+      <li>
         Tianeptine and opipranol have antidepressent properties despite not acting through the monoamine system
       </li>
       <li>
-        Depletion of monoamines does not cause depression in healthy people + does not worsen symptoms in depressed patients (in contrast to animal model???)
+        <font size="5"><b>Depletion of monoamines does not cause depressio</b></font>n in healthy people + does not worsen symptoms in depressed patients (in contrast to animal model???)
       </li>
     </ul>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 <icon BUILTIN="broken-line"/>
 <node COLOR="#111111" CREATED="1227514254996" ID="ID_701829293" MODIFIED="1227514786863" TEXT="Increase levels of 5HT">
 <richcontent TYPE="NOTE"><html>
@@ -1795,8 +1811,7 @@
       meist mittel der wahl
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1228180147875" ID="ID_198307872" MODIFIED="1228180346812" TEXT="Trizyklische Antidepressiva">
 <richcontent TYPE="NOTE"><html>
@@ -1836,8 +1851,7 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node COLOR="#111111" CREATED="1228182679078" ID="ID_799457480" MODIFIED="1228182684750" TEXT="selektive">
 <node COLOR="#111111" CREATED="1228180898468" ID="ID_1510705537" MODIFIED="1228182717187" TEXT="MAO-A">
 <richcontent TYPE="NOTE"><html>
@@ -1849,8 +1863,7 @@
       vorwiegend im PNS
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 <node COLOR="#111111" CREATED="1228180901968" ID="ID_1294124631" MODIFIED="1228182708687" TEXT="MAO-B">
 <richcontent TYPE="NOTE"><html>
@@ -1867,22 +1880,25 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 <node COLOR="#111111" CREATED="1228182685218" ID="ID_1098930298" MODIFIED="1228182688250" TEXT="nicht selektive">
-<node COLOR="#111111" CREATED="1228181129015" ID="ID_1303368412" MODIFIED="1228181138562" TEXT="Vorsicht bei K&#xe4;se!">
+<node COLOR="#111111" CREATED="1228181129015" ID="ID_1303368412" MODIFIED="1228227653906" TEXT="Vorsicht bei K&#xe4;se!">
 <richcontent TYPE="NOTE"><html>
   <head>
     
   </head>
   <body>
     <p>
-      Da <a href="http://de.wikipedia.org/wiki/Monoaminooxidase" title="Monoaminooxidase">MAO</a> auch andere <a href="http://de.wikipedia.org/wiki/Amine" title="Amine">Amine</a> wie z.B. <a href="http://de.wikipedia.org/wiki/Tyramin" title="Tyramin">Tyramin</a> abbauen, f&#252;hren MAO-Hemmer bei vielen Patienten nach Einnahme bestimmter Lebensmittel zu sogenannten Tyramin-Reaktionen. Durch dessen sympathomimetischen Eigenschaften kommt es dabei u. a. zu einem Anstieg des Blutdrucks, der kritisch werden kann. Au&#223;erdem sind Lebensmittel, die <a href="http://de.wikipedia.org/wiki/Tyrosin" title="Tyrosin">Tyrosin</a>, <a href="http://de.wikipedia.org/wiki/Koffein" title="Koffein" class="mw-redirect">Koffein</a> und <a href="http://de.wikipedia.org/wiki/Histamin" title="Histamin">Histamin</a> in den K&#246;rper bringen, gef&#228;hrlich. Aus diesem Grunde m&#252;ssen bei irreversiblen MAO-Hemmern unbedingt Di&#228;trichtlinien eingehalten werden.
+      Da MAO auch andere Amine wie z.B. Tyramin abbauen, f&#252;hren MAO-Hemmer bei vielen Patienten nach Einnahme bestimmter Lebensmittel zu sogenannten Tyramin-Reaktionen.
+    </p>
+    <p>
+      vgl. Vorlesung: Tyramin liegt im &#220;berschuss vor, wird statt DA vom VMAT im Anitport mit H+ in Vesikel transportiert und bindet dort H+ (warum?), intrazellul&#228;rer pH steigt, DA wird aus der Zelle &quot;geschwemmt&quot; (umgekehrter Transport durch DAT), [DA]e steigt, Flush: Hoher Blutdruck etc.
     </p>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 </node>
 </node>
 </node>
@@ -1907,8 +1923,7 @@
       TW: hab ich noch nix zu gefunden...
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <icon BUILTIN="help"/>
 </node>
 <node COLOR="#111111" CREATED="1228182855656" ID="ID_948573214" MODIFIED="1228182863609" TEXT="Litihium">
@@ -1946,8 +1961,7 @@
       , da es auf zahllose Prozesse im menschlichen K&#246;rper einwirkt. So wird vermutet, dass <a href="http://de.wikipedia.org/wiki/Lithium" title="Lithium">Lithium</a> die Wahrscheinlichkeit einer weiteren affektiven Episode vermindert, indem es bei manischen Episoden einen Noradrenalin&#252;berschuss senkt und bei depressiven Episoden die Serotoninproduktion aktiviert.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 </node>
@@ -2170,7 +2184,7 @@
 </node>
 </node>
 </node>
-<node COLOR="#990000" CREATED="1227012612763" FOLDED="true" ID="ID_960662828" MODIFIED="1227864726037" TEXT="ADHS">
+<node COLOR="#990000" CREATED="1227012612763" FOLDED="true" ID="ID_960662828" MODIFIED="1228226907890" TEXT="ADHS">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227013112060" ID="ID_1536214099" MODIFIED="1227524675703" TEXT="Symptoms">
@@ -2823,12 +2837,133 @@
 <node COLOR="#990000" CREATED="1227012701907" ID="ID_1318611504" MODIFIED="1227012719237" TEXT="Addiction">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1228228986390" ID="ID_818071654" MODIFIED="1228228993531" TEXT="Symptome"/>
+<node COLOR="#111111" CREATED="1228228994406" ID="ID_1565052314" MODIFIED="1228228997578" TEXT="Therapy"/>
+<node COLOR="#111111" CREATED="1228228998109" ID="ID_289949047" MODIFIED="1228229002515" TEXT="Sonstiges">
+<node COLOR="#111111" CREATED="1228229003296" ID="ID_142077765" MODIFIED="1228229024046" TEXT="Erlernte Toleranz"/>
+</node>
+<node COLOR="#111111" CREATED="1228229074750" ID="ID_1634348330" MODIFIED="1228229078500" TEXT="Definition">
+<node COLOR="#111111" CREATED="1228229084640" ID="ID_1700313499" MODIFIED="1228229097234" TEXT="Zwanghaftes Verlangen nach dem Suchtmittel"/>
+<node COLOR="#111111" CREATED="1228229089703" ID="ID_767864944" MODIFIED="1228229091031" TEXT="trotz Einsicht in die negativen Konsequenzen"/>
+</node>
+<node COLOR="#111111" CREATED="1228230045906" ID="ID_481039154" MODIFIED="1228230058843" TEXT="Erkl&#xe4;rungen">
+<node COLOR="#111111" CREATED="1228230059718" ID="ID_1888738489" MODIFIED="1228230121421" TEXT="Operantes Konditionieren?">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      neutrale Handlungsweise wird durch Belohnung verst&#228;rkt/durch Bestrafung unterdr&#252;ckt
+    </p>
+  </body>
+</html>
+</richcontent>
+<node COLOR="#111111" CREATED="1228230121421" ID="ID_1673910286" MODIFIED="1228230124328" TEXT="Pro">
+<node COLOR="#111111" CREATED="1228230136468" ID="ID_1201953196" MODIFIED="1228230150031" TEXT="Drug intake = neutrales Verhalten"/>
+<node COLOR="#111111" CREATED="1228230150984" ID="ID_173370754" MODIFIED="1228230159750" TEXT="Belohnung des Verhaltens"/>
+<node COLOR="#111111" CREATED="1228230165234" ID="ID_1423681631" MODIFIED="1228230178531" TEXT="Verhalten wird gefestigt, wiederholt"/>
+</node>
+<node COLOR="#111111" CREATED="1228230124734" ID="ID_671154642" MODIFIED="1228230126500" TEXT="Contra">
+<node COLOR="#111111" CREATED="1228230191531" ID="ID_1340222277" MODIFIED="1228230210390" TEXT="Kein Vergessen m&#xf6;glich"/>
+<node COLOR="#111111" CREATED="1228230240921" ID="ID_273834477" MODIFIED="1228230246843" TEXT="Keine Extinktion durch">
+<node COLOR="#111111" CREATED="1228230247421" ID="ID_1997050735" MODIFIED="1228230763093" TEXT="context exposure">
+<icon BUILTIN="help"/>
+<icon BUILTIN="yes"/>
+</node>
+<node COLOR="#111111" CREATED="1228230250656" ID="ID_1449213519" MODIFIED="1228230299734" TEXT="Bestrafung"/>
+</node>
+<node COLOR="#111111" CREATED="1228230312359" ID="ID_964303594" MODIFIED="1228230321468" TEXT="Enstprechende Therapien gescheitert"/>
+</node>
+<node COLOR="#111111" CREATED="1228230514671" ID="ID_1759506600" MODIFIED="1228230641937" TEXT="Droge -&gt; Belohnung -&gt; wiederholen">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Tiere lernen: Droge -&gt; Belohnung
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1228230577312" ID="ID_1632293253" MODIFIED="1228230622625" TEXT="Keine Droge -&gt; Entzugssympt. -&gt; vermeiden">
+<node COLOR="#111111" CREATED="1228230648781" ID="ID_1510129473" MODIFIED="1228230657296" TEXT="eindeutig widerlegt"/>
+<node COLOR="#111111" CREATED="1228230661296" ID="ID_1969069921" MODIFIED="1228230681296" TEXT="r&#xfc;ckf&#xe4;lligkeit nach Entzug!"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1228230805234" ID="ID_1902471039" MODIFIED="1228231171921" TEXT="Gewohnheitslernen">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Assoziation zwischen einem Reiz und einem Verhalten, die langsam entsteht und durch Wiederholung zur Gewohnheit/Routine wird.
+    </p>
+    <p>
+      Verhalten V in Gegenwart von Umweltreiz U wird immer wieder belohnt -&gt; U reicht aus, um V auszul&#246;sen
+    </p>
+    <p>
+      <b>(ist das nicht klassische Kondit.???</b>)
+    </p>
+  </body>
+</html>
+</richcontent>
+<icon BUILTIN="help"/>
+<icon BUILTIN="yes"/>
+<node COLOR="#111111" CREATED="1228231495484" ID="ID_1568313117" MODIFIED="1228231516031" TEXT="Pro">
+<node COLOR="#111111" CREATED="1228231448109" ID="ID_955547691" MODIFIED="1228231458796" TEXT="implicit learning">
+<icon BUILTIN="help"/>
+</node>
+<node COLOR="#111111" CREATED="1228231437000" ID="ID_1627256358" MODIFIED="1228231442781" TEXT="learned addiction very stable"/>
+<node COLOR="#111111" CREATED="1228231529343" ID="ID_1000141880" MODIFIED="1228231555343" TEXT="nigro-striatale Bahn involved"/>
+<node COLOR="#111111" CREATED="1228231573671" ID="ID_737983322" MODIFIED="1228232162968" TEXT="Suchtverhalten wird auch bei abflachender Euphorie beibehalten"/>
+</node>
+<node COLOR="#111111" CREATED="1228231501906" ID="ID_166888739" MODIFIED="1228231519265" TEXT="Contra">
+<node COLOR="#111111" CREATED="1228231626546" ID="ID_1245631481" MODIFIED="1228231719093" TEXT="Habits are usually not compulsive"/>
+</node>
+</node>
+<node COLOR="#111111" CREATED="1228231754953" ID="ID_809826663" MODIFIED="1228231889343" TEXT="Automatic Processing Hypothesis">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      w&#228;hrend Suchtentwicklung wird Drogeneinnahme zur Gewohnheit;
+    </p>
+    <p>
+      wird Ausf&#252;hren der Gewohnheitshandlung verhindert: Craving
+    </p>
+    <p>
+      ?? aber nicht jede unterdr&#252;ckte gew.handlung f&#252;hrt zu craving?!
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node COLOR="#111111" CREATED="1228232553296" ID="ID_87356977" MODIFIED="1228232609421" TEXT="Incentive Sensitization Hypothesis">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      comulsivity is due tu sensitization.
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+</node>
 </node>
 </node>
 <node COLOR="#00b439" CREATED="1227012741601" ID="ID_1181664014" MODIFIED="1227875740218" TEXT="Transmitter">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
-<node COLOR="#990000" CREATED="1227012576927" FOLDED="true" ID="ID_97603357" MODIFIED="1227865793358" TEXT="ACh">
+<node COLOR="#990000" CREATED="1227012576927" ID="ID_97603357" MODIFIED="1228230065234" TEXT="ACh">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227012832554" ID="ID_1566780007" LINK="gfx/ACh-abbau-aufbau.png" MODIFIED="1227516694409" TEXT="Aufbau/Abbau">
@@ -3603,7 +3738,7 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 </node>
-<node COLOR="#990000" CREATED="1227012687215" FOLDED="true" ID="ID_63780026" MODIFIED="1228177839390" TEXT="Cannabinoids">
+<node COLOR="#990000" CREATED="1227012687215" FOLDED="true" ID="ID_63780026" MODIFIED="1228228963203" TEXT="Cannabinoids">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="14"/>
 <node COLOR="#111111" CREATED="1227522429928" ID="ID_295046359" MODIFIED="1227878505015" TEXT="Pharmacology">
@@ -3681,7 +3816,7 @@
 </html></richcontent>
 <font NAME="SansSerif" SIZE="12"/>
 <node COLOR="#111111" CREATED="1227012905585" ID="ID_1818139268" MODIFIED="1227521926298" TEXT="Metabotropic">
-<node COLOR="#111111" CREATED="1227878740937" ID="ID_1112026390" MODIFIED="1227881648359" TEXT="CB 1">
+<node COLOR="#111111" CREATED="1227878740937" ID="ID_1112026390" MODIFIED="1228228494031" TEXT="CB 1">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -3706,10 +3841,11 @@
       wiki: is the most abundant G protein-coupled receptor in the brain
     </p>
     <p>
-      -&gt; deswegen hat man nach *endogenen* cannabinoiden geforscht
+      -&gt; deswegen hat man nach *<b>endogenen</b>* cannabinoiden geforscht
     </p>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 </node>
 <node COLOR="#111111" CREATED="1227878743078" ID="ID_896667740" MODIFIED="1227878886828" TEXT="(CB 2)">
 <richcontent TYPE="NOTE"><html>
@@ -3807,10 +3943,10 @@
 </node>
 </node>
 </node>
-<node COLOR="#0033ff" CREATED="1227013240214" FOLDED="true" ID="ID_1273083058" MODIFIED="1228177844265" POSITION="left" TEXT="Templates">
+<node COLOR="#0033ff" CREATED="1227013240214" ID="ID_1273083058" MODIFIED="1228228976484" POSITION="left" TEXT="Templates">
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
-<node COLOR="#00b439" CREATED="1227013243306" ID="ID_149521833" MODIFIED="1227878485921" TEXT="Transmitter">
+<node COLOR="#00b439" CREATED="1227013243306" FOLDED="true" ID="ID_149521833" MODIFIED="1228228979093" TEXT="Transmitter">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <node COLOR="#990000" CREATED="1227012832554" ID="ID_932556270" MODIFIED="1227013261747" TEXT="Aufbau">
